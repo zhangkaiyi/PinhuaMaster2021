@@ -115,6 +115,7 @@ namespace PinhuaMaster
 
             services.AddTransient<IActionPermissionService, ActionPermissionService>();
             services.AddTransient<IAttendanceService, AttendanceService>();
+            services.AddTransient<IAttendanceService2021, AttendanceService2021>();
             services.AddTransient<IAuthorizationHandler, PermissionHandler>();
 
             // Asp.net Core 2.2 以后让RazorPage动态编译的设置

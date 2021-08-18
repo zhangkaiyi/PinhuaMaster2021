@@ -1,10 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.EntityFrameworkCore;
+using OfficeOpenXml;
 using PinhuaMaster.Data.Entities.EastRiver;
 using PinhuaMaster.Data.Entities.Pinhua;
 using PinhuaMaster.Pages.Payroll.ViewModel;
@@ -18,12 +22,14 @@ namespace PinhuaMaster.Pages.Attendance
         private readonly PinhuaContext _pinhuaContext;
         private readonly EastRiverContext _eastRiverContext;
         private readonly IAttendanceService _attendanceService;
+        private readonly IAttendanceService2021 _attendanceService2021;
 
-        public EditModel(PinhuaContext pinhuaContext, EastRiverContext eastRiverContext, IAttendanceService attendanceService)
+        public EditModel(PinhuaContext pinhuaContext, EastRiverContext eastRiverContext, IAttendanceService attendanceService, IAttendanceService2021 attendanceService2021)
         {
             _pinhuaContext = pinhuaContext;
             _eastRiverContext = eastRiverContext;
             _attendanceService = attendanceService;
+            _attendanceService2021 = attendanceService2021;
         }
 
         public void OnGet(int? Y, int? M)
@@ -134,6 +140,48 @@ namespace PinhuaMaster.Pages.Attendance
             _pinhuaContext.SaveChanges();
 
             return RedirectToPage("Index");
+        }
+
+        public IActionResult OnGetExportByEPPlus(int? Y, int? M)
+        {
+            
+            using (ExcelPackage pck = new ExcelPackage())
+            {
+                //Create the worksheet
+                string sheetName = "Sheet1";
+                ExcelWorksheet ws = pck.Workbook.Worksheets.Add(sheetName);
+                ws.Cells.Style.Font.Name = "Microsoft YaHei";
+                ws.Cells.Style.Font.Size = 11;
+                //Load the datatable into the sheet, starting from cell A1. Print the column names on row 1
+                ws.Cells[1, 1].Value = $"考勤数据，{Y}-{M?.ToString("D2")}";
+                ws.Row(1).Height = 40;
+                ws.Row(1).Style.Font.Size = 12;
+                ws.Cells[1, 1, 1, 11].Merge = true;
+                ws.Cells[1, 1, 1, 11].Style.VerticalAlignment = OfficeOpenXml.Style.ExcelVerticalAlignment.Center;
+                ws.Cells[2, 1].Value = "日期";
+                ws.Cells[2, 2].Value = "业务描述";
+                ws.Cells[2, 3].Value = "备注";
+                ws.Cells[2, 4].Value = "产品编号";
+                ws.Cells[2, 5].Value = "产品描述";
+                ws.Cells[2, 6].Value = "规格";
+                ws.Cells[2, 7].Value = "片数";
+                ws.Cells[2, 8].Value = "数量";
+                ws.Cells[2, 9].Value = "单位";
+                ws.Cells[2, 10].Value = "单价";
+                ws.Cells[2, 11].Value = "金额";
+                ws.Row(2).Height = 30;
+                ws.Row(2).Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Center;
+                ws.Row(2).Style.VerticalAlignment = OfficeOpenXml.Style.ExcelVerticalAlignment.Center;
+                ws.Cells[2, 1, 2, 11].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
+                ws.Cells[2, 1, 2, 11].Style.Fill.BackgroundColor.SetColor(Color.FromArgb(248, 246, 235));
+                ws.Cells[2, 1, 2, 11].AutoFilter = true;
+                var rowNum = 3;
+
+                var saveAsFileName = $"考勤数据，{Y}-{M?.ToString("D2")}.xlsx";
+                var fileExt = Path.GetExtension(saveAsFileName);
+                var provider = new FileExtensionContentTypeProvider();
+                return File(pck.GetAsByteArray(), provider.Mappings[fileExt], saveAsFileName);
+            }
         }
     }
 }

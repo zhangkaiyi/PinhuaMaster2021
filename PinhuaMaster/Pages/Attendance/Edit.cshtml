@@ -2,6 +2,7 @@
 @model PinhuaMaster.Pages.Attendance.EditModel
 @using PinhuaMaster.Services
 @inject IAttendanceService attendanceService
+@inject IAttendanceService2021 attendanceService2021
 @{
     ViewData["Title"] = "Edit";
     var Y = PageContext.RouteData.Values["Y"];
@@ -9,8 +10,9 @@
     var rcid = pinhuaContext.AttendanceReport.AsNoTracking().FirstOrDefault(r => r.Y == int.Parse(PageContext.RouteData.Values["Y"].ToString()) && r.M == int.Parse(PageContext.RouteData.Values["M"].ToString())).ExcelServerRcid;
     var refreshUrl = Url.Page("Create", "Ajax", new { Y = Y, M = M });
     var getUrl = Url.Page("Edit", "AjaxExsitedAttendanceData", new { Y = PageContext.RouteData.Values["Y"], M = PageContext.RouteData.Values["M"] });
+    //var aaa = Newtonsoft.Json.JsonConvert.SerializeObject(attendanceService2021.考勤表(2021,7), Newtonsoft.Json.Formatting.Indented);
 }
-
+@*<pre>@aaa</pre>*@
 <div class="row">
     <div class="col-md-3">
         <div class="box box-solid">
@@ -57,6 +59,11 @@
                         </div>
                     </div>
                     <input type="hidden" value="@(refreshUrl)" id="refreshUrl" />
+                    <div class="form-group">
+                        <div class="col-xs-12">
+                            <button class="form-control btn btn-default"><i class="fa fa-save"></i> 导出</button>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
