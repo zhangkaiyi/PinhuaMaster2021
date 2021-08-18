@@ -1,0 +1,12 @@
+﻿@page "{Id?}"
+@model PinhuaMaster.Pages.OrderManagement.EasyPurchasing.EditModel
+@{
+    ViewData["Title"] = "Edit";
+    ViewBag.NoContentHeader = true;
+}
+
+@Html.Partial("_PurchasingTable", Model.Purchasing)
+
+@section Scripts{
+    @Html.RenderScripts()
+}

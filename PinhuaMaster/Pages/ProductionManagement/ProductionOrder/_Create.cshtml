@@ -1,0 +1,578 @@
+﻿@page
+@model PinhuaMaster.Pages.ProductionManagement.ProductionOrder.CreateModel
+@using PinhuaMaster.Pages.ProductionManagement.ProductionOrder.ViewModel
+@using Newtonsoft.Json
+@{
+    ViewData["Title"] = "Create";
+}
+
+<div class="box box-solid">
+    <div class="box-header">
+        <div class="box-title">新增 - 生产订单</div>
+    </div>
+    <div class="box-body">
+        <div class="row">
+            <div class="col-sm-4">
+                <div class="form-group has-error">
+                    <label class="control-label" asp-for="Order.M.客户名"><i class="fa fa-angle-double-right"></i> @Html.DisplayNameFor(x => x.Order.M.客户名)</label>
+                    <div class="input-group">
+                        <input type="text" asp-for="Order.M.客户名" class="form-control" />
+                        <span class="input-group-addon no-padding">
+                            <i class="fa fa-user" style="width:38px;"></i>
+                        </span>
+                    </div>
+                </div>
+                <div class="form-group has-error">
+                    <label class="control-label" asp-for="Order.M.概要"><i class="fa fa-angle-double-right"></i> @Html.DisplayNameFor(x => x.Order.M.概要)</label>
+                    <div class="input-group">
+                        <input type="text" asp-for="Order.M.概要" class="form-control" />
+                        <span class="input-group-addon no-padding">
+                            <i class="fa fa-sticky-note-o" style="width:38px;"></i>
+                        </span>
+                    </div>
+                </div>
+                <div class="form-group has-error">
+                    <label class="control-label" asp-for="Order.M.日期"><i class="fa fa-angle-double-right"></i> @Html.DisplayNameFor(x => x.Order.M.日期)</label>
+                    <div class="input-group">
+                        <input type="text" asp-for="Order.M.日期" data-provide="datepicker" data-date-format="yyyy-mm-dd" readonly class="form-control" />
+                        <span class="input-group-addon no-padding">
+                            <i class="fa fa-calendar-o" style="width:38px;"></i>
+                        </span>
+                    </div>
+                    <span class="help-block" asp-validation-for="Order.M.日期"></span>
+                </div>
+                <div class="form-group has-error">
+                    <label class="control-label" asp-for="Order.M.交期"><i class="fa fa-angle-double-right"></i> @Html.DisplayNameFor(x => x.Order.M.交期)</label>
+                    <div class="input-group">
+                        <input type="text" asp-for="Order.M.交期" data-provide="datepicker" data-date-format="yyyy-mm-dd" readonly class="form-control" />
+                        <span class="input-group-addon no-padding">
+                            <i class="fa fa-calendar-o" style="width:38px;"></i>
+                        </span>
+                    </div>
+                    <span class="help-block" asp-validation-for="Order.M.日期"></span>
+                </div>
+            </div>
+            <!-- /.col -->
+            <div class="col-sm-4">
+                <div class="form-group has-warning">
+                    <label class="control-label" asp-for="Order.M.备注">
+                        <i class="fa fa-bell-o"></i> @Html.DisplayNameFor(x => x.Order.M.备注)
+                    </label>
+                    <div class="input-group">
+                        <textarea asp-for="Order.M.备注" class="form-control" rows="3"></textarea>
+                        <span class="input-group-addon no-padding">
+                            <i class="fa fa-ellipsis-h" style="width:38px;"></i>
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <!-- /.col -->
+        </div>
+    </div>
+</div>
+
+<div class="box box-solid">
+    <div class="box-header">
+        <div class="box-title">列表</div>
+    </div>
+    <div class="box-body">
+        <div class="row">
+            <div class="col-xs-12">
+                <div id="toolbar">
+                    <button id="button" class="btn btn-default btn-flat"><i class="fa fa-plus"></i> 增加</button>
+                </div>
+                <table id="table"
+                       data-toolbar="#toolbar"
+                       data-pagination="true"
+                       data-show-export="true">
+                    <thead>
+                        <tr>
+                            @*
+                                <th data-field="图片">图片</th>*@
+                            <th data-field="描述">描述</th>
+                            <th data-field="长">长</th>
+                            <th data-field="宽">宽</th>
+                            <th data-field="高">高</th>
+                            <th data-field="刻线">刻线</th>
+                            <th data-field="拉丝">拉丝</th>
+                            <th data-field="开槽">开槽</th>
+                            <th data-field="油漆">油漆</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row" id="vueScope">
+    <div class="col-xs-12">
+        <div class="box box-solid">
+            <div class="box-header with-border">
+                <div class="box-title">列表</div>
+                <div class="box-tools pull-right">
+                    <a class="btn btn-default btn-sm" data-toggle="modal" data-target="#myModal" v-on:click="newRecord">
+                        <i class="fa fa-plus"></i>　添加产品
+                    </a>
+                </div>
+            </div>
+            <div class="box-body no-padding" v-if="">
+                <div class="table-responsive">
+                    <table class="table table-striped table-bordered" id="formTable" style="">
+                        <thead>
+                            <tr>
+                                <th style="width:80px;max-width:80px"></th>
+                                <th style="min-width:80px;">描述</th>
+                                <th style="min-width:80px;">规格</th>
+                                <th class="hidden" style="min-width:80px;">长</th>
+                                <th class="hidden" style="min-width:80px;">宽</th>
+                                <th class="hidden" style="min-width:80px;">高</th>
+                                <th style="min-width:80px;">片数</th>
+                                <th class="" style="min-width:80px;">刻线</th>
+                                <th class="" style="min-width:80px;">拉丝</th>
+                                <th class="" style="min-width:80px;">开槽</th>
+                                <th class="" style="min-width:80px;">油漆</th>
+                                <th class="" style="min-width:80px;">其他</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr v-if="items.length == 0"><td colspan="20" class="text-center">空</td></tr>
+                            <tr v-for="(item,index) in items">
+                                <td class="text-center">
+                                    <a href="javascript:;" v-on:click="移除记录(index)">移除</a> <a href="javascript:;" v-on:click="修改记录(index)">修改</a>
+                                </td>
+                                <td>{{ item.描述 }}<input :name="buildName(index,'描述')" type="hidden" v-model="item.描述" /></td>
+                                <td>{{ 生成规格(item) }}</td>
+                                <td class="hidden">{{ item.长 }}<input :name="buildName(index,'长')" type="hidden" v-bind:value="item.长" /></td>
+                                <td class="hidden">{{ item.宽 }}<input :name="buildName(index,'宽')" type="hidden" v-bind:value="item.宽" /></td>
+                                <td class="hidden">{{ item.高 }}<input :name="buildName(index,'高')" type="hidden" v-bind:value="item.高" /></td>
+                                <td>{{ item.片数 }}<input :name="buildName(index,'片数')" type="hidden" v-bind:value="item.片数" /></td>
+                                <td>{{ item.刻线要求 }}<input :name="buildName(index,'刻线要求')" type="hidden" v-bind:value="item.刻线要求" /></td>
+                                <td>{{ item.拉丝要求 }}<input :name="buildName(index,'拉丝要求')" type="hidden" v-bind:value="item.拉丝要求" /></td>
+                                <td>{{ item.开槽要求 }}<input :name="buildName(index,'开槽要求')" type="hidden" v-bind:value="item.开槽要求" /></td>
+                                <td>{{ item.油漆要求 }}<input :name="buildName(index,'油漆要求')" type="hidden" v-bind:value="item.油漆要求" /></td>
+                                <td>{{ item.其他要求 }}<input :name="buildName(index,'其他要求')" type="hidden" v-bind:value="item.其他要求" /></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- /.col -->
+    <div id="ItemDetail" style="display:none">
+        <div class="modal-body">
+            <div class="form-horizontal margin-r-5">
+                <div class="form-group has-error">
+                    <label class="control-label col-xs-4 col-md-3"><i class="fa fa-angle-double-right"></i> 描述</label>
+                    <div class="col-xs-8 col-md-9">
+                        <div class="input-group">
+                            <input class="form-control" v-model="itemCurrent.描述" />
+                            <div class="input-group-addon no-padding">
+                                <i class="fa fa-info" style="width:38px;"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group has-error">
+                    <label class="control-label col-xs-4 col-md-3"><i class="fa fa-angle-double-right"></i> 长</label>
+                    <div class="col-xs-8 col-md-9">
+                        <div class="input-group">
+                            <input type="number" class="form-control" v-model="itemCurrent.长" />
+                            <div class="input-group-btn">
+                                <button type="button" class="btn btn-danger btn-flat dropdown-toggle" style="width:40px" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="caret"></span></button>
+                                <ul class="dropdown-menu dropdown-menu-right">
+                                    <li><a v-on:click="itemCurrent.长=450">450</a></li>
+                                    <li><a v-on:click="itemCurrent.长=500">500</a></li>
+                                    <li><a v-on:click="itemCurrent.长=600">600</a></li>
+                                    <li><a v-on:click="itemCurrent.长=300">300</a></li>
+                                </ul>
+                                @*<button type="button" class="btn btn-danger btn-flat" style="width:40px"><i class="fa fa-sort-numeric-asc"></i></button>*@
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group has-error">
+                    <label class="control-label col-xs-4 col-md-3"><i class="fa fa-angle-double-right"></i> 宽</label>
+                    <div class="col-xs-8 col-md-9">
+                        <div class="input-group">
+                            <input type="number" class="form-control" v-model="itemCurrent.宽" />
+                            <div class="input-group-btn">
+                                <button type="button" class="btn btn-danger btn-flat dropdown-toggle" style="width:40px" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="caret"></span></button>
+                                <ul class="dropdown-menu dropdown-menu-right">
+                                    <li><a v-on:click="itemCurrent.宽=450">450</a></li>
+                                    <li><a v-on:click="itemCurrent.宽=500">500</a></li>
+                                    <li><a v-on:click="itemCurrent.宽=600">600</a></li>
+                                    <li><a v-on:click="itemCurrent.宽=300">300</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group has-error">
+                    <label class="control-label col-xs-4 col-md-3"><i class="fa fa-angle-double-right"></i> 高</label>
+                    <div class="col-xs-8 col-md-9">
+                        <div class="input-group">
+                            <input type="number" class="form-control" v-model="itemCurrent.高" />
+                            <div class="input-group-btn">
+                                <button type="button" class="btn btn-danger btn-flat dropdown-toggle" style="width:40px" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="caret"></span></button>
+                                <ul class="dropdown-menu dropdown-menu-right">
+                                    <li><a v-on:click="itemCurrent.高=15">15</a></li>
+                                    <li><a v-on:click="itemCurrent.高=18">18</a></li>
+                                    <li><a v-on:click="itemCurrent.高=12">12</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group has-error">
+                    <label class="control-label col-xs-4 col-md-3"><i class="fa fa-angle-double-right"></i> 片数</label>
+                    <div class="col-xs-8 col-md-9">
+                        <div class="input-group">
+                            <input type="number" class="form-control" v-model="itemCurrent.片数" />
+                            <div class="input-group-addon no-padding">
+                                <i class="fa fa-calculator" style="width:38px"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group has-error">
+                    <label class="control-label col-xs-4 col-md-3"><i class="fa fa-angle-double-right"></i> 刻线</label>
+                    <div class="col-xs-8 col-md-9">
+                        <div class="input-group">
+                            <input class="form-control" v-model="itemCurrent.刻线要求" />
+                            <div class="input-group-btn">
+                                <button type="button" class="btn btn-danger btn-flat dropdown-toggle" style="width:40px" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="caret"></span></button>
+                                <ul class="dropdown-menu dropdown-menu-right">
+                                    <li><a v-on:click="itemCurrent.刻线要求='常规'">常规</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group has-error">
+                    <label class="control-label col-xs-4 col-md-3"><i class="fa fa-angle-double-right"></i> 拉丝</label>
+                    <div class="col-xs-8 col-md-9">
+                        <div class="input-group">
+                            <input class="form-control" v-model="itemCurrent.拉丝要求" />
+                            <div class="input-group-btn">
+                                <button type="button" class="btn btn-danger btn-flat dropdown-toggle" style="width:40px" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="caret"></span></button>
+                                <ul class="dropdown-menu dropdown-menu-right">
+                                    <li><a v-on:click="itemCurrent.拉丝要求='常规'">常规</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group has-error">
+                    <label class="control-label col-xs-4 col-md-3"><i class="fa fa-angle-double-right"></i> 开槽</label>
+                    <div class="col-xs-8 col-md-9">
+                        <div class="input-group">
+                            <input class="form-control" v-model="itemCurrent.开槽要求" />
+                            <div class="input-group-btn">
+                                <button type="button" class="btn btn-danger btn-flat dropdown-toggle" style="width:40px" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="caret"></span></button>
+                                <ul class="dropdown-menu dropdown-menu-right">
+                                    <li><a v-on:click="itemCurrent.开槽要求='常规'">常规</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group has-error">
+                    <label class="control-label col-xs-4 col-md-3"><i class="fa fa-angle-double-right"></i> 油漆</label>
+                    <div class="col-xs-8 col-md-9">
+                        <div class="input-group">
+                            <input class="form-control" v-model="itemCurrent.油漆要求" />
+                            <div class="input-group-btn">
+                                <button type="button" class="btn btn-danger btn-flat dropdown-toggle" style="width:40px" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="caret"></span></button>
+                                <ul class="dropdown-menu dropdown-menu-right">
+                                    <li><a v-on:click="itemCurrent.油漆要求='常规'">常规</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group has-error">
+                    <label class="control-label col-xs-4 col-md-3"><i class="fa fa-angle-double-right"></i> 其他</label>
+                    <div class="col-xs-8 col-md-9">
+                        <div class="input-group">
+                            <input class="form-control" v-model="itemCurrent.其他要求" />
+                            <div class="input-group-addon no-padding">
+                                <i class="fa fa-ellipsis-h" style="width:38px"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-default btn-flat" onclick="layer.closeAll('page')">取消</button>
+            <button type="button" class="btn btn-default btn-flat" v-if="isNew" v-on:click="saveNewRecord">新增</button>
+            <button type="button" class="btn btn-default btn-flat" v-if="!isNew" v-on:click="saveEditRecord">修改</button>
+        </div>
+    </div>
+
+</div>
+
+
+<a href="javascript:saveOrSubmit();" class="btn btn-default btn-flat"><i class="fa fa-check"></i>&nbsp;提交</a>
+
+@section Styles{
+    <link href="~/lib/x-editable/dist/bootstrap3-editable/css/bootstrap-editable.css" rel="stylesheet">
+}
+
+@section Scripts{
+    <script src="~/lib/x-editable/dist/bootstrap3-editable/js/bootstrap-editable.min.js"></script>
+    <script src="~/lib/bootstrap-table/dist/extensions/editable/bootstrap-table-editable.min.js"></script>
+
+    <script>
+        function layerItemDetail() {
+            layer.open({
+                type: 1,
+                area: $(window).width() < 992 ? ['98%', 'auto'] : ['800px', 'auto'],
+                content: $('#ItemDetail'),
+                shadeClose: true,
+                isOutAnim: false,
+                fixed: false,
+                //closeBtn: false,
+                //scrollbar: false,
+                //title: false,
+            });
+        }
+    </script>
+
+    <script>
+        var emptyRecord = @Html.Raw(JsonConvert.SerializeObject(new dto生产单D()));
+        var emptyRecordList = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(new List<dto生产单D>()));
+        var vm = new Vue({
+            el: '#vueScope',
+            data: {
+                items: emptyRecordList,
+                itemCurrent: {},
+                itemIndex: {},
+                isNew: false,
+            },
+            methods: {
+                buildName: function (index, name) {
+                    return "Order.D[" + index + "]." + name
+                },
+                newRecord: function () {
+                    this.isNew = true;
+                    this.itemCurrent = JSON.parse(JSON.stringify(emptyRecord))
+                    layerItemDetail()
+                },
+                saveNewRecord: function () {
+                    this.items.push(this.itemCurrent);
+                    layer.closeAll('page')
+                },
+                修改记录: function (index) {
+                    this.isNew = false;
+                    this.itemIndex = index;
+                    this.itemCurrent = JSON.parse(JSON.stringify(this.items[index]))
+                    layerItemDetail()
+                },
+                saveEditRecord: function () {
+                    this.$set(this.items, this.itemIndex, this.itemCurrent)
+                    layer.closeAll('page')
+
+                },
+                移除记录: function (index) {
+                    this.items.splice(index, 1)
+                },
+                生成规格: function (item) {
+                    if (!item.长 || !item.宽 || !item.高)
+                        return ""
+                    return [item.长, item.宽, item.高].join("*")
+                },
+            }
+        })
+    </script>
+    <script>
+        var $table = $('#table')
+        var $button = $('#button')
+
+        $(function () {
+            $('#table').bootstrapTable({
+                columns: [
+                    //{
+                    //    field: "图片",
+                    //    title: "图片",
+                    //},
+                    {
+                        field: "描述",
+                        title: "描述",
+                        editable: {
+                            type: 'text',
+                            title: '描述',
+                            validate: function (v) {
+                                if (!v) return '描述不能为空';
+
+                            }
+                        }
+                    },
+                    {
+                        field: "长",
+                        title: "长",
+                        editable: {
+                            type: 'text',
+                            title: '长',
+                            validate: function (v) {
+                                if (!v) return '长不能为空';
+
+                            }
+                        }
+                    },
+                    {
+                        field: "宽",
+                        title: "宽",
+                        editable: {
+                            type: 'text',
+                            title: '宽',
+                            validate: function (v) {
+                                if (!v) return '宽不能为空';
+
+                            }
+                        }
+                    },
+                    {
+                        field: "高",
+                        title: "高",
+                        editable: {
+                            type: 'text',
+                            title: '高',
+                            validate: function (v) {
+                                if (!v) return '高不能为空';
+
+                            }
+                        }
+                    },
+                    {
+                        field: "是否刻线",
+                        title: "刻线",
+                        editable: {
+                            type: "select",              //编辑框的类型。支持text|textarea|select|date|checklist等
+                            title: '是否刻线',
+                            source: [{ value: 'Yes', text: "Yes" }, { value: 'No', text: "No" }],
+                            //title: "是否",           //编辑框的标题
+                            disabled: false,           //是否禁用编辑
+                            //emptytext: "空文本",       //空值的默认文本
+                            mode: "popup",            //编辑框的模式：支持popup和inline两种模式，默认是popup
+                        }
+                    },
+                    {
+                        field: "刻线要求",
+                        title: "刻线要求",
+                        editable: {
+                            type: 'text',
+                            title: '刻线要求',
+                        }
+                    },
+                    {
+                        field: "是否拉丝",
+                        title: "拉丝",
+                        editable: {
+                            type: 'select',
+                            title: '是否拉丝',
+                            source: [{ value: 'Yes', text: "Yes" }, { value: 'No', text: "No" }],
+                        }
+                    },
+                    {
+                        field: "拉丝要求",
+                        title: "拉丝要求",
+                        editable: {
+                            type: 'text',
+                            title: '拉丝要求',
+                        }
+                    },
+                    {
+                        field: "是否开槽",
+                        title: "开槽",
+                        editable: {
+                            type: 'select',
+                            title: '是否开槽',
+                            source: [{ value: 'Yes', text: "Yes" }, { value: 'No', text: "No" }],
+                        }
+                    },
+                    {
+                        field: "开槽要求",
+                        title: "开槽要求",
+                        editable: {
+                            type: 'text',
+                            title: '开槽要求',
+                        }
+                    },
+                    {
+                        field: "是否油漆",
+                        title: "油漆",
+                        editable: {
+                            type: 'select',
+                            title: '是否油漆',
+                            source: [{ value: 'Yes', text: "Yes" }, { value: 'No', text: "No" }],
+                        }
+                    },
+                    {
+                        field: "油漆要求",
+                        title: "油漆要求",
+                        editable: {
+                            type: 'text',
+                            title: '油漆要求',
+                        }
+                    },
+                    {
+                        field: "其他要求",
+                        title: "其他要求",
+                        editable: {
+                            type: 'text',
+                            title: '备注',
+
+                        }
+                    },
+                ]
+            })
+
+            $button.click(function () {
+                var count = $table.bootstrapTable('getData').length;
+                $table.bootstrapTable('insertRow', {
+                    index: count,
+                    row: {
+                        图片: '',
+                        描述: '',
+                        长: '450',
+                        宽: '450',
+                        高: '15',
+                        是否刻线: 'No',
+                        刻线要求: '',
+                        是否拉丝: 'No',
+                        拉丝要求: '',
+                        是否开槽: 'No',
+                        开槽要求: '',
+                        是否油漆: 'No',
+                        油漆要求: '',
+                        其他要求: ''
+                    }
+                })
+            })
+        })
+    </script>
+    <script>
+    function saveOrSubmit(type) {
+        console.log($table.bootstrapTable("getData", true))
+        $.ajax({
+            type: "post",
+            url: "@Url.Page("/ProductionManagement/ProductionOrder/Create", "AjaxSubmit")",
+            data: {
+                M: {
+
+                },
+                D: $table.bootstrapTable("getData", true),
+            },
+            dataType: "json",
+            success: function (msg) {
+                // msg = JSON.parse(msg);
+                console.log(msg);
+            }
+        });
+    }
+    </script>
+}

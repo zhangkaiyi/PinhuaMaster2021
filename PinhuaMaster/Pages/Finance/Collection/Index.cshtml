@@ -1,0 +1,75 @@
+﻿@page
+@model PinhuaMaster.Pages.Finance.Collection.IndexModel
+@{
+    ViewData["Title"] = "Index";
+
+    var collectionList = pinhuaContext.收款单.OrderByDescending(x => x.收款日期).ThenByDescending(x => x.收款单号).ThenBy(x => x.单位编号);
+}
+<div class="row">
+    <section class="col-lg-9">
+        <div class="box box-solid">
+            <div class="box-body">
+                <div class="mailbox-controls no-padding" id="toolbar">
+                    <!-- Check all button -->
+                    <a asp-page="Create" class="btn btn-default btn-sm"><i class="fa fa-plus"></i><span> 新增记录</span></a>
+
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-default btn-sm"><i class="fa fa-trash-o"></i></button>
+                    </div>
+                    <!-- /.btn-group -->
+                </div>
+                <table id="collectionTable"
+                       data-toggle="table"
+                       data-search="true"
+                       data-toolbar="#toolbar"
+                       data-pagination="true"
+                       data-page-size="10"
+                       data-page-list="[10, 20, 50, 100, 200, ALL]"
+                       data-classes="table table-bordered table-striped">
+                    <thead>
+                        <tr>
+                            <th data-width="20px"></th>
+                            <th data-width="20px"></th>
+                            <th>收款日期</th>
+                            <th class="hidden-xs">收款单号</th>
+                            <th>收款单位</th>
+                            <th data-align="right">收款金额</th>
+                            <th>收款类型</th>
+                            <th data-visible="false">ExcelServerRcid</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var collection in collectionList)
+                        {
+                            <tr>
+                                <td><a asp-page="Edit" asp-route-id="@collection.收款单号"><i class="fa fa-edit"></i></a></td>
+                                <td><a href="javascript:toDelete('@collection.ExcelServerRcid')"><i class="fa fa-times"></i></a></td>
+                                <td>@collection.收款日期?.ToString("yyyy-MM-dd")</td>
+                                <td>@collection.收款单号</td>
+                                <td>@collection.收款单位</td>
+                                <td>@collection.收款金额</td>
+                                <td>@collection.收款类型</td>
+                                <td>@collection.ExcelServerRcid</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div><!-- /.box-body -->
+        </div><!-- /.box -->
+
+        <form id="toDeleteForm" method="post" asp-page="Delete">
+            <input type="hidden" id="toDeleteRcid" name="rcId" />
+        </form>
+    </section>
+</div>
+
+@section Scripts{
+    <script>
+        function toDelete(rcid) {
+            if (confirm('确定删除这条记录吗？')) {
+                $('#toDeleteRcid').val(rcid);
+                $('#toDeleteForm').submit();
+            }
+        }
+    </script>
+}

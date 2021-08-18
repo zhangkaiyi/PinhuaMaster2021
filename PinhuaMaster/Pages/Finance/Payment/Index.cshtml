@@ -1,0 +1,73 @@
+﻿@page
+@model PinhuaMaster.Pages.Finance.Payment.IndexModel
+@{
+    ViewData["Title"] = "Index";
+
+    var paymentList = pinhuaContext.付款单.OrderByDescending(x => x.付款日期).ThenByDescending(x=>x.付款单号).ThenBy(x => x.单位编号);
+}
+
+<div class="row">
+    <section class="col-lg-9">
+        <div class="box box-solid">
+            <div class="box-body">
+                <div class="mailbox-controls no-padding" id="toolbar">
+                    <!-- Check all button -->
+                    <a asp-page="Create" class="btn btn-default btn-sm"><i class="fa fa-plus"></i><span> 新增记录</span></a>
+
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-default btn-sm"><i class="fa fa-trash-o"></i></button>
+                    </div>
+                </div>
+                <table id="collectionTable"
+                       data-toggle="table"
+                       data-search="true"
+                       data-toolbar="#toolbar"
+                       data-pagination="true"
+                       data-page-size="10"
+                       data-page-list="[10, 20, 50, 100, 200, ALL]"
+                       data-classes="table table-bordered table-striped">
+                    <thead>
+                        <tr>
+                            <th data-width="20px"></th>
+                            <th data-width="20px"></th>
+                            <th>收款日期</th>
+                            <th class="hidden-xs">收款单号</th>
+                            <th>收款单位</th>
+                            <th>收款金额</th>
+                            <th>收款类型</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var payment in paymentList)
+                        {
+                            <tr>
+                                <td><a asp-page="Edit" asp-route-id="@payment.付款单号"><i class="fa fa-edit"></i></a></td>
+                                <td><a href="javascript:toDelete('@payment.ExcelServerRcid')"><i class="fa fa-times"></i></a></td>
+                                <td>@payment.付款日期?.ToString("yyyy-MM-dd")</td>
+                                <td>@payment.付款单号</td>
+                                <td>@payment.付款单位</td>
+                                <td>@payment.付款金额</td>
+                                <td>@payment.付款类型</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div><!-- /.box-body -->
+        </div><!-- /.box -->
+
+        <form method="post" asp-page="Delete" id="toDeleteForm">
+            <input type="hidden" id="toDeleteRcid" name="rcId" />
+        </form>
+    </section>
+</div>
+
+@section Scripts{
+    <script>
+        function toDelete(rcid) {
+            if (confirm('确定删除这条记录吗？')) {
+                $('#toDeleteRcid').val(rcid);
+                $('#toDeleteForm').submit();
+            }
+        }
+    </script>
+}

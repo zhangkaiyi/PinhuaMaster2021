@@ -1,0 +1,19 @@
+﻿@page
+@using PinhuaMaster.Pages.BasicInformation.ModelNumber.ViewModel
+@using PinhuaMaster.Pages.BasicInformation.ModelNumber
+@using Microsoft.EntityFrameworkCore
+@model CreateModel
+@{
+    ViewData["Title"] = "录入";
+    ViewBag.NoContentHeader = true;
+}
+
+@Html.Partial("_ModelNumberPartial", Model.ModelNumberInfo)
+
+
+@section Scripts{
+    @Html.RenderScripts()
+}
+@section Styles{
+    @Html.RenderStyles()
+}

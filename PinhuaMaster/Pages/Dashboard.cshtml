@@ -1,0 +1,72 @@
+﻿@page
+@model DashboardModel
+@using Microsoft.EntityFrameworkCore
+
+@inject PinhuaMaster.Services.ITimelineService timelineService
+
+@{
+    ViewData["Title"] = "HomePage";
+    var sales1 = from m in pinhuaContext.发货.AsNoTracking()
+                 join d in pinhuaContext.发货Detail.AsNoTracking() on m.ExcelServerRcid equals d.ExcelServerRcid
+                 join b in pinhuaContext.业务类型.AsNoTracking() on m.业务类型 equals b.业务类型1
+                 join i in pinhuaContext.物料登记.AsNoTracking() on d.编号 equals i.编号
+                 select new
+                 {
+                     CustomerId = m.客户编号,
+                     CustomerName = m.客户,
+                     Date = m.送货日期,
+                     Amount = d.金额,
+                     Square = d.Pcs * i.Length * i.Width / 1000 / 1000,
+                     Type = b.性质
+                 };
+    var sales2 = from m in pinhuaContext.Gi2Main.AsNoTracking()
+                 join d in pinhuaContext.Gi2Details.AsNoTracking() on m.ExcelServerRcid equals d.ExcelServerRcid
+                 join b in pinhuaContext.业务类型.AsNoTracking() on m.DeliveryType equals b.业务类型1
+                 select new
+                 {
+                     CustomerId = m.CustomerId,
+                     CustomerName = m.CustomerName,
+                     Date = m.DeliveryDate,
+                     Amount = d.Amount,
+                     Square = d.Qty * d.Length * d.Width / 1000 / 1000,
+                     Type = b.性质
+                 };
+    var sales = from p in sales1.Union(sales2).ToList()
+                group p by new { p.Date.Value.Year, p.Date.Value.Month } into g
+                select new
+                {
+                    g.Key.Year,
+                    g.Key.Month,
+                    Data = g.Select(p => p)
+                };
+}
+
+<div class="row">
+    <div class="col-lg-8">
+        <div class="box box-solid">
+            <div class="box-body">
+                <table class="table table-striped table-bordered table-hover">
+                    <thead>
+                        <tr>
+                            <th>年</th>
+                            <th>月</th>
+                            <th class="text-right">销售金额</th>
+                            <th class="text-right">销售面积</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in sales.OrderByDescending(p => p.Year).ThenByDescending(p => p.Month))
+                        {
+                            <tr>
+                                <td>@item.Year</td>
+                                <td>@item.Month</td>
+                                <td class="text-right">@item.Data.Where(p => p.Type == "销售").Sum(p => p.Amount)?.ToString("0.00")</td>
+                                <td class="text-right">@item.Data.Where(p => p.Type == "销售").Sum(p => p.Square)?.ToString("0.00")</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,80 @@
+﻿@page "{Id?}"
+@model PinhuaMaster.Pages.OrderManagement.EasyDelivery.Print2Model
+@{
+    ViewData["Title"] = "打印";
+}
+
+<!-- Main content -->
+<div class="box box-solid"><div class="box-body"><iframe id="iframe1" src="@Url.Page("PrintDetail", new {Id=Model.Id })" style="width:100%;height:500px;border:1px solid"></iframe></div></div>
+<!-- /.content -->
+<button class="btn btn-default" onclick="previewiframe('iframe1')"><i class="fa fa-search"></i> 预览模板1</button>
+<button class="btn btn-default" onclick="printiframe('iframe1')"><i class="fa fa-search"></i> 打印模板1</button>
+<button class="btn btn-default" onclick="printiframepaginate('iframe1')"><i class="fa fa-search"></i> 分页打印模板1</button>
+
+<div style="margin-bottom:20px;"></div>
+
+<!-- Main content -->
+<div class="box box-solid"><div class="box-body"><iframe id="iframe2" src="@Url.Page("PrintDetail2", new {Id=Model.Id })" style="width:100%;height:500px;border:1px solid"></iframe></div></div>
+<!-- /.content -->
+<button class="btn btn-default" onclick="previewiframe('iframe2')"><i class="fa fa-search"></i> 预览模板2</button>
+<button class="btn btn-default" onclick="printiframe('iframe2')"><i class="fa fa-search"></i> 打印模板2</button>
+
+@section Scripts{
+    <!-- CLodop -->
+    <script src='http://qy.pinhuadashi.com:6800/CLodopfuncs.js'></script>
+    <script language="javascript" type="text/javascript">
+        function previewiframe(tagId) {
+            LODOP.PRINT_INIT("预览 @(Model.Id)");
+            strHtml = document.getElementById(tagId).contentWindow.document.documentElement.innerHTML;
+            LODOP.ADD_PRINT_HTM(0, 0, "100%", "100%", strHtml);
+            //console.log(strHtml)
+            var printerName = 'EPSON LQ-635K ESC/P2'
+            LODOP.SET_PRINTER_INDEX(printerName)
+            LODOP.SET_PRINTER_INDEXA(printerName)
+            LODOP.PREVIEW();
+        }
+        function printiframe(tagId) {
+            LODOP.PRINT_INIT("打印 @(Model.Id)");
+            strHtml = document.getElementById(tagId).contentWindow.document.documentElement.innerHTML;
+            LODOP.ADD_PRINT_HTM(0, 0, "100%", "100%", strHtml);
+            //console.log(strHtml)
+            var printerName = 'EPSON LQ-635K ESC/P2'
+            LODOP.SET_PRINTER_INDEX(printerName)
+            LODOP.SET_PRINTER_INDEXA(printerName)
+            if (confirm("确认通过 " + printerName + " 打印吗?")) {
+                LODOP.PRINT();
+            }
+        }
+        function printiframepaginate(tagId) {
+
+            LODOP.PRINT_INIT("分页打印 @(Model.Id)");
+            LODOP.SET_PRINT_PAGESIZE(1, '241mm', '150mm');
+            var pageSize = 8;
+            //strHtml = document.getElementById(tagId).contentWindow.document.documentElement.innerHTML;
+            var $dom = $(document.getElementById(tagId).contentWindow.document.documentElement);
+            var count = Math.ceil($dom.find('tbody>tr').length / pageSize);
+            for (var i = 0; i != count; i++) {
+                if (i != 0) {
+                    LODOP.NewPageA();
+                }
+                var $x = $dom.clone();
+                // method 1
+                //$x.find('tbody>tr:gt(' + ((i + 1) * pageSize - 1).toString() + ')').hide();
+                //$x.find('tbody>tr:lt(' + (i * pageSize).toString() + ')').hide();;
+                // method 2
+                //$x.find('tbody>tr').not($x.find('tbody>tr').slice(i * pageSize, (i + 1) * pageSize)).hide();
+                // method 3
+                $x.find('tbody>tr').hide();
+                $x.find('tbody>tr').slice(i * pageSize, (i + 1) * pageSize).show();
+                LODOP.ADD_PRINT_HTM(0, 0, "100%", "100%", $x.html());
+            }
+
+            var printerName = 'EPSON LQ-635K ESC/P2'
+            LODOP.SET_PRINTER_INDEX(printerName)
+            LODOP.SET_PRINTER_INDEXA(printerName)
+            if (confirm("确认通过 " + printerName + " 打印吗?")) {
+                LODOP.PREVIEWA();
+            }
+        }
+    </script>
+}

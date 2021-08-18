@@ -1,0 +1,76 @@
+﻿@using PinhuaMaster.Pages.StockManagement.Warehouse.ViewModel
+@using PinhuaMaster.Pages.StockManagement.Warehouse
+@using Microsoft.EntityFrameworkCore
+@model WarehouseViewModel
+
+@if (!ViewContext.ModelState.IsValid)
+{
+    <div class="alert alert-danger">
+        <h4><i class="icon fa fa-warning"></i> 提示</h4>
+        <div asp-validation-summary="All"></div>
+    </div>
+}
+<div class="row">
+    <div class="col-sm-6">
+        <form method="post" class="form-horizontal">
+            <div class="box box-solid" id="formBox">
+                <div class="box-body">
+                    <div class="form-group">
+                        <label class="control-label col-xs-3 col-md-2" asp-for="Main.Id"></label>
+                        <div class="col-xs-9 col-md-10">
+                            <input asp-for="Main.Id" class="form-control" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-xs-3 col-md-2" asp-for="Main.Name"></label>
+                        <div class="col-xs-9 col-md-10">
+                            <input asp-for="Main.Name" class="form-control" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-xs-3 col-md-2" asp-for="Main.Address"></label>
+                        <div class="col-xs-9 col-md-10">
+                            <input asp-for="Main.Address" class="form-control" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-xs-3 col-md-2" asp-for="Main.Contact"></label>
+                        <div class="col-xs-9 col-md-10">
+                            <input asp-for="Main.Contact" class="form-control" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-xs-3 col-md-2" asp-for="Main.Phone"></label>
+                        <div class="col-xs-9 col-md-10">
+                            <input asp-for="Main.Phone" class="form-control" />
+                        </div>
+                    </div>
+                </div>
+                <div class="box-footer">
+                    <div class="row no-print">
+                        <div class="col-xs-12">
+                            <button type="submit" class="btn btn-primary pull-right">
+                                <i class="fa fa-check"></i> 确认提交
+                            </button>
+                            <a asp-page="Index" class="btn btn-default pull-right" style="margin-right: 5px;">
+                                <i class="fa fa-reply"></i> 取消
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+
+</div>
+
+
+<!-- Modal -->
+@Html.Script(@<text>
+
+</text>)
+
+
+@Html.Style(@<text>
+
+</text>)

@@ -1,0 +1,49 @@
+﻿@page
+@model PinhuaMaster.Pages.Attendance.OvertimeForm.IndexModel
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<p>
+    <a asp-page="Create" class="btn btn-default"><i class="fa fa-plus"></i> 新建</a>
+</p>
+<div class="box box-solid">
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    日期
+                </th>
+                <th>
+                    制单日期
+                </th>
+                <th>
+                    制单人
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.OvertimeFormMain)
+            {
+                <tr>
+                    <td>
+                        @(new DateTime(item.Y, item.M, item.D).ToString("yyyy-MM-dd"))
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.CreatedDate)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.CreatedBy)
+                    </td>
+                    <td>
+                        <a asp-page="Edit" asp-route-Y="@item.Y" asp-route-M="@item.M" asp-route-D="@item.D">Edit</a> |
+                        <a asp-page="Details" asp-route-Y="@item.Y" asp-route-M="@item.M" asp-route-D="@item.D">Details</a> |
+                        <a asp-page="Delete" asp-route-Y="@item.Y" asp-route-M="@item.M" asp-route-D="@item.D">Delete</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

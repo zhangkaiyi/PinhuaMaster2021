@@ -1,0 +1,11 @@
+﻿@page
+@model PinhuaMaster.Pages.Retail.IndexModel
+@{
+    if (User.IsInRole("业务员"))
+    {
+        Layout = "_Layout_Retail";
+    }
+}
+
+<h2>Index</h2>
+

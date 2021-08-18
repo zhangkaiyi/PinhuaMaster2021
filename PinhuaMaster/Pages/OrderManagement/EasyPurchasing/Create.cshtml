@@ -1,0 +1,14 @@
+﻿@page
+@using PinhuaMaster.Data.Entities.Pinhua
+@using PinhuaMaster.Pages.OrderManagement.EasyPurchasing.ViewModel
+@model PinhuaMaster.Pages.OrderManagement.EasyPurchasing.CreateModel
+@{
+    ViewData["Title"] = "Create";
+    ViewBag.NoContentHeader = true;
+}
+
+@Html.Partial("_PurchasingTable", Model.Purchasing)
+
+@section Scripts{
+    @Html.RenderScripts()
+}

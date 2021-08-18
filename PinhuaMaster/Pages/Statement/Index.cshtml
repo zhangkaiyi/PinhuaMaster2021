@@ -1,0 +1,52 @@
+﻿@page
+@model PinhuaMaster.Pages.Statement.IndexModel
+@{
+    ViewData["Title"] = "Index";
+}
+
+<div class="box box-solid">
+    <div class="box-header">
+        <div class="box-title">
+            对帐企业
+        </div>
+        <div class="box-tools pull-right">
+            <!-- Buttons, labels, and many other things can be placed here! -->
+
+            <div class="has-feedback" id="buttons-toolbar">
+                <input type="text" class="form-control input-sm" placeholder="筛选...">
+                <span class="glyphicon glyphicon-search form-control-feedback"></span>
+            </div>
+
+        </div>
+    </div>
+    <div class="box-body">
+        <table data-toggle="table"
+               data-classes="table table-striped table-hover"
+               data-search="true"
+               data-show-columns="true"
+               data-buttons-toolbar="#buttons-toolbar"
+               style="white-space:nowrap">
+            <thead>
+                <tr>
+                    <th>Rank</th>
+                    <th class="hidden-xs">编号</th>
+                    <th>单位名称</th>
+                    <th class="hidden-xs">单位地址</th>
+                    <th data-width="20"></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var cus in Model.Customers)
+                {
+                <tr>
+                    <td>@cus.Rank</td>
+                    <td>@cus.单位编号</td>
+                    <td><a asp-page="Details" asp-route-id="@cus.单位编号">@cus.单位名称</a></td>
+                    <td>@cus.单位地址</td>
+                    <td><a asp-page="Details" asp-route-id="@cus.单位编号">查看</a></td>
+                </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

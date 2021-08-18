@@ -1,0 +1,19 @@
+﻿@page
+@using PinhuaMaster.Pages.StockManagement.StockTransfer.ViewModel
+@using PinhuaMaster.Pages.StockManagement.StockTransfer
+@using Microsoft.EntityFrameworkCore
+@model CreateModel
+@{
+    ViewData["Title"] = "录入";
+    ViewBag.NoContentHeader = true;
+}
+
+@Html.Partial("_StockTransferPartial", Model.Order)
+
+
+@section Scripts{
+    @Html.RenderScripts()
+}
+@section Styles{
+    @Html.RenderStyles()
+}

@@ -1,0 +1,42 @@
+﻿@page
+@model PinhuaMaster.Pages.Permission.CreateModel
+@using PinhuaMaster.Services
+@inject IActionPermissionService permissionService
+@inject UserManager<ApplicationUser> _userManager
+@inject RoleManager<IdentityRole> _roleManager
+@inject ApplicationDbContext identityContext
+@{
+    ViewBag.Title = "Create";
+    var permissions = permissionService.GetAllPermissions().Select(p => p.Page).Distinct();
+    var exsitedPermission = identityContext.RolePages.Where(p => p.RoleId == Model.RoleId).Select(p => p.Page);
+    var except = permissions.Except(exsitedPermission);
+}
+
+<div class="row">
+    <div class="col-md-8">
+        <form method="post">
+            <div class="box box-solid">
+                <div class="box-header">
+                    <div class="box-title">添加权限</div>
+                </div>
+                <input type="hidden" name="roleId" value="@Model.RoleId" />
+                <table class="table table-striped table-bordered no-margin">
+                    <tr>
+                        <th>页面</th>
+                        <th>是否添加</th>
+                    </tr>
+                    @foreach (var permission in except)
+                    {
+                        <tr>
+                            <td>@permission</td>
+                            <td><input type="checkbox" name="pagesAddToRole" value="@permission"></td>
+                        </tr>
+                    }
+                </table>
+                <div class="box-footer">
+                    <button type="submit" class="btn btn-primary btn-flat">保存</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

@@ -1,0 +1,20 @@
+﻿@page
+@using PinhuaMaster.Pages.StockManagement.ProductionStockIn.ViewModel
+@using PinhuaMaster.Pages.StockManagement.ProductionStockIn
+@using Microsoft.EntityFrameworkCore
+@model CreateModel
+
+@{ 
+    ViewData["Title"] = "录入";
+    ViewBag.NoContentHeader = true;
+}
+
+@Html.Partial("_ProductionStockInPartial", Model.Order)
+
+@section Scripts{
+    @Html.RenderScripts()
+}
+
+@section Styles{
+    @Html.RenderStyles()
+}

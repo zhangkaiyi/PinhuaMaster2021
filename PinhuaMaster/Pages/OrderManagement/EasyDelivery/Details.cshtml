@@ -1,0 +1,223 @@
+﻿@page "{id?}"
+@model PinhuaMaster.Pages.OrderManagement.EasyDelivery.DetailsModel
+@{
+    ViewData["Title"] = "查看";
+    Layout = "~/Pages/_Layout.cshtml";
+}
+
+<div id="vueScope" v-cloak>
+    <form method="post" id="myForm">
+        <section class="box box-solid" id="invoice" style="margin:0px;margin-bottom:20px;">
+            <div class="box-header" style="font-size:22px;">
+                <i class="fa fa-globe"></i> 胜美木业, Inc.
+                <div class="btn-group btn-group-sm pull-right">
+                    <a class="btn btn-default" asp-page="Edit" asp-route-id="@Model.Order.Main.DeliveryId"><i class="fa fa-edit"></i> 修改</a>
+                    <a class="btn btn-default" asp-page="Print" asp-route-id="@Model.Order.Main.DeliveryId"><i class="fa fa-print"></i> 打印</a>
+                </div>
+                <!-- /.col -->
+            </div>
+            <!-- info row -->
+            <div class="box-body form-horizontal">
+                <div class="row">
+                    <div class="col-sm-4">
+                        <div class="form-group">
+                            <label class="control-label col-xs-3" asp-for="Order.Main.DeliveryType">类型</label>
+                            <div class="col-xs-9">
+                                <div class="input-group">
+                                    <input class="form-control" asp-for="Order.Main.DeliveryTypeDescription" readonly />
+                                    <span class="input-group-addon no-padding">
+                                        <i class="fa fa-bars" style="width:38px;"></i>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-xs-3" asp-for="Order.Main.CustomerName">客户</label>
+                            <div class="col-xs-9">
+                                <div class="input-group">
+                                    <input class="form-control" name="Order.Main.CustomerId" asp-for="Order.Main.CustomerName" readonly />
+                                    <span class="input-group-addon no-padding">
+                                        <i class="fa fa-address-card-o" style="width:38px;"></i>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-xs-3" asp-for="Order.Main.DeliveryDate">日期</label>
+                            <div class="col-xs-9">
+                                <div class="input-group">
+                                    <input type="text" asp-for="Order.Main.DeliveryDate" class="form-control pull-right" value="@Model.Order.Main.DeliveryDate.Value.ToString("yyyy-MM-dd")" readonly />
+                                    <span class="input-group-addon no-padding">
+                                        <i class="fa fa-calendar-o" style="width:38px;"></i>
+                                    </span>
+                                </div>
+                            </div>
+                            <span class="help-block" asp-validation-for="Order.Main.DeliveryDate"></span>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-xs-3" asp-for="Order.Main.DeliveryAddress">地址</label>
+                            <div class="col-xs-9">
+                                <div class="input-group">
+                                    <input asp-for="Order.Main.DeliveryAddress" class="form-control" readonly />
+                                    <span class="input-group-addon no-padding">
+                                        <i class="fa fa-truck" style="width:38px;"></i>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- /.col -->
+                    <div class="col-sm-4">
+                        <div class="form-group">
+                            <label class="control-label col-xs-3" asp-for="Order.Main.Contact"></label>
+                            <div class="col-xs-9">
+                                <div class="input-group">
+                                    <input type="text" asp-for="Order.Main.Contact" class="form-control" readonly />
+                                    <span class="input-group-addon no-padding">
+                                        <i class="fa fa-user" style="width:38px;"></i>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-xs-3" asp-for="Order.Main.ContactNumber"></label>
+                            <div class="col-xs-9">
+                                <div class="input-group">
+                                    <input type="text" asp-for="Order.Main.ContactNumber" class="form-control" readonly />
+                                    <span class="input-group-addon no-padding">
+                                        <i class="fa fa-phone" style="width:38px;"></i>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-xs-3" asp-for="Order.Main.Remarks"></label>
+                            <div class="col-xs-9">
+                                <div class="input-group">
+                                    <textarea asp-for="Order.Main.Remarks" class="form-control" rows="3" readonly></textarea>
+                                    <span class="input-group-addon no-padding">
+                                        <i class="fa fa-ellipsis-h" style="width:38px;"></i>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- /.col -->
+                    <div class="col-sm-4">
+                        <div class="form-group">
+                            <label class="control-label col-xs-3" asp-for="Order.Main.DeliveryId">送货单号</label>
+                            <div class="col-xs-9">
+                                <div class="input-group">
+                                    <input type="text" asp-for="Order.Main.DeliveryId" class="form-control" readonly />
+                                    <span class="input-group-addon no-padding">
+                                        <i class="fa fa-sticky-note-o" style="width:38px;"></i>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-xs-3" asp-for="Order.Main.CreatedBy"></label>
+                            <div class="col-xs-9">
+                                <div class="input-group">
+                                    <input type="text" asp-for="Order.Main.CreatedBy" class="form-control" readonly />
+                                    <span class="input-group-addon no-padding">
+                                        <i class="fa fa-user-o" style="width:38px;"></i>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-xs-3" asp-for="Order.Main.CreatedDate"></label>
+                            <div class="col-xs-9">
+                                <div class="input-group">
+                                    <input type="text" asp-for="Order.Main.CreatedDate" class="form-control" value="@Model.Order.Main.CreatedDate.Value.ToString("yyyy-MM-dd HH:mm:ss")" readonly />
+                                    <span class="input-group-addon no-padding">
+                                        <i class="fa fa-calendar-o" style="width:38px;"></i>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>                <!-- /.col -->
+            </div>
+            <div class="box-footer">
+                <table data-toggle="table" class="text-nowrap">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>描述</th>
+                            <th>规格</th>
+                            <th data-visible="false">长</th>
+                            <th data-visible="false">宽</th>
+                            <th data-visible="false">高</th>
+                            <th class="text-right">片数</th>
+                            <th class="text-right">单位数量</th>
+                            <th>计价单位</th>
+                            <th class="text-right">单价</th>
+                            <th class="text-right">金额</th>
+                            <th class="hidden-xs">备注</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model.Order.Details.Count == 0)
+                        {
+                            <tr><td colspan="20" class="text-center">出库清单空</td></tr>
+
+                        }
+                        @foreach (var item in Model.Order.Details)
+                        {
+                            <tr>
+                                <td>@item.Id</td>
+                                <td>@item.Description</td>
+                                <td>@item.Specification</td>
+                                <td>@item.Length</td>
+                                <td>@item.Width</td>
+                                <td>@item.Height</td>
+                                <td>@item.Qty?.ToString("0.#")</td>
+                                <td>@item.UnitQty?.ToString("0.0000")</td>
+                                <td>@item.Unit</td>
+                                <td>@item.Price?.ToString("0.#")</td>
+                                <td>@item.Amount?.ToString("0.00")</td>
+                                <td>@item.Remarks</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+
+            </div>
+            <!-- /.row -->
+            <!-- /.row -->
+        </section>
+    </form>
+</div>
+@section Scripts{
+    <script>
+        $(function () {
+            $('#vueScope').show()
+        })
+    </script>
+}
+@section Styles{
+    <style>
+        [v-cloak] {
+            display: none;
+        }
+
+        .form-horizontal .control-label {
+            text-align: right;
+            margin-bottom: 0;
+            padding-top: 7px;
+        }
+
+        body.modal-open {
+            position: fixed;
+            overflow: hidden;
+            left: 0;
+            right: 0;
+        }
+
+        .modal {
+            -webkit-overflow-scrolling: auto;
+        }
+    </style>
+}

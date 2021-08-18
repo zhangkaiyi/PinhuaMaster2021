@@ -1,0 +1,30 @@
+﻿@page "{Id?}"
+@model PinhuaMaster.Pages.OrderManagement.EasyDelivery.DeleteModel
+@{
+    ViewData["Title"] = "删除";
+}
+
+<form method="post" id="deleteForm">
+    <div class="alert alert-danger">
+        <h4><i class="icon fa fa-warning"></i> 警告！</h4>
+        <p>您确定要删除单号为 @Model.Id 的出库单吗？删除后无法恢复，慎重操作！</p>
+        <br />
+        <p>
+            <button type="button" class="btn btn-warning btn-flat" id="ok"><i class="fa fa-check"></i>&nbsp;确认删除</button>
+            <button type="button" class="btn btn-default btn-flat" id="cancel"><i class="fa fa-close"></i>&nbsp;放弃</button>
+        </p>
+    </div>
+    <input asp-for="Id" type="hidden" />
+</form>
+
+@section Scripts{
+    <script>
+        $('#ok').on('click', function () {
+            $('#deleteForm').submit()
+        })
+
+        $('#cancel').on('click', function () {
+            location.href = '@Url.Page("Index")';
+        })
+    </script>
+}

@@ -1,0 +1,163 @@
+﻿@page
+@model PinhuaMaster.Pages.BasicInformation.ModelNumber.IndexModel
+@{
+    ViewData["Title"] = "型号列表";
+}
+
+<div class="row">
+    <div class="col-md-9">
+        <div class="box box-solid">
+            <div class="box-body">
+                <div id="tableContainer">
+                    <div id="toolbar">
+                        <div class="btn-group" role="group" aria-label="...">
+                            <a asp-page="Create" class="btn btn-default btn-flat"><i class="fa fa-plus"></i> 填报</a>
+                        </div>
+                    </div>
+                    <table data-classes="table table-hover text-nowrap"
+                           data-toggle="table"
+                           data-toolbar="#toolbar"
+                           data-show-columns="false"
+                           data-search="true"
+                           data-striped="true"
+                           data-pagination="true"
+                           data-page-size="15"
+                           data-page-list="[15, 20, 50, 100, 200]"
+                           data-url="@Url.Page("Index", "AjaxModelNumberList")"
+                           id="mainTable">
+                        <thead>
+                            <tr>
+                                <th data-width="20" data-formatter="browseRecord"></th>
+                                <th data-field="@(nameof(ViewModel.ModelNumberDTO.ModelName))">型号</th>
+                                <th data-field="@(nameof(ViewModel.ModelNumberDTO.Rank))">排序</th>
+                            </tr>
+                        </thead>
+
+                    </table>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+@section LayerContent{
+
+}
+
+@section Scripts{
+    <script>
+        function browseRecord (value, row) {
+            return '<a href="@(Url.Page("Delete"))/' + row.ModelNumber + '">删除</a> <a href="@(Url.Page("Edit"))/' + row.ModelNumber + '">修改</a>'
+            //return '<a href="@(Url.Page("Details"))/' + row.DeliveryId + '"><i class="fa fa-search"></i> </a>'
+        }
+        function deleteRecord (value, row) {
+            return '<a href="@(Url.Page("Delete"))/' + row.ModelNumber + '"><i class="fa fa-minus"></i></a>'
+        }
+        function formatterDeliveryId(value, row) {
+            return '<a href="@(Url.Page("Details"))/' + row.ModelNumber + '">' + value + '</a>'
+        }
+
+        var mainTable = $('#mainTable')
+        var detailsTable = $('#detailsTable')
+        var detailsTitle = $('#detailsTitle')
+        mainTable.on('click-cell.bs.table', function (event, field, value, row, $element) {
+            var url = '@Url.Page("Index", "AjaxModelNumberDetails")&id=' + row.OrderId
+            detailsTable.bootstrapTable('refresh', { url: url });
+            detailsTitle.html(row.CustomerName + ' <small>类型：' + row.MovementTypeDescription + '</small> <small>单号：' + row.OrderId +'</small>')
+            console.log(field)
+            if (field != 0 && field != 14) {
+                $('#detailsModal').modal()
+            }
+        })
+
+        footerFormatter = function (value) { //底部合计
+            var total = 0;
+            for (var i in value) {
+                total += isNaN(parseFloat(value[i].Amount)) ? 0 : parseFloat(value[i].Amount)
+            }
+                return total.toFixed(2);
+        }
+    </script>
+
+    <script>
+        function layerAdvanceSearch() {
+            layer.open({
+                type: 1,
+                area: $(window).width() < 992 ? ['98%', '90%'] : ['800px', 'auto'],
+                content: $('#advanceSearch'),
+                shadeClose: true,
+                isOutAnim: false,
+                fixed: false,
+                skin: 'demo-class',
+                btn: ['查找', '清空'],
+                yes: function () {
+                    vm.toSearch()
+                },
+                btn2: function () {
+                    vm.toSearchAfterClean()
+                }
+                //closeBtn: false,
+                //scrollbar: false,
+                //title: false,
+            });
+        }
+
+        var vm = new Vue({
+            el: '#advanceSearch',
+            data: {
+                searchModel: JSON.parse($('#searchModel').val()),
+            },
+            methods: {
+                toSearch: function () {
+                    //console.log(JSON.stringify(this.searchModel))
+                    this.searchModel.DeliveryDate = $("#DeliveryDate").val()
+                    this.searchModel.CreatedDate = $("#CreatedDate").val()
+                    var opt = {
+                        url: $('#searchUrl').val(),
+                        silent: true,
+                        query: {
+                            json: JSON.stringify(this.searchModel)
+                        },
+                    }
+                    mainTable.bootstrapTable('refresh', opt);
+                    layer.closeAll('page')
+                },
+                toSearchAfterClean: function () {
+                    this.searchModel = JSON.parse(JSON.stringify(this.defaultSearchModel))
+                    $("#DeliveryDate").val('')
+                    $("#CreatedDate").val('')
+                    var opt = {
+                        url: $('#searchUrl').val(),
+                        silent: true,
+                        query: {
+                            json: JSON.stringify(this.searchModel)
+                        },
+                    }
+                    mainTable.bootstrapTable('refresh', opt);
+                    layer.closeAll('page')
+                }
+            },
+            mounted: function () {
+                this.defaultSearchModel = JSON.parse(JSON.stringify(this.searchModel))
+            },
+        })
+    </script>
+}
+
+@section Styles{
+    <style>
+        .fixed-table-toolbar .bs-bars,
+        .fixed-table-toolbar .search,
+        .fixed-table-toolbar .columns {
+            position: relative;
+            margin-top: 10px;
+            margin-bottom: 10px;
+            line-height: 30px;
+        }
+
+        body .demo-class .layui-layer-btn {
+            border-top: 1px solid #E9E7E7;
+        }
+    </style>
+}

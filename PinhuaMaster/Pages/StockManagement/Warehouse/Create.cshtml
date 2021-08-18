@@ -1,0 +1,19 @@
+﻿@page
+@using PinhuaMaster.Pages.StockManagement.Warehouse.ViewModel
+@using PinhuaMaster.Pages.StockManagement.Warehouse
+@using Microsoft.EntityFrameworkCore
+@model CreateModel
+@{
+    ViewData["Title"] = "录入";
+    ViewBag.NoContentHeader = true;
+}
+
+@Html.Partial("_WarehousePartial", Model.WarehouseInfo)
+
+
+@section Scripts{
+    @Html.RenderScripts()
+}
+@section Styles{
+    @Html.RenderStyles()
+}

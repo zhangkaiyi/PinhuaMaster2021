@@ -1,0 +1,14 @@
+@using Microsoft.EntityFrameworkCore
+@using Microsoft.AspNetCore.Identity
+@using PinhuaMaster
+@using PinhuaMaster.Data
+@using PinhuaMaster.Extensions
+@namespace PinhuaMaster.Pages
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@addTagHelper *, PinhuaMaster
+
+@inject PinhuaMaster.Data.Entities.Pinhua.PinhuaContext pinhuaContext
+@inject PinhuaMaster.Data.Entities.EastRiver.EastRiverContext eastRiverContext
+@inject PinhuaMaster.Data.ApplicationDbContext identityContext
+@inject PinhuaMaster.Services.INavMenuService navMenuService
+@inject Microsoft.AspNetCore.Http.IHttpContextAccessor httpContextAccessor

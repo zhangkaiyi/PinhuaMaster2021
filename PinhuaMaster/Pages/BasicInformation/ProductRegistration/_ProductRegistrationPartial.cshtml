@@ -1,0 +1,204 @@
+﻿@using PinhuaMaster.Pages.BasicInformation.ProductRegistration.ViewModel
+@using PinhuaMaster.Pages.BasicInformation.ProductRegistration
+@using Microsoft.EntityFrameworkCore
+@model ProductRegistrationDTO
+
+@{
+    var productRecord = Newtonsoft.Json.JsonConvert.SerializeObject(Model);
+}
+
+@if (!ViewContext.ModelState.IsValid)
+{
+    <div class="alert alert-danger">
+        <h4><i class="icon fa fa-warning"></i> 提示</h4>
+        <div asp-validation-summary="All"></div>
+    </div>
+}
+<div class="row" id="vueScope">
+    <div class="col-lg-6 col-md-10">
+        <form method="post" class="form-horizontal">
+            <div class="box box-solid" id="formBox">
+                <div class="box-body">
+                    <div class="form-group">
+                        <label class="control-label col-xs-3 col-md-2" asp-for="ModelNumber"></label>
+                        <div class="col-xs-9 col-md-10">
+                            <div class="input-group">
+                                <input asp-for="ModelNumber" v-model="product.ModelNumber" class="form-control" type="hidden" readonly />
+                                <input asp-for="ModelName" v-bind:value="product.ModelName" class="form-control" readonly />
+                                <div class="input-group-btn">
+                                    <button type="button" class="btn btn-primary" onclick="$('#modelNumberModal').modal()" style="width: 40px;"><span class="caret"></span></button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-xs-3 col-md-2" asp-for="SubModelNumber"></label>
+                        <div class="col-xs-9 col-md-10">
+                            <input asp-for="SubModelNumber" v-model="product.SubModelNumber" class="form-control" readonly />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-xs-3 col-md-2" asp-for="Specification"></label>
+                        <div class="col-xs-9 col-md-10">
+                            <input asp-for="Specification" v-bind:value="computeSpecification" class="form-control" readonly />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-xs-3 col-md-2" asp-for="Description"></label>
+                        <div class="col-xs-9 col-md-10">
+                            <input asp-for="Description" v-model="product.Description" class="form-control" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-xs-3 col-md-2" asp-for="Length"></label>
+                        <div class="col-xs-9 col-md-10">
+                            <input asp-for="Length" v-model="product.Length" class="form-control" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-xs-3 col-md-2" asp-for="Width"></label>
+                        <div class="col-xs-9 col-md-10">
+                            <input asp-for="Width" v-model="product.Width" class="form-control" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-xs-3 col-md-2" asp-for="Height"></label>
+                        <div class="col-xs-9 col-md-10">
+                            <input asp-for="Height" v-model="product.Height" class="form-control" />
+                        </div>
+                    </div>
+                </div>
+                <div class="box-footer">
+                    <div class="row no-print">
+                        <div class="col-xs-12">
+                            <button type="submit" class="btn btn-primary pull-right">
+                                <i class="fa fa-check"></i> 确认提交
+                            </button>
+                            <a asp-page="Index" class="btn btn-default pull-right" style="margin-right: 5px;">
+                                <i class="fa fa-reply"></i> 取消
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <div id="modelNumberSelector" style="display:none;">
+        <div class="modal-body">
+            <table data-classes="table table-hover text-nowrap"
+                   data-toggle="table"
+                   data-search="true"
+                   data-striped="true"
+                   data-pagination="true"
+                   data-page-size="10"
+                   data-url="@Url.Page("Create", "ModelNumbers")"
+                   id="modelNumbersTable">
+                <thead>
+                    <tr>
+                        <th data-field="ModelNumber" data-visible="false">编号</th>
+                        <th data-field="ModelName">型号</th>
+                        <th data-field="AvalibleSubModelNumber">可用子型号</th>
+                        <th data-events="modelNumberSelectEvent" data-formatter="modelNumberSelectorFormatter">操作</th>
+                    </tr>
+                </thead>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal" id="modelNumberModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-body">
+                <table data-classes="table table-hover text-nowrap"
+                       data-toggle="table"
+                       data-search="true"
+                       data-striped="true"
+                       data-pagination="true"
+                       data-page-size="10"
+                       data-url="@Url.Page("Create", "ModelNumbers")"
+                       id="modelNumbersTable">
+                    <thead>
+                        <tr>
+                            <th data-field="ModelNumber" data-visible="false">编号</th>
+                            <th data-field="ModelName">型号</th>
+                            <th data-field="AvalibleSubModelNumber">可用子型号</th>
+                            <th data-events="modelNumberSelectEvent" data-formatter="modelNumberSelectorFormatter">操作</th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<!-- Modal -->
+@Html.Script(@<text>
+    <script>
+        function layerModelNumberSelector() {
+            layer.open({
+                type: 1,
+                area: $(window).width() < 992 ? ['98%', 'auto'] : ['800px', 'auto'],
+                content: $('#modelNumberSelector'),
+                shadeClose: true,
+                isOutAnim: false,
+                anim: -1,
+                fixed: false,
+                //closeBtn: false,
+                //scrollbar: false,
+                //title: false,
+            });
+        }
+
+        function modelNumberSelectorFormatter(value, row, index) {
+            return ['<a href="javascript:;" id="selectorButton" data-dismiss="modal">选择</a>',
+            ].join('')
+        }
+
+        window.modelNumberSelectEvent = {
+            'click #selectorButton': function (e, value, row, index) {
+                layer.closeAll('page')
+                vm.$data.product.ModelNumber = row.ModelNumber
+                vm.$data.product.SubModelNumber = row.AvalibleSubModelNumber
+                vm.$data.product.ModelName = row.ModelName
+                //vm.$data.product.Description = row.Description
+                //vm.$data.product.Specification = row.Specification
+                //vm.$data.product.Length = row.Length
+                //vm.$data.product.Width = row.Width
+                //vm.$data.product.Height = row.Height
+            },
+        }
+    </script>
+    <script>
+    var vm = new Vue({
+        el: '#vueScope',
+        data: {
+            product: @(Html.Raw(productRecord)),
+            isNew: false,
+            trEdit: -1,
+        },
+        computed: {
+            computeSpecification: function () {
+                if (!this.product.Length || !this.product.Width || !this.product.Height)
+                    return ""
+                return [this.product.Length, this.product.Width, this.product.Height].join("*")
+            },
+        }
+    })
+    </script>
+</text>)
+
+
+@Html.Style(@<text>
+<style>
+    #modelNumberModal .pagination-detail {
+        display: none;
+    }
+</style>
+</text>)

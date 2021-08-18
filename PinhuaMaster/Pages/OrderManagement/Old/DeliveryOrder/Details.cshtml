@@ -1,0 +1,164 @@
+﻿@page
+@model PinhuaMaster.Pages.OrderManagement.Old.DeliveryOrder.DetailsModel
+@{
+    ViewData["Title"] = "Details";
+    Layout = null;
+    var delivery = pinhuaContext.发货.Where(d => d.送货单号 == Model.DeliveryId).SingleOrDefault();
+    var details = pinhuaContext.发货Detail.Where(d => d.ExcelServerRcid == delivery.ExcelServerRcid).ToList();
+}
+
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Print | PinhuaMaster</title>
+    <!-- Tell the browser to be responsive to screen width -->
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <!-- CLodop -->
+    <script src='http://192.168.1.20:8000/CLodopfuncs.js'></script>
+
+    <style>
+        body, button, input, select, textarea, h1, h2, h3, h4, h5, h6 {
+            font-family: "Microsoft YaHei", "微软雅黑", "黑体", SimSun, "宋体", sans-serif;
+            font-size: 12px;
+        }
+
+        .table > tbody > tr > td, .table > tfoot > tr > td, .table > tfoot > tr > th, .table > thead > tr > td, .table > thead > tr > th {
+            border-top: 1px dashed #000
+        }
+
+        .table > caption + thead > tr:first-child > td, .table > caption + thead > tr:first-child > th, .table > colgroup + thead > tr:first-child > td, .table > colgroup + thead > tr:first-child > th, .table > thead:first-child > tr:first-child > td, .table > thead:first-child > tr:first-child > th {
+            border-top: 1px solid #000 !important;
+            border-bottom: 1px solid #000 !important
+        }
+
+        .table > tbody > tr:last-child > td {
+            border-bottom: 1px solid #000 !important
+        }
+    </style>
+</head>
+<body>
+    <!-- Main content -->
+    <section class="container-fluid">
+        <div id="forPrint">
+            <!-- title row -->
+            <div class="row">
+                <div class="col-xs-12 text-center">
+                    <div style="font-size:26px;margin-top:5px;">
+                        嘉善县胜美木业厂
+                        <span style="font-size:20px;">（送货单）</span>
+                    </div>
+                </div>
+                <!-- /.col -->
+            </div>
+            <!-- info row -->
+            <div class="row">
+                <div class="col-xs-9" style="padding-left:23px;">
+                    <p>收货单位： @delivery.客户</p>
+                    <p>收货地址： @delivery.地址</p>
+                    <p>备　　注： @delivery.备注</p>
+                </div>　　
+                <!-- /.col -->
+                <div class="col-xs-3">
+                    <p>单　　号： @delivery.送货单号</p>
+                    <p>日　　期： @delivery.送货日期?.ToString("yyyy-MM-dd")</p>
+                    <p>类　　型： @delivery.业务描述</p>
+
+                </div>
+                <!-- /.col -->
+            </div>
+            <!-- /.row -->
+            <!-- Table row -->
+            <div class="row">
+                <div class="col-xs-12">
+                    <table class="table table-condensed">
+                        <thead>
+                            <tr>
+                                <th class="hidden">编号</th>
+                                <th>描述</th>
+                                <th>规格</th>
+                                <th class="text-right">片数</th>
+                                <th class="text-right">单位数量</th>
+                                <th class="text-right">单价</th>
+                                <th class="text-right">金额</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var detail in details)
+                            {
+                                <tr>
+                                    <td class="hidden">@detail.编号</td>
+                                    <td>@detail.描述</td>
+                                    <td>@detail.规格</td>
+                                    <td class="text-right">@detail.Pcs?.ToString("0")</td>
+                                    <td class="text-right">@detail.单位数量?.ToString("0.00") @detail.计价单位</td>
+                                    <td class="text-right">@detail.单价?.ToString("0")</td>
+                                    <td class="text-right">@detail.金额?.ToString("0.00")</td>
+                                </tr>
+                            }
+                            @for (var i = 0; i != (details.Count < 7 ? 7 - details.Count() : 0); i++)
+                            {
+                                <tr>
+                                    <td class="hidden"></td>
+                                    <td>　</td>
+                                    <td></td>
+                                    <td class="text-right"></td>
+                                    <td class="text-right"></td>
+                                    <td class="text-right"></td>
+                                    <td class="text-right"></td>
+                                </tr>
+
+                            }
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <td colspan="5" class="text-right">合计：</td>
+                                <td class="text-right">@details.Sum(a => a.金额)</td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+                <!-- /.col -->
+            </div>
+            <!-- /.row -->
+            <div class="row">
+                <div class="col-xs-4" style="padding-left:23px;"><p>承运人： <u>　　　　　　　　　　</u></p></div>
+                <div class="col-xs-4"><p>收货单位： <u>　　　　　　　　　　</u></p></div>
+                <div class="col-xs-4"><p>送货单位： <u>　　　　　　　　　　</u></p></div>
+            </div>
+        </div>
+        <div class="row" id="preview">
+            <div class="col-xs-12">
+                <button class="hidden-print btn btn-primary btn-flat" onclick="preview()">预览</button>
+                <button class="hidden-print btn btn-primary btn-flat" onclick="print()">打印</button>
+            </div>
+        </div>
+    </section>
+    <!-- /.content -->
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script language="javascript" type="text/javascript">
+        function preview() {
+            var head = $('head')[0].outerHTML
+            var body = '<body><div class="container-fluid">' + $('#forPrint').clone().html() + '</div></body>'
+            var html = head + body
+            //LODOP.PRINT_INITA(10, 20, 810, 610, "测试C-Lodop远程打印四步骤");
+            LODOP.PRINT_INIT("打印控件功能演示_Lodop功能_完整全页");
+            LODOP.ADD_PRINT_HTM(0, 10, "100%", "100%", "<!DOCTYPE html>" + html);
+            LODOP.PREVIEW();
+        };
+        function print() {
+            var head = $('head')[0].outerHTML
+            var body = '<body><div class="container-fluid">' + $('#forPrint').clone().html() + '</div></body>'
+            var html = head + body
+            //LODOP.PRINT_INITA(10, 20, 810, 610, "测试C-Lodop远程打印四步骤");
+            LODOP.SET_LICENSES("", "5A7B86A1115E612CDF0F9507DC18589D", "C94CEE276DB2187AE6B65D56B3FC2848", "");
+            LODOP.PRINT_INIT("打印控件功能演示_Lodop功能_完整全页");
+            LODOP.ADD_PRINT_HTM(0, 10, "100%", "100%", "<!DOCTYPE html>" + html);
+            LODOP.PRINTA();
+        };
+    </script>
+</body>
+</html>

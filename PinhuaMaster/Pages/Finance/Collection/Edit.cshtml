@@ -1,0 +1,74 @@
+﻿@page
+@model PinhuaMaster.Pages.Finance.Collection.EditModel
+@{
+    ViewData["Title"] = "收款修改";
+
+    var partners = from p in pinhuaContext.往来单位
+                   orderby p.Rank descending
+                   select p;
+
+    var selectGroups = from p in partners
+                       group p by p.Rank into g
+                       orderby g.Key descending
+                       select g.Key;
+}
+
+<div class="row">
+    <div class="col-sm-9">
+        <form method="post" id="EditForm">
+            <div class="box box-solid" id="formBox">
+                <div class="box-body form-horizontal">
+                    <div class="form-group">
+                        <label class="control-label col-xs-3 col-md-2" for="单位编号">收款单位</label>
+                        <div class="col-xs-9 col-md-10">
+                            <select class="form-control" asp-for="Collection.单位编号" asp-items="Model.CustomerSelectList"></select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-xs-3 col-md-2" for="收款类型">收款类型</label>
+                        <div class="col-xs-9 col-md-10">
+                            <select class="form-control" asp-for="Collection.收款类型" asp-items="Model.CollectionTypeSelectList"></select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-xs-3 col-md-2" for="收款日期">日期</label>
+                        <div class="col-xs-9 col-md-10">
+                            <input type="text" asp-for="Collection.收款日期" value="@Model?.Collection?.收款日期?.ToString("yyyy-MM-dd")"
+                                   class="form-control"
+                                   id="收款日期"
+                                   data-provide="datepicker"
+                                   data-date-format="yyyy-mm-dd" 
+                                   readonly />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-xs-3 col-md-2" for="收款金额">收款金额</label>
+                        <div class="col-xs-9 col-md-10">
+                            <input type="number" class="form-control" id="收款金额" asp-for="Collection.收款金额" placeholder="输入金额..." value="@Model.Collection.收款金额.Value.ToString("0.#")">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-xs-3 col-md-2" for="备注">备注</label>
+                        <div class="col-xs-9 col-md-10">
+                            <input type="text" class="form-control" id="备注" asp-for="Collection.备注" placeholder="输入备注..." value="@Model.Collection.备注">
+                        </div>
+                    </div>
+                    @Html.HiddenFor(x => x.Collection.ExcelServerRcid)
+                </div>
+                <div class="box-footer">
+                    <div class="row no-print">
+                        <div class="col-xs-12">
+                            <a href="invoice-print.html" target="_blank" class="btn btn-default"><i class="fa fa-print"></i> 打印</a>
+                            <button type="submit" class="btn btn-primary pull-right">
+                                <i class="fa fa-check"></i> 确认修改
+                            </button>
+                            <a asp-page="Index" class="btn btn-default pull-right" style="margin-right: 5px;">
+                                <i class="fa fa-reply"></i> 取消
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

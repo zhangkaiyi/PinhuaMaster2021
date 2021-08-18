@@ -1,0 +1,177 @@
+﻿@page
+@model IndexModel
+@using Microsoft.EntityFrameworkCore
+
+@{
+    ViewBag.Title = "导航页";
+}
+
+<div class="row">
+    <div class="col-lg-8">
+        <div class=" box-">
+            <div class="-body">
+                <p>
+                    <i class="fa fa-gears"></i> 基础设置
+                </p>
+                <div class="btn-group group-btn-app-margin">
+                    <a href="@Url.Page("/BasicInformation/ModelNumber/Index")" class="btn btn-app"><i class="fa fa-gear"></i> 型号登记</a>
+                    <a href="@Url.Page("/BasicInformation/ModelNumber/Create")" class="btn btn-default no-padding" style="height:60px;line-height:60px;">
+                        <span class="fa fa-plus margin"></span>
+                    </a>
+                </div>
+                <div class="btn-group group-btn-app-margin">
+                    <a href="@Url.Page("/BasicInformation/ProductRegistration/Index")" class="btn btn-app"><i class="fa fa-gear"></i> 产品登记</a>
+                    <a href="@Url.Page("/BasicInformation/ProductRegistration/Create")" class="btn btn-default no-padding" style="height:60px;line-height:60px;">
+                        <span class="fa fa-plus margin"></span>
+                    </a>
+                </div>
+                <div class="btn-group group-btn-app-margin">
+                    <a href="@Url.Page("/StockManagement/Warehouse/Index")" class="btn btn-app"><i class="fa fa-gear"></i> 仓库登记</a>
+                    <a href="@Url.Page("/StockManagement/Warehouse/Create")" class="btn btn-default no-padding" style="height:60px;line-height:60px;">
+                        <span class="fa fa-plus margin"></span>
+                    </a>
+                </div>
+                <div class="btn-group group-btn-app-margin">
+                    <a href="@Url.Page("/BasicInformation/Partner/Index")" class="btn btn-app"><i class="fa fa-gear"></i> 合作单位</a>
+                    <a href="@Url.Page("/BasicInformation/Partner/Create")" class="btn btn-default no-padding" style="height:60px;line-height:60px;">
+                        <span class="fa fa-plus margin"></span>
+                    </a>
+                </div>
+                <p>
+                    <i class="fa fa-arrow-circle-up"></i> 出库单
+                </p>
+                <div class="btn-group group-btn-app-margin">
+                    <a href="@Url.Page("/StockManagement/StockOut/Index")" class="btn btn-app"><i class="fa fa-sticky-note-o"></i> 销售出库单</a>
+                    <a href="@Url.Page("/StockManagement/StockOut/Create")" class="btn btn-default no-padding" style="height:60px;line-height:60px;">
+                        <span class="fa fa-plus margin"></span>
+                    </a>
+                </div>
+                <div class="btn-group group-btn-app-margin">
+                    <a href="@Url.Page("/StockManagement/StockSubconctracting/Index")" class="btn btn-app"><i class="fa fa-sticky-note-o"></i> 外协加工单</a>
+                    <a href="@Url.Page("/StockManagement/StockSubconctracting/Create")" class="btn btn-default no-padding" style="height:60px;line-height:60px;">
+                        <span class="fa fa-plus margin"></span>
+                    </a>
+                </div>
+                <div class="btn-group group-btn-app-margin">
+                    <a href="@Url.Page("/OrderManagement/EasyDelivery/Index")" class="btn btn-app"><i class="fa fa-sticky-note-o"></i> 其他出库单</a>
+                    <a href="@Url.Page("/OrderManagement/EasyDelivery/Create")" class="btn btn-default no-padding" style="height:60px;line-height:60px;">
+                        <span class="fa fa-plus margin"></span>
+                    </a>
+                </div>
+                <p>
+                    <i class="fa fa-arrow-circle-down"></i> 入库单
+                </p>
+                <div class="btn-group group-btn-app-margin">
+                    <a href="@Url.Page("/StockManagement/StockIn/Index")" class="btn btn-app"><i class="fa fa-edit"></i> 采购入库单</a>
+                    <a href="@Url.Page("/StockManagement/StockIn/Create")" class="btn btn-default no-padding" style="height:60px;line-height:60px;">
+                        <span class="fa fa-plus margin"></span>
+                    </a>
+                </div>
+                <div class="btn-group group-btn-app-margin">
+                    <a href="@Url.Page("/StockManagement/ProductionStockIn/Index")" class="btn btn-app"><i class="fa fa-edit"></i> 生产入库单</a>
+                    <a href="@Url.Page("/StockManagement/ProductionStockIn/Create")" class="btn btn-default no-padding" style="height:60px;line-height:60px;">
+                        <span class="fa fa-plus margin"></span>
+                    </a>
+                </div>
+                <div class="btn-group group-btn-app-margin">
+                    <a href="@Url.Page("/OrderManagement/EasyPurchasing/Index")" class="btn btn-app"><i class="fa fa-edit"></i> 其他入库单</a>
+                    <a href="@Url.Page("/OrderManagement/EasyPurchasing/Create")" class="btn btn-default no-padding" style="height:60px;line-height:60px;">
+                        <span class="fa fa-plus margin"></span>
+                    </a>
+                </div>
+                <p>
+                    <i class="fa fa-table"></i> 库存管理
+                </p>
+                <div class="btn-group group-btn-app-margin">
+                    <a href="@Url.Page("/StockManagement/Inventory")" class="btn btn-app"><i class="fa fa-bars"></i> 库存清单</a>
+                    <a href="@Url.Page("/StockManagement/Inventory")" class="btn btn-default no-padding" style="height:60px;line-height:60px;">
+                        <span class="fa fa-plus margin"></span>
+                    </a>
+                </div>
+                <div class="btn-group group-btn-app-margin">
+                    <a href="@Url.Page("/StockManagement/StockTransfer/Index")" class="btn btn-app"><i class="fa fa-random"></i> 库存移动</a>
+                    <a href="@Url.Page("/StockManagement/StockTransfer/Create")" class="btn btn-default no-padding" style="height:60px;line-height:60px;">
+                        <span class="fa fa-plus margin"></span>
+                    </a>
+                </div>
+                <div class="btn-group group-btn-app-margin">
+                    <a href="@Url.Page("/StockManagement/StockTransfer/Index")" class="btn btn-app"><i class="fa fa-refresh"></i> 库存转换</a>
+                    <a href="@Url.Page("/StockManagement/StockTransfer/Index")" class="btn btn-default no-padding" style="height:60px;line-height:60px;">
+                        <span class="fa fa-plus margin"></span>
+                    </a>
+                </div>
+                <p>
+                    <i class="fa fa-table"></i> 生产管理
+                </p>
+                <div class="btn-group group-btn-app-margin">
+                    <a href="@Url.Page("/ProductionManagement/ProductionOrder/Index")" class="btn btn-app"><i class="fa fa-product-hunt"></i> 生产订单</a>
+                    <a href="@Url.Page("/ProductionManagement/ProductionOrder/Create")" class="btn btn-default no-padding" style="height:60px;line-height:60px;">
+                        <span class="fa fa-plus margin"></span>
+                    </a>
+                </div>
+                <p>
+                    <i class="fa fa-users"></i> 人力资源
+                </p>
+                <div class="btn-group group-btn-app-margin">
+                    <a href="@Url.Page("/Personnel/Files/Index")" class="btn btn-app"><i class="fa fa-user"></i> 人员档案</a>
+                    <a href="@Url.Page("/Personnel/Files/Create")" class="btn btn-default no-padding" style="height:60px;line-height:60px;">
+                        <span class="fa fa-plus margin"></span>
+                    </a>
+                </div>
+                <div class="btn-group group-btn-app-margin">
+                    <a href="@Url.Page("/Attendance/Index")" class="btn btn-app"><i class="fa fa-calendar"></i> 考勤报表</a>
+                    <a href="@Url.Page("/Attendance/Create")" class="btn btn-default no-padding" style="height:60px;line-height:60px;">
+                        <span class="fa fa-plus margin"></span>
+                    </a>
+                </div>
+                <div class="btn-group group-btn-app-margin">
+                    <a href="@Url.Page("/Payroll/Index")" class="btn btn-app"><i class="fa fa-money"></i> 薪资计算</a>
+                    <a href="@Url.Page("/Payroll/Create")" class="btn btn-default no-padding" style="height:60px;line-height:60px;">
+                        <span class="fa fa-plus margin"></span>
+                    </a>
+                </div>
+                <p>
+                    <i class="fa fa-users"></i> 财务管理
+                </p>
+                <div class="btn-group group-btn-app-margin">
+                    <a href="@Url.Page("/Statement/Index")" class="btn btn-app"><i class="fa fa-table"></i> 对帐单</a>
+                    <a href="@Url.Page("/Statement/Create")" class="btn btn-default no-padding" style="height:60px;line-height:60px;">
+                        <span class="fa fa-plus margin"></span>
+                    </a>
+                </div>
+                <div class="btn-group group-btn-app-margin">
+                    <a href="@Url.Page("/Finance/Collection/Index")" class="btn btn-app"><i class="fa fa-arrow-circle-o-left"></i> 收款</a>
+                    <a href="@Url.Page("/Finance/Collection/Create")" class="btn btn-default no-padding" style="height:60px;line-height:60px;">
+                        <span class="fa fa-plus margin"></span>
+                    </a>
+                </div>
+                <div class="btn-group group-btn-app-margin">
+                    <a href="@Url.Page("/Finance/Payment/Index")" class="btn btn-app"><i class="fa fa-arrow-circle-o-right"></i> 付款</a>
+                    <a href="@Url.Page("/Finance/Payment/Create")" class="btn btn-default no-padding" style="height:60px;line-height:60px;">
+                        <span class="fa fa-plus margin"></span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Styles{
+    <style>
+        .btn-group.group-btn-app-margin:not(:last-child) {
+            margin: 0 10px 10px 0 !important
+        }
+
+        .btn-group.group-btn-app-margin:last-child {
+            margin: 0 0 10px 0 !important
+        }
+
+        .group-btn-app-margin > .dropdown-menu {
+            margin: -8px 0 0 0
+        }
+
+        .content-wrapper {
+            background-color: #fff !important
+        }
+    </style>
+}

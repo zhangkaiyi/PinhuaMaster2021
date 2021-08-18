@@ -1,0 +1,73 @@
+﻿@page
+@using AutoMapper
+@using PinhuaMaster.Pages.OrderManagement.EasyDelivery.ViewModel
+@using PinhuaMaster.Pages.OrderManagement.EasyPurchasing.ViewModel
+@using PinhuaMaster.Data.Entities.Pinhua
+@model PinhuaMaster.Pages.StockManagement.Inventory2Model
+@{
+    ViewData["Title"] = "Inventory2";
+
+    // Stock out
+    var EasyDeliveryList = (from p in pinhuaContext.Gi2Main.AsNoTracking()
+                            join d in pinhuaContext.Gi2Details.AsNoTracking() on p.ExcelServerRcid equals d.ExcelServerRcid
+                            where p.DeliveryType == "741"   // 外协加工送货
+                            select new
+                            {
+                                DeliveryId = p.DeliveryId,
+                                Id = d.Id,
+                                Qty = d.Qty
+                            }).ToList();
+    var x = (from p in pinhuaContext.Gi2Main.AsNoTracking()
+             join d in pinhuaContext.Gi2Details.AsNoTracking() on p.ExcelServerRcid equals d.ExcelServerRcid
+             where p.DeliveryType == "601" && d.BindOrder != null && d.BindItem != null
+             select new
+             {
+                 DeliveryId = d.BindOrder,
+                 Id = d.BindItem.Value,
+                 Qty = -d.Qty
+             }).ToList();
+    var r = EasyDeliveryList.Union(x);
+    var gr = from p in r
+             group p by new { p.DeliveryId, p.Id } into g
+             select new
+             {
+                 g.Key.DeliveryId,
+                 Id = g.Key.Id,
+                 Qty = g.Sum(a => a.Qty)
+             };
+    var f = from p in pinhuaContext.Gi2Main.AsNoTracking()
+            join d in pinhuaContext.Gi2Details.AsNoTracking() on p.ExcelServerRcid equals d.ExcelServerRcid
+            join stock in gr on new { d.DeliveryId, d.Id } equals new { stock.DeliveryId, stock.Id }
+            select new
+            {
+                p.CustomerId,
+                p.CustomerName,
+                d.DeliveryId,
+                d.Id,
+                d.Description,
+                d.Specification,
+                stock.Qty
+            };
+}
+
+<div class="box box-solid">
+    <div class="box-body">
+        <table class="table">
+            <tbody>
+                @foreach (var delivery in f.ToList().OrderBy(abc => abc.CustomerId).ThenBy(abc => abc.DeliveryId).ThenBy(abc => abc.Id).Where(abc => abc.Qty > 0))
+                {
+                    <tr>
+                        <td>@delivery.CustomerName</td>
+                        <td>@delivery.DeliveryId</td>
+                        <td>@delivery.Id</td>
+                        <td>@delivery.Description</td>
+                        <td>@delivery.Specification</td>
+                        <td>@delivery.Qty</td>
+                    </tr>
+
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+

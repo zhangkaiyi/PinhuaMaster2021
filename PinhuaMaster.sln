@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.27130.2010
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PinhuaMaster", "PinhuaMaster\PinhuaMaster.csproj", "{2A5D3DF1-7F6B-4648-8D4D-3C7E64BF69E6}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PinhuaMaster.Vue", "PinhuaMaster.Vue\PinhuaMaster.Vue.csproj", "{5A5E5BEF-F307-4BDF-89BC-39AC4C3E2CDC}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{2A5D3DF1-7F6B-4648-8D4D-3C7E64BF69E6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2A5D3DF1-7F6B-4648-8D4D-3C7E64BF69E6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2A5D3DF1-7F6B-4648-8D4D-3C7E64BF69E6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2A5D3DF1-7F6B-4648-8D4D-3C7E64BF69E6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5A5E5BEF-F307-4BDF-89BC-39AC4C3E2CDC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5A5E5BEF-F307-4BDF-89BC-39AC4C3E2CDC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5A5E5BEF-F307-4BDF-89BC-39AC4C3E2CDC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5A5E5BEF-F307-4BDF-89BC-39AC4C3E2CDC}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {B820CA1A-2845-4FC6-A0DA-7A81C3B8C1F4}
+	EndGlobalSection
+EndGlobal

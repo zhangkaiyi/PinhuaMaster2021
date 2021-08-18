@@ -1,0 +1,17 @@
+﻿@page "{Id?}"
+@using PinhuaMaster.Pages.BasicInformation.Partner.ViewModel
+@model PinhuaMaster.Pages.BasicInformation.Partner.EditModel
+@{
+    ViewData["Title"] = "编辑";
+    ViewBag.NoContentHeader = true;
+}
+
+@Html.Partial("_PartnerPartial", Model.PartnerInfo)
+
+
+@section Scripts{
+    @Html.RenderScripts()
+}
+@section Styles{
+    @Html.RenderStyles()
+}

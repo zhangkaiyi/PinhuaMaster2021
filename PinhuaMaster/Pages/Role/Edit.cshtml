@@ -1,0 +1,66 @@
+﻿@page
+@model PinhuaMaster.Pages.Role.EditModel
+@inject UserManager<ApplicationUser> userManager
+@inject RoleManager<IdentityRole> roleManager
+@{
+    ViewData["Title"] = "编辑角色";
+    var thisRole = await roleManager.FindByIdAsync(Model.RoleId);
+    var usersInRole = await userManager.GetUsersInRoleAsync(thisRole.Name);
+    var usersNotInRole = userManager.Users.Except(usersInRole);
+}
+
+<form method="post">
+    <input type="hidden" name="roleName" value="@thisRole.Name" />
+    <div class="row">
+        <div class="col-lg-6">
+            <div class="box box-primary box-solid">
+                <div class="box-header">添加帐户到【@thisRole.Name】</div>
+                <table class="table table-striped no-margin">
+                    @if (usersNotInRole.Count() == 0)
+                    {
+                        <tr><td colspan="2" class="text-center">没有可添加的帐户</td></tr>
+                    }
+                    else
+                    {
+                        <tr><td>帐户名</td><td>是否添加</td></tr>
+                        foreach (var user in usersNotInRole)
+                        {
+                            <tr>
+                                <td>@user.UserName</td>
+                                <td>
+                                    <input type="checkbox" name="usersToAdd" value="@user.Id">
+                                </td>
+                            </tr>
+                        }
+                    }
+                </table>
+            </div>
+        </div>
+        <div class="col-lg-6">
+            <div class="box box-primary box-solid">
+                <div class="box-header">移除帐户自【@thisRole.Name】</div>
+                <table class="table table-striped no-margin">
+                    @if (usersInRole.Count() == 0)
+                    {
+                        <tr><td colspan="2" class="text-center">没有可移除的帐户</td></tr>
+                    }
+                    else
+                    {
+                        <tr><td>帐户名</td><td>是否移除</td></tr>
+                        foreach (var user in usersInRole)
+                        {
+                            <tr>
+                                <td>@user.UserName</td>
+                                <td>
+                                    <input type="checkbox" name="usersToRemove" value="@user.Id">
+                                </td>
+                            </tr>
+                        }
+                    }
+                </table>
+            </div>
+        </div>
+    </div>
+    <button type="submit" class="btn btn-primary btn-flat">保存修改</button>
+    <a asp-page="Index" class="btn btn-default btn-flat">取消</a>
+</form>

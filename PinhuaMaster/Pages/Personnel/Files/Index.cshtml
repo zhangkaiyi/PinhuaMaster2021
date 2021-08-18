@@ -1,0 +1,148 @@
+﻿@page
+@model PinhuaMaster.Pages.Personnel.Files.IndexModel
+@{
+    ViewData["Title"] = "人员档案";
+
+    var inservice = (from p in Model.PersonnelFiles
+                     where p.状态 == "在职"
+                     select p).ToList();
+}
+<div class="btn-group" role="group" aria-label="..." id="toolbar">
+    <a asp-page="Create" class="btn btn-default btn-flat"><i class="fa fa-user-plus"></i> 录入</a>
+</div>
+<div class="nav-tabs-custom">
+    <ul class="nav nav-tabs">
+        <li class="active"><a href="#tab_1" data-toggle="tab" aria-expanded="true">在职</a></li>
+        <li class=""><a href="#tab_2" data-toggle="tab" aria-expanded="false">全部</a></li>
+        <li class="pull-right"><a href="#" class="text-muted"><i class="fa fa-gear"></i></a></li>
+    </ul>
+    <div class="tab-content">
+        <div class="tab-pane active" id="tab_1">
+            <table style="white-space:nowrap"
+                   data-toggle="table"
+                   data-search="true"
+                   data-show-columns="true"
+                   data-show-pagination-switch="true"
+                   data-pagination="false"
+                   data-toolbar="#toolbar">
+                <thead>
+                    <tr>
+                        <th data-width="20" data-align="right">#</th>
+                        <th data-visible="false" class="hidden-xs">人员编号</th>
+                        <th>姓名</th>
+                        <th>性别</th>
+                        <th>出生年月</th>
+                        <th class="hidden-xs">证件号码</th>
+                        <th>联系电话</th>
+                        <th class="hidden-xs">联系地址</th>
+                        <th class="hidden-xs">入职时间</th>
+                        <th class="hidden-xs">登记时间</th>
+                        <th data-width="20"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var file in inservice)
+                    {
+                        <tr>
+                            @*<td class="dropdown">
+                                    <button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="caret"></span></button>
+                                    <ul class="dropdown-menu">
+                                        <li><a asp-page="Edit" asp-route-id="@file.人员编号"> 修改</a></li>
+                                        <li><a href="javascript:toDelete('@file.ExcelServerRcid')"> 删除</a></li>
+                                    </ul>
+                                </td>*@
+                            <td>@(inservice.IndexOf(file) + 1)</td>
+                            <td>@file.人员编号</td>
+                            <td>@file.姓名</td>
+                            <td>@file.性别</td>
+                            <td>@file.出生年月?.ToString("yyyy-MM-dd")</td>
+                            <td>@file.证件号码</td>
+                            <td>@file.联系电话</td>
+                            <td>@file.联系地址</td>
+                            <td>@file.入职时间?.ToString("yyyy-MM-dd")</td>
+                            <td>@file.登记时间?.ToString("yyyy-MM-dd")</td>
+                            <td><a asp-page="Details" asp-route-id="@file.人员编号">查看 @*<i class="fa fa-ellipsis-h"></i>*@</a></td>
+                        </tr>
+
+                    }
+                </tbody>
+            </table>
+        </div>
+        <!-- /.tab-pane -->
+        <div class="tab-pane" id="tab_2">
+            <table style="white-space:nowrap"
+                   data-toggle="table"
+                   data-search="true"
+                   data-show-columns="true"
+                   data-show-pagination-switch="true"
+                   data-pagination="false">
+                <thead>
+                    <tr>
+                        <th data-width="20" data-align="right">#</th>
+                        <th class="hidden-xs" data-visible="false">人员编号</th>
+                        <th>姓名</th>
+                        <th>性别</th>
+                        <th>出生年月</th>
+                        <th>证件号码</th>
+                        <th>联系电话</th>
+                        <th class="hidden-xs">联系地址</th>
+                        <th class="hidden-xs">入职时间</th>
+                        <th class="hidden-xs">离职时间</th>
+                        <th class="hidden-xs">登记时间</th>
+                        <th data-width="20"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var file in Model.PersonnelFiles)
+                    {
+                    <tr>
+                        <td>@(Model.PersonnelFiles.IndexOf(file) + 1)</td>
+                        <td>@file.人员编号</td>
+                        <td>@file.姓名</td>
+                        <td>@file.性别</td>
+                        <td>@file.出生年月?.ToString("yyyy-MM-dd")</td>
+                        <td>@file.证件号码</td>
+                        <td>@file.联系电话</td>
+                        <td>@file.联系地址</td>
+                        <td>@file.入职时间?.ToString("yyyy-MM-dd")</td>
+                        <td>@file.离职时间?.ToString("yyyy-MM-dd")</td>
+                        <td>@file.登记时间?.ToString("yyyy-MM-dd")</td>
+                        <td><a asp-page="Details" asp-route-id="@file.人员编号">查看 @*<i class="fa fa-ellipsis-h"></i>*@</a></td>
+                    </tr>
+
+                    }
+                </tbody>
+            </table>
+        </div>
+        <!-- /.tab-pane -->
+    </div>
+    <!-- /.tab-content -->
+</div>
+
+<form method="post" asp-page="Delete" id="toDeleteForm">
+    <input type="hidden" id="toDeleteRcid" name="rcId" />
+</form>
+
+@section Styles{
+    <style>
+        .fixed-table-toolbar .bs-bars,
+        .fixed-table-toolbar .search,
+        .fixed-table-toolbar .columns {
+            position: relative;
+            margin-top: 10px;
+            margin-bottom: 10px;
+            line-height: 30px;
+        }
+    </style>
+}
+
+@section Scripts{
+    <script>
+        function toDelete(rcid) {
+            if (confirm('确定删除这条记录吗？')) {
+                $('#toDeleteRcid').val(rcid);
+                $('#toDeleteForm').submit();
+            }
+        }
+    </script>
+}

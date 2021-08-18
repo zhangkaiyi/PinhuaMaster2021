@@ -1,0 +1,13 @@
+﻿Scaffold-DbContext "Data Source=192.168.1.20;Initial Catalog=Pinhua;User ID=sa;Password=Benny0922" Microsoft.EntityFrameworkCore.SqlServer -OutputDir Data\Entities\Pinhua
+
+        public PinhuaContext(DbContextOptions<PinhuaContext> options) : base(options)
+        {
+
+        }
+
+Scaffold-DbContext "Data Source=122.225.47.230,6012;Initial Catalog=EastRiver;Persist Security Info=True;User ID=sa;Password=Benny0922" Microsoft.EntityFrameworkCore.SqlServer -OutputDir Data\Entities\EastRiver
+
+        public EastRiverContext(DbContextOptions<EastRiverContext> options) : base(options)
+        {
+
+        }

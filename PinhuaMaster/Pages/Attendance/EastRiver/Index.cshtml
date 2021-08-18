@@ -1,0 +1,48 @@
+﻿@page
+@model PinhuaMaster.Pages.Attendance.EastRiver.IndexModel
+@{
+    ViewData["Title"] = "Index";
+
+    var users = (from p in pinhuaContext.人员档案.AsNoTracking()
+                 join c in pinhuaContext.考勤卡号变动.AsNoTracking() on p.ExcelServerRcid equals c.ExcelServerRcid
+                 select new
+                 {
+                     Id = p.人员编号,
+                     Name = p.姓名,
+                     CardNo = c.卡号
+                 }).ToList();
+
+    var YMUsers = (from p in eastRiverContext.TimeRecords.AsNoTracking()
+                   join u in users on p.CardId equals u.CardNo
+                   group u by new { p.SignTime.Year, p.SignTime.Month } into g
+                   select new
+                   {
+                       g.Key.Year,
+                       g.Key.Month,
+                       Users = g.Select(u => u).Distinct().OrderBy(u => u.Id),
+                   }).Distinct().ToList();
+
+}
+<div class="row">
+    <div class="col-md-12">
+        <div class="box box-solid">
+            <div class="box-body">
+                <table class="table table-striped" data-toggle="table">
+                    @foreach (var ym in YMUsers.OrderByDescending(p => p.Year).ThenByDescending(p => p.Month))
+                    {
+                        <tr>
+                            <td><a asp-page="Details" asp-route-year="@ym.Year" asp-route-month="@ym.Month">@(new DateTime(ym.Year, ym.Month, 1).ToString("yyyy-MM"))</a></td>
+                            <td>
+                                @foreach (var user in ym.Users)
+                                {
+                                    <a asp-page="Details" asp-route-year="@ym.Year" asp-route-month="@ym.Month" asp-route-id="@user.Id">@user.Name</a>
+                                }
+                            </td>
+                        </tr>
+
+                    }
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

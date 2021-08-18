@@ -1,0 +1,213 @@
+﻿@page
+@model PinhuaMaster.Pages.Payroll.CreateModel
+@{
+    ViewData["Title"] = "生成工资单";
+}
+
+<div id="vueScope">
+    <div class="row">
+        <div class="col-md-3">
+            <div class="box box-solid">
+                <div class="box-body">
+                    <div class="form-horizontal" id="test">
+                        <div class="form-group">
+                            <label class="control-label col-xs-3">年</label>
+                            <div class="col-xs-9">
+                                <select class="form-control" v-model="Y" v-on:change="getMList" id="refreshY">
+                                    <option v-for="(item,index) in YMList">{{item.Year}}</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-xs-3">月</label>
+                            <div class="col-xs-9">
+                                <select class="form-control" v-model="M" id="refreshM">
+                                    <option v-for="(item,index) in MList" :value="item.Month" v-bind:disabled="isDisabled(item)">{{display(item)}}</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-xs-9 col-xs-offset-3">
+                                <button class="form-control btn btn-default btn-flat" v-on:click="getPayroll">查询</button>
+                                <input type="hidden" id="hiddenYMList" value="@(Newtonsoft.Json.JsonConvert.SerializeObject(Model.ymList))" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-xs-9 col-xs-offset-3">
+                                <button class="form-control btn btn-default btn-flat" v-on:click="savePayroll">保存</button>
+                            </div>
+                        </div>
+                        <input type="hidden" value="@Url.Page("Create", "Ajax")" id="refreshUrl" />
+                    </div>
+                </div>
+                <div class="box-footer"><div asp-validation-summary="All"></div></div>
+
+            </div>
+        </div>
+        <div class="col-md-8">
+            <div class="box box-solid">
+                <div class="box-body">
+                    <table id="table"
+                           data-toggle="table"
+                           data-classes="table table-striped"
+                           data-row-style="rowStyle"
+                           style="white-space:nowrap;">
+                        <thead>
+                            <tr>
+                                <th data-field="@(nameof(ViewModel.PayrollDetailsDTO.Id))" data-visible="false">编号</th>
+                                <th data-field="@(nameof(ViewModel.PayrollDetailsDTO.Name))" data-formatter="fmtName">姓名</th>
+                                <th data-field="@(nameof(ViewModel.PayrollDetailsDTO.Post))">岗位</th>
+                                <th data-field="@(nameof(ViewModel.PayrollDetailsDTO.Sex))" data-visible="false">性别</th>
+                                <th data-field="@(nameof(ViewModel.PayrollDetailsDTO.IsFullAttendance))" data-visible="false">是否全勤</th>
+                                <th data-field="@(nameof(ViewModel.PayrollDetailsDTO.PriceOverview))">工价</th>
+                                <th data-field="@(nameof(ViewModel.PayrollDetailsDTO.DaytimeHours))" data-formatter="fmtHours">正班</th>
+                                <th data-field="@(nameof(ViewModel.PayrollDetailsDTO.OvertimeHours))" data-formatter="fmtHours">加班</th>
+                                <th data-field="@(nameof(ViewModel.PayrollDetailsDTO.AllHours))" data-formatter="fmtHours">合计工时</th>
+                                <th data-field="@(nameof(ViewModel.PayrollDetailsDTO.AllHoursAmountWithFullAttendance))" data-formatter="fmtAmount" data-sortable="true" data-visible="false">工资</th>
+                                <th data-field="@(nameof(ViewModel.PayrollDetailsDTO.TimesOfDinner))">用餐</th>
+                                <th data-field="@(nameof(ViewModel.PayrollDetailsDTO.DinnerAmount))">餐费</th>
+                                <th data-field="@(nameof(ViewModel.PayrollDetailsDTO.FinalAmount))" data-formatter="fmtAmount">实发</th>
+                                @*<th data-field="@(nameof(ViewModel.PayrollDetailsDTO.DaysOfWork))" data-formatter="fmtHours" data-visible="false">出勤天数</th>*@
+                                @*<th data-field="@(nameof(ViewModel.PayrollDetailsDTO.DaysOfLeave))" data-formatter="fmtHours" data-visible="false">缺勤天数</th>*@
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <form method="post" id="toSaveForm">
+        <input type="hidden" name="yyyy" v-model="Y" />
+        <input type="hidden" name="mm" v-model="M" />
+        <input type="hidden" id="jsonStr" name="jsonStr" />
+    </form>
+</div>
+
+@section Scripts{
+    <script>
+        function fmtName(value, row) {
+            var b = row.IsFullAttendance
+
+            var el = ""
+            if (b)
+                el = '<div class="text-red">' + value + '</div>'
+            else
+                el = '<div class="text-green">' + value + '</div>'
+
+            return value
+        }
+
+        function fmtHours(value, row) {
+            if (!value)
+                return ""
+            return value.toFixed(1)
+        }
+
+        function fmtAmount(value, row) {
+            return value.toFixed(2)
+        }
+
+        function fmtFooter(data) {
+            var sum = 0
+            for (var i in data) {
+                sum += parseFloat(data[i].FinalAmount)
+            }
+            return sum.toFixed(2)
+        }
+
+        function rowStyle(row, index) {
+            var classes = ['active', 'success', 'info', 'warning', 'danger'];
+
+            if (row.IsFullAttendance) {
+                return {
+                    classes: 'text-danger'
+                    //classes: 'text-bold'
+                };
+            }
+            else
+                return {
+                    //classes: 'text-success'
+                    classes: ''
+                };
+        }
+    </script>
+
+    <script>
+        var data = JSON.parse($('#hiddenYMList').val())
+        vm = new Vue({
+            el: '#vueScope',
+            data: {
+                YMList: data,
+                MList: [],
+                Y: "",
+                M: "",
+
+            },
+            methods: {
+                getMList: function () {
+                    var tempMList = []
+                    this.MList = []
+                    for (var item of this.YMList) {
+                        if (item.Year == this.Y) {
+                            for (var month of item.MonthList) {
+                                tempMList.push(month)
+                            }
+                        }
+                    }
+                    this.MList = tempMList
+
+                    var bContains = false;
+                    for (var item of this.MList) {
+                        if (item.Month == this.M) {
+                            this.M = item.Month
+                            bContains = true;
+                            break;
+                        }
+                    }
+                    if (!bContains) {
+                        for (var i in this.MList) {
+                            if (this.MList[i].State != "已存在") {
+                                this.M = this.MList[i].Month
+                                break;
+                            }
+                        }
+
+                    }
+                },
+                isDisabled: function (item) {
+                    if (item.State == "已存在")
+                        return true
+                    else
+                        return false
+                },
+                display: function (item) {
+                    if (item.State == "已存在")
+                        return item.Month + ' Exsited'
+                    else
+                        return item.Month
+                },
+                getPayroll: function () {
+                    var url = '/Payroll/Create?Handler=AjaxComputePayroll&year=' + this.Y + '&month=' + this.M
+                    var $table = $('#table');
+                    $table.bootstrapTable('refresh', { url: url });
+                },
+                savePayroll: function () {
+                    if ([1,2,3,4,5,6,7,8,9,10,11,12].indexOf(this.M) == -1) {
+                        alert('日期输入格式有误！')
+                        return;
+                    }
+                    if (confirm('确定保存吗？')) {
+                        var jsonStr = JSON.stringify($('#table').bootstrapTable('getData'))
+                        var url = '/Payroll/Create?Handler=AjaxSavePayroll'
+                        $('#toSaveForm #jsonStr').val(jsonStr)
+                        $('#toSaveForm').submit()
+                    }
+                }
+            },
+            mounted: function () {
+                this.Y = this.YMList[0].Year
+                this.getMList()
+            }
+        })
+    </script>
+}

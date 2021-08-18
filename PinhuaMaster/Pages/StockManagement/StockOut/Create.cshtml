@@ -1,0 +1,20 @@
+﻿@page
+@using PinhuaMaster.Pages.StockManagement.StockOut.ViewModel
+@using PinhuaMaster.Pages.StockManagement.StockOut
+@using Microsoft.EntityFrameworkCore
+@model CreateModel
+@{
+    ViewData["Title"] = "录入";
+    ViewBag.NoContentHeader = true;
+
+}
+
+@Html.Partial("_StockOutPartial", Model.Order)
+
+
+@section Scripts{
+    @Html.RenderScripts()
+}
+@section Styles{
+    @Html.RenderStyles()
+}

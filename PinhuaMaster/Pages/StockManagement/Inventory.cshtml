@@ -1,0 +1,46 @@
+﻿@page
+@using AutoMapper
+@using PinhuaMaster.Data.Entities.Pinhua
+@model PinhuaMaster.Pages.StockManagement.InventoryModel
+@{
+    ViewData["Title"] = "库存查看";
+
+    var warehouseList = (from w in pinhuaContext.view_库存明细
+                         group w by w.Warehouse into g
+                         select g.Key).ToList();
+}
+
+@foreach (var w in warehouseList)
+{
+    <div class="box box-solid">
+        <div class="box-header with-border">
+            <div class="box-title">@w - @pinhuaContext.Warehouse.FirstOrDefault(x => x.Id == w)?.Name</div>
+        </div>
+        <div class="box-body">
+            <table data-classes="table table-hover text-nowrap"
+                   data-toggle="table"
+                   data-striped="true"
+                   data-show-footer="true">
+                <thead>
+                    <tr>
+                        <th>型号</th>
+                        <th>描述</th>
+                        <th>规格</th>
+                        <th>数量</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var info in pinhuaContext.view_库存明细.Where(x => x.Warehouse == w))
+                    {
+                        <tr>
+                            <td>@info.ModelName</td>
+                            <td>@info.Description</td>
+                            <td>@info.Specification</td>
+                            <td>@info.Qty</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+}

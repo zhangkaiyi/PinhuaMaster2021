@@ -1,0 +1,65 @@
+﻿@page "{Y}/{M}/{D}"
+@model PinhuaMaster.Pages.Attendance.OvertimeForm.DeleteModel
+
+@{
+    ViewData["Title"] = "Delete";
+}
+
+<h2>Delete</h2>
+
+<h3>Are you sure you want to delete this?</h3>
+<div>
+    <h4>OvertimeFormMain</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.OvertimeFormMain.ExcelServerRcid)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.OvertimeFormMain.ExcelServerRcid)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.OvertimeFormMain.ExcelServerRtid)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.OvertimeFormMain.ExcelServerRtid)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.OvertimeFormMain.Y)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.OvertimeFormMain.Y)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.OvertimeFormMain.M)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.OvertimeFormMain.M)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.OvertimeFormMain.D)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.OvertimeFormMain.D)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.OvertimeFormMain.CreatedDate)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.OvertimeFormMain.CreatedDate)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.OvertimeFormMain.CreatedBy)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.OvertimeFormMain.CreatedBy)
+        </dd>
+    </dl>
+    <form method="post">
+        <input type="hidden" asp-for="OvertimeFormMain.Y" />
+        <input type="hidden" asp-for="OvertimeFormMain.M" />
+        <input type="hidden" asp-for="OvertimeFormMain.D" />
+        <input type="submit" value="Delete" class="btn btn-default" /> |
+        <a asp-page="./Index">Back to List</a>
+    </form>
+</div>

@@ -1,0 +1,403 @@
+﻿@page
+@model PinhuaMaster.Pages.OrderManagement.EasyDelivery.IndexModel
+@{
+    ViewData["Title"] = "列表 - 简易送货单";
+    ViewBag.NoContentHeader = true;
+}
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="box box-solid">
+            <div class="box-header">
+                <i class="fa fa-globe"></i>
+                <h3 class="box-title"> 列表 - 简易送货单</h3>
+            </div>
+            <div class="box-body">
+                <div id="tableContainer">
+                    <div id="toolbar">
+                        <div class="btn-group" role="group" aria-label="...">
+                            <a asp-page="Create" class="btn btn-default btn-flat"><i class="fa fa-plus"></i> 填报</a>
+                        </div>
+                        <div class="btn-group" role="group" aria-label="...">
+                            <button class="btn btn-default btn-flat" onclick="layerAdvanceSearch()"><i class="fa fa-search"></i> 高级搜索</button>
+                        </div>
+                    </div>
+                    <table data-classes="table table-hover text-nowrap"
+                           data-toggle="table"
+                           data-toolbar="#toolbar"
+                           data-show-columns="false"
+                           data-search="true"
+                           data-striped="true"
+                           data-pagination="true"
+                           data-page-size="15"
+                           data-page-list="[15, 20, 50, 100, 200]"
+                           data-url="@Url.Page("Index", "AjaxEasyDelivery")"
+                           id="mainTable">
+                        <thead>
+                            <tr>
+                                <th data-width="20" data-formatter="browseRecord"></th>
+                                <th data-field="DeliveryId" class="hidden-xs">单号</th>
+                                <th data-field="DeliveryDate">送货日期</th>
+                                <th data-field="CustomerId" data-visible="false">客户编号</th>
+                                <th data-field="CustomerName">客户名称</th>
+                                <th data-visible="false" data-field="DeliveryType">类型编号</th>
+                                <th data-field="DeliveryTypeDescription" class="hidden-xs">类型</th>
+                                <th data-field="Amount">金额</th>
+                                <th data-field="DeliveryAddress" data-visible="false">送货地址</th>
+                                <th data-field="Remarks">备注</th>
+                                <th data-visible="false" data-field="Contact">联系人</th>
+                                <th data-visible="false" data-field="ContactNumber">联系电话</th>
+                                <th data-visible="false" data-field="CreatedBy">制单人</th>
+                                <th data-visible="false" data-field="CreatedDate">制单日期</th>
+                                <th data-width="20" data-formatter="deleteRecord"></th>
+                            </tr>
+                        </thead>
+
+                    </table>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal" id="detailsModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="detailsTitle">Modal title</h4>
+            </div>
+            <div class="modal-body">
+                <table data-classes="table table-hover text-nowrap"
+                       data-toggle="table"
+                       data-striped="true"
+                       data-show-footer="true"
+                       id="detailsTable">
+                    <thead>
+                        <tr>
+                            <th data-field="Id">#</th>
+                            <th data-field="Description">描述</th>
+                            <th data-field="Specification">规格</th>
+                            <th data-field="Qty" data-align="right">片数</th>
+                            <th data-field="UnitQty" data-formatter="formatterUnitQty" data-align="right">单位数量</th>
+                            <th data-field="Unit" data-visible="false">单位</th>
+                            <th data-field="Price" data-align="right">单价</th>
+                            <th data-field="Amount" data-footer-formatter="footerFormatter" data-align="right">金额</th>
+                        </tr>
+                    </thead>
+
+                </table>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+@section LayerContent{
+    <div id="advanceSearch" style="display:none;padding:20px;">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group has-error">
+                    <label class="control-label" asp-for="SearchViewModel.DeliveryId"><i class="fa fa-angle-double-right"></i> @Html.DisplayNameFor(m => m.SearchViewModel.DeliveryId)</label>
+                    <div class="input-group">
+                        <input v-model="searchModel.DeliveryId" class="form-control" />
+                        <span class="input-group-addon no-padding">
+                            <i class="fa fa-info" style="width:38px;"></i>
+                        </span>
+                    </div>
+                </div>
+                <div class="form-group has-error">
+                    <label class="control-label" asp-for="SearchViewModel.CustomerName"><i class="fa fa-angle-double-right"></i> @Html.DisplayNameFor(m => m.SearchViewModel.CustomerName)</label>
+                    <div class="input-group">
+                        <input v-model="searchModel.CustomerName" class="form-control" />
+                        <span class="input-group-addon no-padding">
+                            <i class="fa fa-info" style="width:38px;"></i>
+                        </span>
+                    </div>
+                </div>
+                <div class="form-group has-error">
+                    <label class="control-label" asp-for="SearchViewModel.DeliveryTypeDescription"><i class="fa fa-angle-double-right"></i> @Html.DisplayNameFor(m => m.SearchViewModel.DeliveryTypeDescription)</label>
+                    <div class="input-group">
+                        <input v-model="searchModel.DeliveryTypeDescription" class="form-control" />
+                        <span class="input-group-addon no-padding">
+                            <i class="fa fa-info" style="width:38px;"></i>
+                        </span>
+                    </div>
+                </div>
+                <div class="form-group has-error">
+                    <label class="control-label" asp-for="SearchViewModel.DeliveryDate"><i class="fa fa-angle-double-right"></i> @Html.DisplayNameFor(m => m.SearchViewModel.DeliveryDate)</label>
+                    <div class="input-group">
+                        <input type="text" class="form-control" data-provide="datepicker" data-date-format="yyyy-mm-dd" id="DeliveryDate" />
+                        <span class="input-group-addon no-padding">
+                            <i class="fa fa-info" style="width:38px;"></i>
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                @*<div class="form-group">
+                        <label class="control-label" asp-for="SearchViewModel.Contact"><i class="fa fa-angle-double-right"></i> @Html.DisplayNameFor(m => m.SearchViewModel.Contact)</label>
+                        <div class="input-group">
+                            <input v-model="searchModel.Contact" class="form-control" />
+                            <span class="input-group-addon no-padding">
+                                <i class="fa fa-info" style="width:38px;"></i>
+                            </span>
+                        </div>
+                    </div>*@
+                @*<div class="form-group">
+                        <label class="control-label" asp-for="SearchViewModel.ContactNumber"><i class="fa fa-angle-double-right"></i> @Html.DisplayNameFor(m => m.SearchViewModel.ContactNumber)</label>
+                        <div class="input-group">
+                            <input asp-for="SearchViewModel.ContactNumber" class="form-control" />
+                            <span class="input-group-addon no-padding">
+                                <i class="fa fa-info" style="width:38px;"></i>
+                            </span>
+                        </div>
+                    </div>*@
+                <div class="form-group has-warning">
+                    <label class="control-label" asp-for="SearchViewModel.DeliveryAddress"><i class="fa fa-angle-double-right"></i> @Html.DisplayNameFor(m => m.SearchViewModel.DeliveryAddress)</label>
+                    <div class="input-group">
+                        <input v-model="searchModel.DeliveryAddress" class="form-control" />
+                        <span class="input-group-addon no-padding">
+                            <i class="fa fa-info" style="width:38px;"></i>
+                        </span>
+                    </div>
+                </div>
+                <div class="form-group has-warning">
+                    <label class="control-label" asp-for="SearchViewModel.Remarks"><i class="fa fa-angle-double-right"></i> @Html.DisplayNameFor(m => m.SearchViewModel.Remarks)</label>
+                    <div class="input-group">
+                        <input v-model="searchModel.Remarks" class="form-control" />
+                        <span class="input-group-addon no-padding">
+                            <i class="fa fa-info" style="width:38px;"></i>
+                        </span>
+                    </div>
+                </div>
+                <div class="form-group has-warning">
+                    <label class="control-label" asp-for="SearchViewModel.CreatedBy"><i class="fa fa-angle-double-right"></i> @Html.DisplayNameFor(m => m.SearchViewModel.CreatedBy)</label>
+                    <div class="input-group">
+                        <input v-model="searchModel.CreatedBy" class="form-control" />
+                        <span class="input-group-addon no-padding">
+                            <i class="fa fa-info" style="width:38px;"></i>
+                        </span>
+                    </div>
+                </div>
+                <div class="form-group has-warning">
+                    <label class="control-label" asp-for="SearchViewModel.CreatedDate"><i class="fa fa-angle-double-right"></i> @Html.DisplayNameFor(m => m.SearchViewModel.CreatedDate)</label>
+                    <div class="input-group">
+                        <input type="text" v-model="searchModel.CreatedDate" class="form-control" data-provide="datepicker" data-date-format="yyyy-mm-dd" id="CreatedDate" />
+                        <span class="input-group-addon no-padding">
+                            <i class="fa fa-info" style="width:38px;"></i>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                @*<div class="form-group">
+                        <label class="control-label" asp-for="SearchViewModel.ItemId"><i class="fa fa-angle-double-right"></i> @Html.DisplayNameFor(m => m.SearchViewModel.ItemId)</label>
+                        <div class="input-group">
+                            <input asp-for="SearchViewModel.ItemId" class="form-control" />
+                            <span class="input-group-addon no-padding">
+                                <i class="fa fa-info" style="width:38px;"></i>
+                            </span>
+                        </div>
+                    </div>*@
+                <div class="form-group">
+                    <label class="control-label" asp-for="SearchViewModel.ItemDescription"><i class="fa fa-angle-double-right"></i> @Html.DisplayNameFor(m => m.SearchViewModel.ItemDescription)</label>
+                    <div class="input-group">
+                        <input v-model="searchModel.ItemDescription" class="form-control" />
+                        <span class="input-group-addon no-padding">
+                            <i class="fa fa-info" style="width:38px;"></i>
+                        </span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label" asp-for="SearchViewModel.ItemSpecification"><i class="fa fa-angle-double-right"></i> @Html.DisplayNameFor(m => m.SearchViewModel.ItemSpecification)</label>
+                    <div class="input-group">
+                        <input v-model="searchModel.ItemSpecification" class="form-control" />
+                        <span class="input-group-addon no-padding">
+                            <i class="fa fa-info" style="width:38px;"></i>
+                        </span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label" asp-for="SearchViewModel.ItemQty"><i class="fa fa-angle-double-right"></i> @Html.DisplayNameFor(m => m.SearchViewModel.ItemQty)</label>
+                    <div class="input-group">
+                        <input v-model="searchModel.ItemQty" class="form-control" />
+                        <span class="input-group-addon no-padding">
+                            <i class="fa fa-info" style="width:38px;"></i>
+                        </span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label" asp-for="SearchViewModel.ItemUnitQty"><i class="fa fa-angle-double-right"></i> @Html.DisplayNameFor(m => m.SearchViewModel.ItemUnitQty)</label>
+                    <div class="input-group">
+                        <input v-model="searchModel.ItemUnitQty" class="form-control" />
+                        <span class="input-group-addon no-padding">
+                            <i class="fa fa-info" style="width:38px;"></i>
+                        </span>
+                    </div>
+                </div>
+                @*<div class="form-group">
+                        <label class="control-label" asp-for="SearchViewModel.ItemRemarks"><i class="fa fa-angle-double-right"></i> @Html.DisplayNameFor(m => m.SearchViewModel.ItemRemarks)</label>
+                        <div class="input-group">
+                            <input v-model="searchModel.ItemRemarks" class="form-control" />
+                            <span class="input-group-addon no-padding">
+                                <i class="fa fa-info" style="width:38px;"></i>
+                            </span>
+                        </div>
+                    </div>*@
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label class="control-label" asp-for="SearchViewModel.ItemPrice"><i class="fa fa-angle-double-right"></i> @Html.DisplayNameFor(m => m.SearchViewModel.ItemPrice)</label>
+                    <div class="input-group">
+                        <input v-model="searchModel.ItemPrice" class="form-control" />
+                        <span class="input-group-addon no-padding">
+                            <i class="fa fa-info" style="width:38px;"></i>
+                        </span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label" asp-for="SearchViewModel.ItemAmount"><i class="fa fa-angle-double-right"></i> @Html.DisplayNameFor(m => m.SearchViewModel.ItemAmount)</label>
+                    <div class="input-group">
+                        <input v-model="searchModel.ItemAmount" class="form-control" />
+                        <span class="input-group-addon no-padding">
+                            <i class="fa fa-info" style="width:38px;"></i>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        @*<button class="btn btn-primary" v-on:click="toSearch"><i class="fa fa-search"></i> 查找</button>*@
+        <input id="searchModel" type="hidden" value='@(Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(new ViewModel.Gi2Search())))' />
+        <input id="searchUrl" type="hidden" value='@Url.Page("Index","AdvanceSearch")' />
+    </div>
+}
+
+@section Scripts{
+    <script>
+        function browseRecord (value, row) {
+            return '<a href="@(Url.Page("Print"))/' + row.DeliveryId + '/frp">打印</a> <a href="@(Url.Page("Edit"))/' + row.DeliveryId + '">修改</a>'
+            //return '<a href="@(Url.Page("Details"))/' + row.DeliveryId + '"><i class="fa fa-search"></i> </a>'
+        }
+        function deleteRecord (value, row) {
+            return '<a href="@(Url.Page("Delete"))/' + row.DeliveryId + '"><i class="fa fa-minus"></i></a>'
+        }
+        function formatterDeliveryId(value, row) {
+            return '<a href="@(Url.Page("Details"))/' + row.DeliveryId + '">' + value + '</a>'
+        }
+        function formatterUnitQty(value, row) {
+            return row.UnitQty + ' ' + row.Unit
+        }
+
+        var mainTable = $('#mainTable')
+        var detailsTable = $('#detailsTable')
+        var detailsTitle = $('#detailsTitle')
+        mainTable.on('click-cell.bs.table', function (event, field, value, row, $element) {
+            var url = '@Url.Page("Index", "AjaxEasyDeliveryDetails")&id=' + row.DeliveryId
+            detailsTable.bootstrapTable('refresh', { url: url });
+            detailsTitle.html(row.CustomerName + ' <br><small>' + row.DeliveryId + '</small><small>，' + row.DeliveryDate + '</small><small>，' + row.DeliveryTypeDescription + '</small>')
+            console.log(field)
+            if (field != 0 && field != 14) {
+                $('#detailsModal').modal()
+            }
+        })
+
+        footerFormatter = function (value) { //底部合计
+            var total = 0;
+            for (var i in value) {
+                total += isNaN(parseFloat(value[i].Amount)) ? 0 : parseFloat(value[i].Amount)
+            }
+            return total.toFixed(2);
+        }
+    </script>
+
+    <script>
+        function layerAdvanceSearch() {
+            layer.open({
+                type: 1,
+                area: $(window).width() < 992 ? ['98%', '90%'] : ['800px', 'auto'],
+                content: $('#advanceSearch'),
+                shadeClose: true,
+                isOutAnim: false,
+                fixed: false,
+                skin: 'demo-class',
+                btn: ['查找', '清空'],
+                yes: function () {
+                    vm.toSearch()
+                },
+                btn2: function () {
+                    vm.toSearchAfterClean()
+                }
+                //closeBtn: false,
+                //scrollbar: false,
+                //title: false,
+            });
+        }
+
+        var vm = new Vue({
+            el: '#advanceSearch',
+            data: {
+                searchModel: JSON.parse($('#searchModel').val()),
+            },
+            methods: {
+                toSearch: function () {
+                    //console.log(JSON.stringify(this.searchModel))
+                    this.searchModel.DeliveryDate = $("#DeliveryDate").val()
+                    this.searchModel.CreatedDate = $("#CreatedDate").val()
+                    var opt = {
+                        url: $('#searchUrl').val(),
+                        silent: true,
+                        query: {
+                            json: JSON.stringify(this.searchModel)
+                        },
+                    }
+                    mainTable.bootstrapTable('refresh', opt);
+                    layer.closeAll('page')
+                },
+                toSearchAfterClean: function () {
+                    this.searchModel = JSON.parse(JSON.stringify(this.defaultSearchModel))
+                    $("#DeliveryDate").val('')
+                    $("#CreatedDate").val('')
+                    var opt = {
+                        url: $('#searchUrl').val(),
+                        silent: true,
+                        query: {
+                            json: JSON.stringify(this.searchModel)
+                        },
+                    }
+                    mainTable.bootstrapTable('refresh', opt);
+                    layer.closeAll('page')
+                }
+            },
+            mounted: function () {
+                this.defaultSearchModel = JSON.parse(JSON.stringify(this.searchModel))
+            },
+        })
+    </script>
+}
+
+@section Styles{
+    <style>
+        .fixed-table-toolbar .bs-bars,
+        .fixed-table-toolbar .search,
+        .fixed-table-toolbar .columns {
+            position: relative;
+            margin-top: 10px;
+            margin-bottom: 10px;
+            line-height: 30px;
+        }
+
+        body .demo-class .layui-layer-btn {
+            border-top: 1px solid #E9E7E7;
+        }
+
+    </style>
+}

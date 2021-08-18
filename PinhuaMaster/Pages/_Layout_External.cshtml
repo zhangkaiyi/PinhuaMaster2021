@@ -1,0 +1,203 @@
+﻿@using PinhuaMaster.Services;
+@{
+    var cookieMenuidsOpen = httpContextAccessor.HttpContext.Request.Cookies["menuids_open"] ?? "";
+    var cookieMenuidOpen = httpContextAccessor.HttpContext.Request.Cookies["menuid_open"] ?? "";
+    var pathName = navMenuService.GetPathName(ViewContext.RouteData.Values["Page"].ToString());
+    ViewBag.PathName = pathName;
+}
+<!DOCTYPE html>
+<!--
+This is a starter template page. Use this page to start your new project from
+scratch. This page gets rid of all links and provides the needed markup only.
+-->
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="renderer" content="webkit">
+    <title>@ViewBag.Title</title>
+    <!-- Tell the browser to be responsive to screen width -->
+    <meta content="width=1024, maximum-scale=2" name="viewport">
+
+    <environment include="Development">
+        <!-- Bootstrap -->
+        <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css">
+        <!-- Bootstrap Table -->
+        <link rel="stylesheet" href="~/lib/bootstrap-table/dist/bootstrap-table.css" />
+        <link rel="stylesheet" href="~/lib/bootstrap-table/dist/extensions/group-by-v2/bootstrap-table-group-by.css" />
+        <link rel="stylesheet" href="~/lib/bootstrap-table/dist/extensions/fixed-columns/bootstrap-table-fixed-columns.css" />
+        <!-- Font Awesome -->
+        <link rel="stylesheet" href="~/lib/font-awesome/css/font-awesome.css">
+        <!-- Ionicons -->
+        <link rel="stylesheet" href="~/lib/Ionicons/css/ionicons.css">
+        <!-- Theme style -->
+        <link rel="stylesheet" href="~/lib/AdminLTE-2.4.3/dist/css/AdminLTE.css">
+        <link rel="stylesheet" href="~/lib/AdminLTE-2.4.3/dist/css/skins/_all-skins.css">
+
+        <link rel="stylesheet" href="~/css/nestable.css" />
+        <link rel="stylesheet" href="~/lib/bootstrap-datepicker/dist/css/bootstrap-datepicker.css" />
+    </environment>
+    <environment exclude="Development">
+        <!-- Bootstrap -->
+        <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css">
+        <!-- Bootstrap Table -->
+        <link rel="stylesheet" href="~/lib/bootstrap-table/dist/bootstrap-table.min.css" />
+        <link rel="stylesheet" href="~/lib/bootstrap-table/dist/extensions/group-by-v2/bootstrap-table-group-by.css" />
+        <link rel="stylesheet" href="~/lib/bootstrap-table/dist/extensions/fixed-columns/bootstrap-table-fixed-columns.css" />
+        <!-- Font Awesome -->
+        <link rel="stylesheet" href="~/lib/font-awesome/css/font-awesome.min.css">
+        <!-- Ionicons -->
+        <link rel="stylesheet" href="~/lib/Ionicons/css/ionicons.min.css">
+        <!-- Theme style -->
+        <link rel="stylesheet" href="~/lib/AdminLTE-2.4.3/dist/css/AdminLTE.min.css">
+        <link rel="stylesheet" href="~/lib/AdminLTE-2.4.3/dist/css/skins/_all-skins.min.css">
+
+        <link rel="stylesheet" href="~/css/nestable.min.css" />
+        <link rel="stylesheet" href="~/lib/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css" />
+    </environment>
+    <link rel="stylesheet" href="~/lib/layer/dist/theme/moon/style.css" />
+    <!-- FastClick -->
+    <script src="~/lib/fastclick/lib/fastclick.js"></script>
+
+    <style>
+        body, button, input, select, textarea, h1, h2, h3, h4, h5, h6 {
+            font-family: Helvetica, Tahoma, Arial, STXihei, "华文细黑", Heiti, "Microsoft YaHei", "微软雅黑", "黑体", SimSun, "宋体", sans-serif
+        }
+
+        body {
+            font-size: 13px;
+        }
+
+        /*解决.form-horizontal在手机xs模式下无效的问题*/
+        .form-horizontal .control-label {
+            text-align: right;
+            margin-bottom: 0;
+            padding-top: 7px;
+        }
+    </style>
+    @RenderSection("Styles", false)
+</head>
+<!--
+BODY TAG OPTIONS:
+=================
+Apply one or more of the following classes to get the
+desired effect
+|---------------------------------------------------------|
+| SKINS         | skin-blue                               |
+|               | skin-black                              |
+|               | skin-purple                             |
+|               | skin-yellow                             |
+|               | skin-red                                |
+|               | skin-green                              |
+|---------------------------------------------------------|
+|LAYOUT OPTIONS | fixed                                   |
+|               | layout-boxed                            |
+|               | layout-top-nav                          |
+|               | sidebar-collapse                        |
+|               | sidebar-mini                            |
+|---------------------------------------------------------|
+-->
+<body class="hold-transition skin-blue sidebar-mini">
+    <div class="wrapper">
+        <!-- Main Header -->
+        <header class="main-header">
+            <!-- Logo -->
+            <a href="javascript:;" class="logo">
+                <!-- mini logo for sidebar mini 50x50 pixels -->
+                <span class="logo-mini"><b>PHM</b></span>
+                <!-- logo for regular state and mobile devices -->
+                <span class="logo-lg"><b>Pinhua</b>Master</span>
+            </a>
+        </header>
+        <!-- Content Wrapper. Contains page content -->
+        <div class="content-wrapper">
+            <!-- Main content -->
+            <section class="content container-fluid" id="mainContent">
+                <!--------------------------
+                  | Your Page Content Here |
+                  -------------------------->
+
+                @RenderBody()
+            </section>
+            <!-- /.content -->
+        </div>
+        <!-- /.content-wrapper -->
+        <!-- Main Footer -->
+        <footer class="main-footer">
+            <!-- To the right -->
+            <div class="pull-right hidden-xs">
+                Colourful Flooring
+            </div>
+            <!-- Default to the left -->
+            <strong>Copyright &copy; 2018 <a href="#">PinhuaMaster</a>.</strong> All rights reserved.
+        </footer>
+        <!-- Add the sidebar's background. This div must be placed
+        immediately after the control sidebar -->
+        <div class="control-sidebar-bg"></div>
+    </div>
+    <!-- ./wrapper -->
+
+    @RenderSection("LayerContent", false)
+
+    <!-- REQUIRED JS SCRIPTS -->
+    <environment include="Development">
+        <!-- jQuery 3 -->
+        <script src="~/lib/jquery/dist/jquery.js"></script>
+        <!-- Bootstrap 3.3.7 -->
+        <script src="~/lib/bootstrap/dist/js/bootstrap.js"></script>
+        <!-- Bootstrap Table -->
+        @*<script src="~/lib/bootstrap-table/dist/bootstrap-table.js"></script>
+        <script src="~/lib/bootstrap-table/dist/locale/bootstrap-table-zh-CN.js"></script>
+        <script src="~/lib/bootstrap-table/dist/extensions/group-by-v2/bootstrap-table-group-by.js"></script>
+        <script src="~/lib/bootstrap-table/dist/extensions/fixed-columns/bootstrap-table-fixed-columns.js"></script>*@
+        <!-- AdminLTE App -->
+        <script src="~/lib/AdminLTE-2.4.3/dist/js/adminlte.js"></script>
+        <!-- Vue -->
+        <script src="~/lib/vue/dist/vue.js"></script>
+
+        <script src="~/lib/bootstrap-datepicker/dist/js/bootstrap-datepicker.js"></script>
+        <script src="~/lib/bootstrap-datepicker/dist/locales/bootstrap-datepicker.zh-CN.min.js"></script>
+    </environment>
+    <environment exclude="Development">
+        <!-- jQuery 3 -->
+        <script src="~/lib/jquery/dist/jquery.min.js"></script>
+        <!-- Bootstrap 3.3.7 -->
+        <script src="~/lib/bootstrap/dist/js/bootstrap.min.js"></script>
+        <!-- Bootstrap Table -->
+        <script src="~/lib/bootstrap-table/dist/bootstrap-table.min.js"></script>
+        <script src="~/lib/bootstrap-table/dist/locale/bootstrap-table-zh-CN.min.js"></script>
+        <script src="~/lib/bootstrap-table/dist/extensions/group-by-v2/bootstrap-table-group-by.min.js"></script>
+        <script src="~/lib/bootstrap-table/dist/extensions/fixed-columns/bootstrap-table-fixed-columns.js"></script>
+        <!-- AdminLTE App -->
+        <script src="~/lib/AdminLTE-2.4.3/dist/js/adminlte.min.js"></script>
+        <!-- Vue -->
+        <script src="~/lib/vue/dist/vue.min.js"></script>
+
+        <script src="~/lib/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js"></script>
+        <script src="~/lib/bootstrap-datepicker/dist/locales/bootstrap-datepicker.zh-CN.min.js"></script>
+    </environment>
+
+    <!-- Layer -->
+    <script src="~/lib/layer/dist/layer.js"></script>
+
+    <script>
+        $(function () {
+            //FastClick.attach(document.body)
+
+            $.fn.datepicker.defaults.language = 'zh-CN';
+            $.fn.datepicker.defaults.todayHighlight = true;
+            $.fn.datepicker.defaults.autoclose = true;
+        })
+        //解决IOS后退不刷新的问题
+        $(function () {
+            window.onpageshow = function (event) {
+                if (event.persisted) {
+                    window.location.reload();
+                }
+            }
+        });
+    </script>
+    @RenderSection("Scripts", required: false)
+
+</body>
+</html>

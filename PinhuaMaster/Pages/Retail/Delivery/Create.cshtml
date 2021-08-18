@@ -1,0 +1,19 @@
+﻿@page
+@using PinhuaMaster.Pages.Retail.Delivery.ViewModel
+@using PinhuaMaster.Pages.Retail.Delivery
+@using Microsoft.EntityFrameworkCore
+@model CreateModel
+@{
+    ViewData["Title"] = "录入";
+    ViewBag.NoContentHeader = true;
+
+}
+
+@Html.Partial("_DeliveryPartial", Model.Order)
+
+@section Scripts{
+    @Html.RenderScripts()
+}
+@section Styles{
+    @Html.RenderStyles()
+}

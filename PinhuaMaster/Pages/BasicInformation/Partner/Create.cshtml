@@ -1,0 +1,19 @@
+﻿@page
+@using PinhuaMaster.Pages.BasicInformation.Partner.ViewModel
+@using PinhuaMaster.Pages.BasicInformation.Partner
+@using Microsoft.EntityFrameworkCore
+@model CreateModel
+@{
+    ViewData["Title"] = "录入";
+    ViewBag.NoContentHeader = true;
+}
+
+@Html.Partial("_PartnerPartial", Model.PartnerInfo)
+
+
+@section Scripts{
+    @Html.RenderScripts()
+}
+@section Styles{
+    @Html.RenderStyles()
+}

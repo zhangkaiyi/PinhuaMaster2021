@@ -1,0 +1,44 @@
+﻿@using PinhuaMaster.Services
+@model IList<NavbarMenu>
+
+@{
+    //var page = ViewContext.RouteData.Values["Page"].ToString();
+    //var pathName = navMenuService.GetPathName(page);
+    var pathName = ViewBag.PathName as IList<string>;
+}
+
+@foreach (var navMenu in Model)
+{
+    // 如果允许角色为空，默认为管理员
+    if (navMenu.allow == null)
+    {
+        navMenu.allow = new List<string> { "管理员" };
+    }
+
+    // 如果当前角色匹配，生成菜单
+    //foreach (var role in navMenu.allow)
+    //{
+    //    if (User.IsInRole(role))
+    //    {
+    if (navMenu.children == null || !navMenu.children.Any())
+    {
+        <li class="@(pathName.Contains(navMenu.name) ? "active" : "")"><a asp-page="@navMenu.url"><i class="@navMenu.icon"></i> <span>@navMenu.name</span></a></li>
+    }
+    else
+    {
+        <li class="treeview @(pathName.Contains(navMenu.name) ? "menu-open active" : "")">
+            <a href="#">
+                <i class="@navMenu.icon"></i> <span>@navMenu.name</span>
+                <span class="pull-right-container">
+                    <i class="fa fa-angle-left pull-right"></i>
+                </span>
+            </a>
+            <ul class="treeview-menu" @(pathName.Contains(navMenu.name) ? @"style=display:block;" : "")>
+                @await Html.PartialAsync("_Navbar_For_AdminLTE", navMenu.children)
+            </ul>
+        </li>
+    }
+    //        break;
+    //    }
+    //}
+}

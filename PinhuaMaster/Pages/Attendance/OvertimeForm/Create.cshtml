@@ -1,0 +1,84 @@
+﻿@page
+@model PinhuaMaster.Pages.Attendance.OvertimeForm.CreateModel
+
+@{
+    ViewData["Title"] = "加班人员填报";
+}
+
+<div id="vueScope" v-cloak>
+    <form method="post">
+        <div class="row">
+            <div class="col-md-4">
+                <div class="box box-solid">
+                    <div class="box-body">
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                        <div class="form-group">
+                            <label class="control-label">日期</label>
+                            <input type="text" asp-for="Input.Form.YMD" class="form-control" data-provide="datepicker" data-date-format="yyyy-mm-dd" value="@DateTime.Now.ToString("yyyy-MM-dd")" readonly />
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label">制单人</label>
+                            <input asp-for="Input.Form.CreatedBy" class="form-control" value="@User.Identity.Name" readonly />
+                        </div>
+                        <div class="form-group">
+                            <button type="submit" class="btn btn-default"><i class="fa fa-save"></i> 保存</button>
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <a asp-page="Index">返回列表</a>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="box box-solid">
+                    <div class="box-body">
+                        <ul class="nav nav-pills nav-stacked">
+                            <li v-for="(user, index) in users">
+                                <a href="javascript:;">
+                                    {{user.Name}}
+                                    <span class="pull-right text-red" v-on:click="remove(index)"><i class="fa fa-times"></i></span>
+                                    <input type="hidden" v-bind:name="'Input.Users['+index+'].Id'" v-bind:value="user.Id" />
+                                    <input type="hidden" v-bind:name="'Input.Users['+index+'].Name'" v-bind:value="user.Name" />
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+@section Styles{
+    <style>
+        [v-cloak] {
+            display: none;
+        }
+    </style>
+}
+
+@section Scripts {
+    <script>
+        overtimeForm = new Vue({
+            el: '#vueScope',
+            data: {
+                users: [],
+            },
+            methods: {
+                remove: function (index) {
+                    if (confirm('［' + this.users[index].人员编号 + ' - ' + this.users[index].姓名 + '］没有加班？'))
+                        this.users.splice(index, 1)
+                }
+            },
+            beforeCreate: function () {
+                $.getJSON("/Attendance/OvertimeForm/Create?Handler=AjaxUsers", function (result) {
+                    this.users = result
+                }.bind(this))
+
+            }
+        })
+    </script>
+
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

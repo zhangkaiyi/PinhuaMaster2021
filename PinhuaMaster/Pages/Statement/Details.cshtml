@@ -1,0 +1,90 @@
+﻿@page "{Id}"
+@model PinhuaMaster.Pages.Statement.DetailsModel
+@{
+    ViewData["Title"] = "查帐";
+}
+
+@using NPOI.HSSF.UserModel;
+@using NPOI.SS.UserModel;
+@using NPOI.SS.Util;
+@using NPOI.HSSF.Util;
+@using NPOI.POIFS.FileSystem;
+@using NPOI.HPSF;
+@using System.IO;
+@using Microsoft.AspNetCore.StaticFiles;
+
+@{
+    var workbook = new HSSFWorkbook();
+    var sheet = workbook.CreateSheet("Statement");
+    // Add header labels
+    var rowIndex = 0;
+    var row = sheet.CreateRow(rowIndex);
+    row.CreateCell(0).SetCellValue("日期");
+    row.CreateCell(1).SetCellValue("业务描述");
+    row.CreateCell(2).SetCellValue("备注");
+    row.CreateCell(3).SetCellValue("产品编号");
+    row.CreateCell(4).SetCellValue("产品描述");
+    row.CreateCell(5).SetCellValue("规格");
+    row.CreateCell(6).SetCellValue("片数");
+    row.CreateCell(7).SetCellValue("数量");
+    row.CreateCell(8).SetCellValue("单位");
+    row.CreateCell(9).SetCellValue("单价");
+    row.CreateCell(10).SetCellValue("金额");
+    rowIndex++;
+    // Add data rows
+    foreach (var data in Model.StatementData)
+    {
+        row = sheet.CreateRow(rowIndex);
+        row.CreateCell(0).SetCellValue(data.OrderDate.Value);
+        row.CreateCell(1).SetCellValue(data.MovementTypeDescription);
+        row.CreateCell(2).SetCellValue(data.Remarks);
+        row.CreateCell(3).SetCellValue(data.ItemId);
+        row.CreateCell(4).SetCellValue(data.Description);
+        row.CreateCell(5).SetCellValue(data.Specification);
+        row.CreateCell(6).SetCellValue((double)(data.Qty ?? 0));
+        row.CreateCell(7).SetCellValue((double)(data.UnitQty ?? 0));
+        row.CreateCell(8).SetCellValue(data.Unit);
+        row.CreateCell(9).SetCellValue((double)(data.Price ?? 0));
+        row.CreateCell(10).SetCellValue((double)(data.Amount ?? 0));
+        rowIndex++;
+    }
+    //using (var fileData = new FileStream("C:\\Statement.xls", FileMode.Create))
+    //{
+    //    workbook.Write(fileData);
+    //}
+    //using (var exportData = new MemoryStream())
+    //{
+    //    workbook.Write(exportData);
+    //    var saveAsFileName = Html.UrlEncoder.Encode("对帐单");
+    //    var fileExt = ".xls";
+    //    Response.Body.Close();
+    //    //Response.Headers["Content-Type"] = "application/x-bittorrent";
+    //    //Response.Headers["Content-Type"] = "application/vnd.ms-excel";
+    //    var provider = new FileExtensionContentTypeProvider();
+    //    Response.Headers["Content-Type"] = provider.Mappings[fileExt];
+    //    Response.Headers["Content-Disposition"] = $"attachment; filename={saveAsFileName}{fileExt}";
+    //    //Response.Headers.ContentLength = exportData.Length;
+    //    Response.Body.Write(exportData.GetBuffer(), 0, (int)exportData.Length);
+    //    Response.Body.Flush();
+    //}
+}
+
+@Html.Partial("_Details_datatables")
+
+@section Styles{
+    @Html.RenderStyles()
+}
+
+@section Scripts{
+    <script>
+        var $detailsTable = $('#detailsTable');
+        $(function () {
+            $detailsTable.on('click-row.bs.table', function (e, row, $element) {
+                $('.success').removeClass('success');
+                $($element).addClass('success');
+            });
+        });
+    </script>
+
+    @Html.RenderScripts()
+}

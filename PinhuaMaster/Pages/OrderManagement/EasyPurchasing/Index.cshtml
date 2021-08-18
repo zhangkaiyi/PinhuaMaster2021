@@ -1,0 +1,125 @@
+﻿@page
+@using PinhuaMaster.Pages.OrderManagement.EasyPurchasing.ViewModel
+@model PinhuaMaster.Pages.OrderManagement.EasyPurchasing.IndexModel
+@{
+    //Layout = "_Layout_Layui";
+    ViewData["Title"] = "Index";
+}
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="box box-solid">
+            <div class="box-body">
+                <div id="tableContainer">
+                    <div class="btn-group" role="group" aria-label="..." id="toolbar">
+                        <a asp-page="Create" class="btn btn-default btn-flat"><i class="fa fa-plus"></i> 填报</a>
+                    </div>
+                    <table data-classes="table table-hover text-nowrap"
+                           data-toggle="table"
+                           data-toolbar="#toolbar"
+                           data-show-columns="true"
+                           data-search="true"
+                           data-striped="true"
+                           data-pagination="true"
+                           data-page-size="15"
+                           data-page-list="[15, 20, 50, 100, 200]"
+                           data-url="@Url.Page("Index", "AjaxPurchasingList")"
+                           id="mainTable">
+                        <thead>
+                            <tr>
+                                <th data-width="20" data-formatter="browseRecord"></th>
+                                <th data-field="@nameof(Gr2MainDto.Supplier)" data-visible="false">供应商编号</th>
+                                <th data-field="@nameof(Gr2MainDto.SupplierName)">供应商</th>
+                                <th data-field="@nameof(Gr2MainDto.PurchasingDate)">采购日期</th>
+                                <th data-field="@nameof(Gr2MainDto.PurchasingId)">采购单号</th>
+                                <th data-field="@nameof(Gr2MainDto.PurchasingType)">采购类型</th>
+                                <th data-field="@nameof(Gr2MainDto.Remarks)">备注</th>
+                                <th data-field="@nameof(Gr2MainDto.Contact)">联系人</th>
+                                <th data-field="@nameof(Gr2MainDto.ContactNumber)">联系电话</th>
+                                <th data-field="@nameof(Gr2MainDto.CreatedBy)">制单人</th>
+                                <th data-field="@nameof(Gr2MainDto.CreatedDate)">制单日期</th>
+                                <th data-width="20" data-formatter="deleteRecord"></th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+@section LayerContent{
+    <div style="padding:10px;display:none" id="detailsContainer">
+        <table data-classes="table table-hover text-nowrap"
+               data-toggle="table"
+               data-striped="true"
+               data-url="@Url.Page("Index", "AjaxPurchasingDetails")"
+               id="detailsTable">
+            <thead>
+                <tr>
+                    <th data-field="@nameof(PinhuaMaster.Data.Entities.Pinhua.Gr2Details.PurchasingId)" data-visible="false">采购单号</th>
+                    <th data-field="@nameof(PinhuaMaster.Data.Entities.Pinhua.Gr2Details.ItemId)">物料号</th>
+                    <th data-field="@nameof(PinhuaMaster.Data.Entities.Pinhua.Gr2Details.Description)">描述</th>
+                    <th data-field="@nameof(PinhuaMaster.Data.Entities.Pinhua.Gr2Details.Specification)">规格</th>
+                    <th data-field="@nameof(PinhuaMaster.Data.Entities.Pinhua.Gr2Details.Qty)">片数</th>
+                    <th data-field="@nameof(PinhuaMaster.Data.Entities.Pinhua.Gr2Details.UnitQty)">单位数量</th>
+                    <th data-field="@nameof(PinhuaMaster.Data.Entities.Pinhua.Gr2Details.Unit)">单位</th>
+                    <th data-field="@nameof(PinhuaMaster.Data.Entities.Pinhua.Gr2Details.Price)">单价</th>
+                    <th data-field="@nameof(PinhuaMaster.Data.Entities.Pinhua.Gr2Details.Amount)">金额</th>
+                </tr>
+            </thead>
+        </table>
+    </div>
+
+}
+
+@section Scripts{
+    <script>
+        function layerPurchasingDetails() {
+            layer.open({
+                type: 1,
+                area: $(window).width() < 992 ? ['98%', 'auto'] : ['800px', 'auto'],
+                offset: $(window).width() < 992 ? 'auto' : '150px',
+                    content: $('#detailsContainer'),
+                    shadeClose: true,
+                    closeBtn: false,
+                    //title: false,
+                });
+        }
+
+        function browseRecord(value, row) {
+            return '<a href="@(Url.Page("Print"))/' + row.PurchasingId + '">打印</a> <a href="@(Url.Page("Edit"))/' + row.PurchasingId + '">修改</a>'
+        }
+
+        function deleteRecord (value, row) {
+            return '<a href="@(Url.Page("Delete"))/' + row.PurchasingId + '"><i class="fa fa-close"></i></a>'
+        }
+
+        var mainTable = $('#mainTable')
+        var detailsTable = $('#detailsTable')
+        var detailsTitle = $('#detailsTitle')
+        mainTable.on('click-cell.bs.table', function (event, field, value, row, $element) {
+            var url = '@Url.Page("Index", "AjaxPurchasingDetails")&id=' + row.PurchasingId
+            detailsTable.bootstrapTable('refresh', { url: url });
+            //detailsTitle.html(row.CustomerName + ' <small>单号：' + row.PurchasingId+'</small> <small>金额：' + row.Amount + '</small>')
+            console.log(field)
+            if (field != 0 && field != 14) {
+                layerPurchasingDetails()
+            }
+        })
+    </script>
+}
+
+@section Styles{
+    <style>
+        .fixed-table-toolbar .bs-bars,
+        .fixed-table-toolbar .search,
+        .fixed-table-toolbar .columns {
+            position: relative;
+            margin-top: 10px;
+            margin-bottom: 10px;
+            line-height: 30px;
+        }
+    </style>
+}

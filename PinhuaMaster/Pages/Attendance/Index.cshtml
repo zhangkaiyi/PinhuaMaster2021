@@ -1,0 +1,43 @@
+﻿@page
+@model PinhuaMaster.Pages.Attendance.IndexModel
+@{
+    ViewData["Title"] = "旧版销售与采购";
+}
+
+<div id="toolbar">
+    <a asp-page="Create" class="btn btn-default">生成新报表</a>
+</div>
+
+<div class="row">
+    <div class="col-md-8">
+        <div class="box box-solid">
+            <div class="box-body">
+                <table data-toggle="table"
+                       data-toolbar="#toolbar"
+                       class="table table-striped table-hover"
+                       style="white-space:nowrap">
+                    <thead>
+                        <tr>
+                            <th>年月</th>
+                            <th>工时</th>
+                            <th>人数</th>
+                            <th>用餐</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.Reports.OrderByDescending(r => r.Report.Y).ThenByDescending(r => r.Report.M))
+                        {
+                        <tr>
+                            <td><a asp-page="Edit" asp-route-Y="@item.Report.Y" asp-route-M="@item.Report.M">@(item.Report.Y) - @(item.Report.M.ToString("D2"))</a></td>
+                            <td>@(item.Details.Sum(p => p.总工时)?.ToString("0.0"))</td>
+                            <td>@(item.Details.Count())</td>
+                            <td>@(item.Details.Sum(p => p.用餐))</td>
+                        </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+

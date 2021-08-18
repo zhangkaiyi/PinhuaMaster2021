@@ -1,0 +1,25 @@
+﻿@page "{Id}"
+@model PinhuaMaster.Pages.Statement.DetailsOldModel
+@{
+    ViewData["Title"] = "查帐";
+}
+
+@Html.Partial("_Details_datatables_old")
+
+@section Styles{
+    @Html.RenderStyles()
+}
+
+@section Scripts{
+    <script>
+        var $detailsTable = $('#detailsTable');
+        $(function () {
+            $detailsTable.on('click-row.bs.table', function (e, row, $element) {
+                $('.success').removeClass('success');
+                $($element).addClass('success');
+            });
+        });
+    </script>
+
+    @Html.RenderScripts()
+}

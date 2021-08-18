@@ -1,0 +1,60 @@
+﻿@page
+@model PinhuaMaster.Pages.User.EditModel
+@inject UserManager<ApplicationUser> userManager
+@inject RoleManager<IdentityRole> roleManager
+@{
+    ViewData["Title"] = "Edit";
+    var thisUser = await userManager.FindByIdAsync(Model.UserId);
+    var rolesInUser = await userManager.GetRolesAsync(thisUser);
+    var rolesNotInUser = roleManager.Roles.Except(roleManager.Roles.Where(r => rolesInUser.Contains(r.Name)));
+}
+
+<form method="post">
+    <input type="hidden" name="userId" value="@thisUser.Id" />
+    <div class="box box-primary box-solid">
+        <div class="box-header">添加角色到【@thisUser.UserName】</div>
+        <table class="table table-striped no-margin">
+            @if (rolesNotInUser.Count() == 0)
+            {
+                <tr><td colspan="2" class="text-center">没有可添加的角色</td></tr>
+            }
+            else
+            {
+                <tr><td>角色名</td><td>是否添加</td></tr>
+                foreach (var role in rolesNotInUser)
+                {
+                    <tr>
+                        <td>@role.Name</td>
+                        <td>
+                            <input type="checkbox" name="rolesToAdd" value="@role.Name">
+                        </td>
+                    </tr>
+                }
+            }
+        </table>
+    </div>
+    <div class="box box-primary box-solid">
+        <div class="box-header">移除角色自【@thisUser.UserName】</div>
+        <table class="table table-striped no-margin">
+            @if (rolesInUser.Count() == 0)
+            {
+                <tr><td colspan="2" class="text-center">没有可移除的角色</td></tr>
+            }
+            else
+            {
+                <tr><td>角色名</td><td>是否移除</td></tr>
+                foreach (var role in rolesInUser)
+                {
+                    <tr>
+                        <td>@role</td>
+                        <td>
+                            <input type="checkbox" name="rolesToRemove" value="@role">
+                        </td>
+                    </tr>
+                }
+            }
+        </table>
+    </div>
+    <button type="submit" class="btn btn-primary">保存修改</button>
+    <a asp-page="Index" class="btn btn-default">取消</a>
+</form>

@@ -1,0 +1,237 @@
+﻿@page
+@model PinhuaMaster.Pages.OrderManagement.IndexModel
+@inject PinhuaMaster.Services.ITimelineService timelineService
+
+@{
+    ViewData["Title"] = "PinhuaMaster Timeline";
+    var timelineData1 = timelineService.GetTimelineData();
+    var timelineData2 = timelineService.GetTimelineData();
+    var orderList = pinhuaContext.NewOrderMain.OrderByDescending(p => p.OrderDate).ThenByDescending(p => p.OrderId).ToList();
+    var orderListGrouping = from p in orderList
+                            group p by p.OrderDate into g
+                            select new
+                            {
+                                Key = g.Key,
+                                Order = g
+                            };
+    var orderDetails = pinhuaContext.NewOrderDetails.ToList();
+    var orderList30 = orderList.Where(p => p.OrderDate >= DateTime.Now.Date.AddDays(-30));
+    var orderList60to30 = orderList.Where(p => p.OrderDate >= DateTime.Now.Date.AddDays(-60) && p.OrderDate < DateTime.Now.Date.AddDays(-30));
+    var orderListGrowthOfQty = ((decimal)(orderList30.Count() - orderList60to30.Count()) / orderList60to30.Count()).ToString("0.00%");
+    var orderListGrowthOfAmount = ((orderList30.Sum(p => p.OrderAmount) - orderList60to30.Sum(p => p.OrderAmount)) / orderList60to30.Sum(p => p.OrderAmount)).Value.ToString("0.00%");
+
+    var deliveryList = pinhuaContext.NewDeliveryMain.OrderByDescending(p => p.DeliveryDate).ThenByDescending(p => p.DeliveryId).ToList();
+    var deliveryListGrouping = from p in deliveryList
+                               group p by p.DeliveryDate into g
+                               select new
+                               {
+                                   Key = g.Key,
+                                   Delivery = g
+
+                               };
+    var deliveryDetails = from p in pinhuaContext.NewDeliveryMain
+                          join pd in pinhuaContext.NewDeliveryDetails on p.DeliveryId equals pd.DeliveryId
+                          join od in pinhuaContext.NewOrderDetails on new { A = p.OrderSource, B = pd.DetailsId } equals new { A = od.OrderId, B = od.DetailsId }
+                          select new
+                          {
+                              p,
+                              pd.DetailsId,
+                              pd.Qty,
+                              pd.Amount,
+                              od.Description,
+                              od.Length,
+                              od.Width,
+                              od.Height
+                          };
+
+    var dates = orderList.Select(p => p.OrderDate).Union(deliveryList.Select(p => p.DeliveryDate)).Distinct().OrderByDescending(p => p.Value).ToList();
+}
+
+<div class="row">
+    <div class="col-md-4 col-sm-6">
+        <div class="info-box bg-yellow">
+            <span class="info-box-icon"><i class="ion ion-ios-paper-outline"></i></span>
+
+            <div class="info-box-content">
+                <span class="info-box-text">订单数量（总计）</span>
+                <span class="info-box-number">@orderList.Count</span>
+            </div>
+            <!-- /.info-box-content -->
+        </div>
+        <div class="info-box bg-yellow">
+            <span class="info-box-icon"><i class="ion ion-ios-paper-outline"></i></span>
+
+            <div class="info-box-content">
+                <span class="info-box-text">订单数量（30天）</span>
+                <span class="info-box-number">@orderList30.Count()</span>
+
+                <div class="progress">
+                    <div class="progress-bar" style="width: @(orderListGrowthOfQty)"></div>
+                </div>
+                <span class="progress-description">
+                    环比增长（30天）：@(orderListGrowthOfQty)
+                </span>
+            </div>
+            <!-- /.info-box-content -->
+        </div>
+        <div class="info-box bg-green">
+            <span class="info-box-icon"><i class="ion ion-social-yen-outline"></i></span>
+
+            <div class="info-box-content">
+                <span class="info-box-text">订单金额（总计）</span>
+                <span class="info-box-number">@orderList.Sum(p => p.OrderAmount).Value.ToString("¥ #,##0.00")</span>
+            </div>
+            <!-- /.info-box-content -->
+        </div>
+        <div class="info-box bg-green">
+            <span class="info-box-icon"><i class="ion ion-social-yen-outline"></i></span>
+
+            <div class="info-box-content">
+                <span class="info-box-text">订单金额（30天）</span>
+                <span class="info-box-number">@orderList30.Sum(p => p.OrderAmount).Value.ToString("¥ #,##0.00")</span>
+
+                <div class="progress">
+                    <div class="progress-bar" style="width: @(orderListGrowthOfAmount)"></div>
+                </div>
+                <span class="progress-description">
+                    环比增长（30天）：@(orderListGrowthOfAmount)
+                </span>
+            </div>
+            <!-- /.info-box-content -->
+        </div>
+    </div>
+    <div class="col-md-6 col-sm-6">
+        <div class="box box-solid">
+            <div class="box-body">
+                <ul class="timeline timeline-inverse">
+                    @foreach (var data in timelineData2)
+                    {<!-- timeline time label -->
+                        /**/
+                        <li class="time-label">
+                            <span style="background-color:#f0f0f0;border:1px solid #ddd">
+                                @data.Date.Value.ToString("yyyy-MM-dd")
+                            </span>
+                        </li>
+                        <!-- /.timeline-label -->
+                        @foreach (var order in data.Orders)
+                        {
+                            <!-- timeline item -->
+                            <li>
+                                <!-- timeline icon -->
+                                <i class="fa fa-sticky-note bg-blue"></i>
+                                <div class="timeline-item">
+                                    <span class="time hidden-xs">创建人：@order.Main.CreatedBy</span>
+
+                                    <h3 class="timeline-header"><a href="#"> 下单 - @order.Main.CName</a></h3>
+                                    <div class="timeline-body">
+                                        <table class="table no-margin">
+                                            <thead>
+                                                <tr>
+                                                    <th style="width:10%">编号</th>
+                                                    <th style="width:50%">描述</th>
+                                                    <th class="hidden-xs" style="width:30%">规格</th>
+                                                    <th class="text-right" style="width:10%">片数</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @foreach (var detail in order.Details)
+                                                {
+                                                    <tr>
+                                                        <td>@detail.DetailsId</td>
+                                                        <td>@detail.Description</td>
+                                                        <td class="hidden-xs">@(detail.Length)x@(detail.Width)x@(detail.Height)</td>
+                                                        <td class="text-right">@Convert.ToInt32(detail.Qty)</td>
+                                                    </tr>
+
+                                                }
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </li>
+                            <!-- END timeline item -->
+                        }
+                        @foreach (var delivery in data.DeliveryOrders)
+                        {
+                            <!-- timeline item -->
+                            <li>
+                                <!-- timeline icon -->
+                                <i class="fa fa-arrow-up bg-red"></i>
+                                <div class="timeline-item">
+                                    <span class="time hidden-xs">创建人：@delivery.Main.CreatedBy</span>
+
+                                    <h3 class="timeline-header"><a href="#" class="text-red"> 发货 - @delivery.Main.CName</a></h3>
+                                    <div class="timeline-body">
+                                        <table class="table no-margin">
+                                            <thead>
+                                                <tr>
+                                                    <th style="width:10%">编号</th>
+                                                    <th style="width:50%">描述</th>
+                                                    <th class="hidden-xs" style="width:30%">规格</th>
+                                                    <th class="text-right" style="width:10%">片数</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @foreach (var detail in delivery.Details.Where(p => p.DeliveryId == delivery.Main.DeliveryId))
+                                                {
+                                                    <tr>
+                                                        <td>@detail.DetailsId</td>
+                                                        <td>@detail.Description</td>
+                                                        <td class="hidden-xs">@(detail.Length)x@(detail.Width)x@(detail.Height)</td>
+                                                        <td class="text-right">@Convert.ToInt32(detail.Qty)</td>
+                                                    </tr>
+
+                                                }
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </li>
+                            <!-- END timeline item -->
+                        }
+                        @foreach (var collection in data.Collections)
+                        {
+                            <!-- timeline item -->
+                            <li>
+                                <!-- timeline icon -->
+                                <i class="fa fa-yen bg-green"></i>
+                                <div class="timeline-item">
+                                    <span class="time hidden-xs">创建人：@collection.Main.CreatedBy</span>
+
+                                    <h3 class="timeline-header"><a href="#" class="text-green"> 收款 - @collection.Main.CustomerName</a></h3>
+
+                                    <div class="timeline-body">
+                                        <ul class="nav nav-pills nav-stacked">
+                                            <li>
+                                                <a>
+                                                    金额：
+                                                    <span class="pull-right text-red">@collection.Main.CollectionAmount.Value.ToString("¥ #,##0")</span>
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a>
+                                                    备注：
+                                                    <span class="pull-right text-yellow">@collection.Main.Remarks</span>
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </li>
+                            <!-- END timeline item -->
+                        }
+                    }
+
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Styles{
+    <style>
+        th, td {
+            white-space: nowrap;
+        }
+    </style>
+}

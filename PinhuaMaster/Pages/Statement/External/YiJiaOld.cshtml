@@ -1,0 +1,118 @@
+﻿@page
+@model PinhuaMaster.Pages.Statement.External.YiJiaOldModel
+@{
+    ViewData["Title"] = "YiJia";
+    ViewData["NoContentHeader"] = true;
+    Layout = "_Layout_External";
+}
+
+<div class="box box-solid">
+    <div class="box-header">
+        <div class="box-title" style="font-weight:bold">@Model?.StatementData?.单位名称 - <small class="text-danger">合计金额：@Model?.StatementData?.应收合计?.ToString("0.00")</small></div>
+    </div>
+    <div class="box-body">
+        <table id="statement" class="table table-hover table-bordered table-striped nowrap"></table>
+    </div>
+</div>
+
+@section Styles{
+    <environment include="Development">
+        <link rel="stylesheet" href="~/lib/datatables/media/css/dataTables.bootstrap.css" />
+    </environment>
+    <environment exclude="Development">
+        <link rel="stylesheet" href="~/lib/datatables/media/css/dataTables.bootstrap.min.css" />
+    </environment>
+}
+
+@section Scripts{
+    <environment include="Development">
+        <script src="~/lib/datatables/media/js/jquery.dataTables.js"></script>
+        <script src="~/lib/datatables/media/js/dataTables.bootstrap.js"></script>
+        <script src="~/js/dataTables.options.js"></script>
+    </environment>
+    <environment exclude="Development">
+        <script src="~/lib/datatables/media/js/jquery.dataTables.min.js"></script>
+        <script src="~/lib/datatables/media/js/dataTables.bootstrap.min.js"></script>
+        <script src="~/js/dataTables.options.js"></script>
+    </environment>
+
+    <script>
+        $.extend(true, $.fn.DataTable.defaults, CONSTANT.DATA_TABLES.DEFAULT_OPTION);
+
+        detailTable = $('#statement').DataTable({
+            @*ajax: {
+                url: "@Url.Page("YiJia","Ajax")",
+                type: "get",
+                dataSrc: "@(Html.Raw(nameof(ViewModel.Model应收应付.明细)))",
+            },*@
+            data:@Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model.StatementData.明细)),
+            autoWidth: false,
+            scrollX: true,
+            pageLength: -1,
+            searching: true,    //禁用原生搜索
+            //scrollY:'600',
+            //dom: "fr<'#detailPanel.panel panel-primary'<'panel-heading'<'row'<'col-xs-5'<'panel-title'>><'col-xs-7'>>>t<'panel-footer'>><'row'<'col-xs-5'i><'col-xs-7'p>>",
+            //dom: 'Bfrtip',
+            columns: [
+                { data: "@(nameof(ViewModel.Model应收应付明细.TypeDescription))", title: "业务描述", visible: false },
+                { data: "@(nameof(ViewModel.Model应收应付明细.Date))", title: "日期", visible: false },
+                { data: "@(nameof(ViewModel.Model应收应付明细.OrderId))", name: "单号", title: "单号", visible: false },
+                { data: "@(nameof(ViewModel.Model应收应付明细.ItemId))", title: "产品编号", class:"hidden-xs" },
+                { data: "@(nameof(ViewModel.Model应收应付明细.ItemDescription))", title: "产品描述" },
+                { data: "@(nameof(ViewModel.Model应收应付明细.Specification))", title: "规格" },
+                { data: "@(nameof(ViewModel.Model应收应付明细.Qty))", title: "片数", class: "text-right" },
+                { data: "@(nameof(ViewModel.Model应收应付明细.UnitQty))", title: "数量", class: "hidden-xs text-right" },
+                { data: "@(nameof(ViewModel.Model应收应付明细.Unit))", title: "单位", class: "hidden-xs" },
+                { data: "@(nameof(ViewModel.Model应收应付明细.Price))", title: "单价", class:"text-right" },
+                { data: "@(nameof(ViewModel.Model应收应付明细.Amount))", title: "金额", class:"text-right" },
+            ],
+            drawCallback: function (settings) {
+                var api = this.api();
+                var rows = api.rows({
+                    page: 'current'
+                }).nodes();
+                var last = null;
+                api.column('单号:name', {
+                    page: 'current'
+                }).data().each(function (value, index) {
+                    if (last !== value) {
+                        var data = api.row(index).data()
+                        var remarks = data.@(nameof(ViewModel.Model应收应付明细.Remarks)) || "";
+                        if (remarks) {
+                            remarks = ' - 备注：' + remarks;
+                            remarks = '<span class="text-success" style="font-weight:bold">' + remarks + '</span>';
+                        }
+                        var totalAmount = data.@(nameof(ViewModel.Model应收应付明细.TotalAmount)) || "";
+                        if (totalAmount) {
+                            totalAmount = ' - 金额：' + totalAmount;
+                            totalAmount = '<span class="text-primary" style="font-weight:bold">' + totalAmount + '</span>';
+                        }
+
+                        var date = data.@(nameof(ViewModel.Model应收应付明细.Date));
+                        var orderId = data.@(nameof(ViewModel.Model应收应付明细.OrderId));
+                        var typeDescription = data.@(nameof(ViewModel.Model应收应付明细.TypeDescription));
+
+                        if ($.inArray(data.@(nameof(ViewModel.Model应收应付明细.TypeDescription)), ['收款', "付款", "结算"]) == -1) {
+                            $(rows).eq(index).before('<tr class="group"><td colspan="20"><b>' + orderId + ' - ' + date + ' - ' + typeDescription + totalAmount + '</b>' + '<span class="hidden-xs">' + remarks + '</span>' + '</td></tr>');
+                        }
+                        else {
+                            var financeAmount = data.@(nameof(ViewModel.Model应收应付明细.Amount));
+                            if (financeAmount != null && financeAmount != undefined) {
+                                    financeAmount = ' - 金额：' + financeAmount;
+                            }
+                            var cls = ""
+                            var description = data.@(nameof(ViewModel.Model应收应付明细.TypeDescription));
+                            if (description == '收款')
+                                cls = 'text-danger'
+                            else if (description == '付款')
+                                cls = 'text-success'
+
+                            $(rows).eq(index).html('<td colspan="20" class="' + cls + '"><b>' + orderId+' - '+ date + ' - ' + typeDescription + financeAmount + '<span class="hidden-xs">' + remarks + '</span>' + '</b></td>');
+                        }
+                        last = value;
+                    }
+                });
+            },
+        })
+    </script>
+}

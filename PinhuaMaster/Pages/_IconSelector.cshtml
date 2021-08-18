@@ -1,0 +1,69 @@
+﻿@using PinhuaMaster.Services
+@inject ApplicationDbContext _dbContext
+<!-- Modal -->
+<div class="modal" id="iconDialog" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">Modal title</h4>
+            </div>
+            <div class="modal-body">
+                <div>
+                    @{
+                        var faIcons = _dbContext.Icons.Where(x => x.SourceType == SourceTypes.Fontawesome).OrderBy(x => x.Name).ToList();
+                        var faCountPerPage = 50;
+                        var faPages = Math.Ceiling((decimal)faIcons.Count() / faCountPerPage);
+                    }
+                    <nav aria-label="Page navigation">
+                        <ul class="pagination">
+                            @for (int i = 1; i != faPages + 1; i++)
+                            {
+                                <li role="presentation" class="@(i==1?"active":"")"><a href="#tab@(i)" aria-controls="home" role="tab" data-toggle="tab">@i</a></li>
+                            }
+                        </ul>
+                    </nav>
+                    <!-- Tab panes -->
+                    <div class="tab-content">
+                        @for (int i = 1; i != faPages + 1; i++)
+                        {
+                            <div role="tabpanel" class="tab-pane @(i==1?"active":"")" id="tab@(i)">
+                                <div class="bs-glyphicons">
+                                    <ul class="bs-glyphicons-list">
+                                        @foreach (var icon in faIcons.Skip(faCountPerPage * (i - 1)).Take(faCountPerPage))
+                                        {
+                                            <li data-dismiss="modal"><span class="@icon.ClassName"></span><span class="glyphicon-class">@icon.Name</span></li>
+
+                                        }
+                                    </ul>
+
+                                </div>
+                            </div>
+
+                        }
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                <button type="button" class="btn btn-primary" data-dismiss="modal">确定</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@Html.Script(
+    @<script>
+         // 这是HtmlResourceHelper
+         $(document).ready(function () {
+             var iconSelector = $('#iconSelector');
+             var iconSelector_i = $('i', iconSelector);
+             var iconSelector_input = $('input', iconSelector);
+             $('.bs-glyphicons-list>li').on('click', function () {
+                 var clsName = $('span', this)[0].className;
+                 iconSelector_i[0].className = clsName;
+                 iconSelector_input[0].value = clsName;
+             })
+         })
+    </script>
+            )

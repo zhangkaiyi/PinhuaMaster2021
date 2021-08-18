@@ -1,0 +1,30 @@
+﻿@page
+@model PinhuaMaster.Pages.MenuSystem.IndexModel
+@using PinhuaMaster.Services
+@inject INavMenuService navMenuService
+@inject ApplicationDbContext DbContext
+
+@{
+    ViewData["Title"] = "NavMenus Management";
+}
+
+<div class="panel panel-default">
+    <div class="panel-heading" style="position:relative">
+        <div class="panel-title">NavMenus Management</div>
+    </div>
+    <div class="panel-body">
+        <div id="app">
+            <div class="row">
+                @await Html.PartialAsync("_NavMenuManagement", navMenuService.GetNavbarMenus())
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Styles{
+    @Html.RenderStyles()
+}
+
+@section Scripts{
+    @Html.RenderScripts()
+}

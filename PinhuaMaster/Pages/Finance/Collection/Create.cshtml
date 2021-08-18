@@ -1,0 +1,69 @@
+﻿@page
+@model PinhuaMaster.Pages.Finance.Collection.CreateModel
+@{
+    ViewData["Title"] = "收款填报";
+}
+
+<div class="row">
+    <div class="col-sm-9">
+        <form method="post" class="form-horizontal">
+            <div class="box box-solid" id="formBox">
+                <div class="box-body">
+                    @*<div class="form-group">
+                            <label for="收款单号">单号</label>
+                            <input type="text" class="form-control" id="收款单号" name="@Html.NameFor(x=>x.收款单号)" placeholder="OrderId">
+                        </div>*@
+                    <div class="form-group">
+                        <label class="control-label col-xs-3 col-md-2" for="单位编号">收款单位</label>
+                        <div class="col-xs-9 col-md-10">
+                            <select class="form-control" id="单位编号" asp-for="Collection.单位编号" asp-items="Model.CustomerSelectList"></select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-xs-3 col-md-2" for="收款类型">收款类型</label>
+                        <div class="col-xs-9 col-md-10">
+                            <select class="form-control" id="收款类型" asp-for="Collection.收款类型" asp-items="Model.CollectionTypeSelectList"></select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-xs-3 col-md-2" for="收款日期">日期</label>
+                        <div class="col-xs-9 col-md-10">
+                            <input asp-for="Collection.收款日期" value="@DateTime.Now.ToString("yyyy-MM-dd")" type="text"
+                                   id="收款日期"
+                                   class="form-control"
+                                   data-provide="datepicker"
+                                   data-date-format="yyyy-mm-dd" 
+                                   readonly />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-xs-3 col-md-2" for="收款金额">收款金额</label>
+                        <div class="col-xs-9 col-md-10">
+                            <input type="number" class="form-control" id="收款金额" asp-for="Collection.收款金额" placeholder="输入金额...">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-xs-3 col-md-2" for="备注">备注</label>
+                        <div class="col-xs-9 col-md-10">
+                            <input type="text" class="form-control" id="备注" asp-for="Collection.备注" placeholder="输入备注...">
+                        </div>
+                    </div>
+                </div>
+                <div class="box-footer">
+                    <div class="row no-print">
+                        <div class="col-xs-12">
+                            <a href="invoice-print.html" target="_blank" class="btn btn-default"><i class="fa fa-print"></i> 打印</a>
+                            <button type="submit" class="btn btn-primary pull-right">
+                                <i class="fa fa-check"></i> 确认提交
+                            </button>
+                            <a asp-page="Index" class="btn btn-default pull-right" style="margin-right: 5px;">
+                                <i class="fa fa-reply"></i> 取消
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+
+</div>

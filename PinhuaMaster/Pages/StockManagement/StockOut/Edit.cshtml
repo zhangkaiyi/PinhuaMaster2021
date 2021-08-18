@@ -1,0 +1,17 @@
+﻿@page "{Id?}"
+@using PinhuaMaster.Pages.StockManagement.StockOut.ViewModel
+@model PinhuaMaster.Pages.StockManagement.StockOut.EditModel
+@{
+    ViewData["Title"] = "编辑";
+    ViewBag.NoContentHeader = true;
+}
+
+@Html.Partial("_StockOutPartial", Model.Order)
+
+
+@section Scripts{
+    @Html.RenderScripts()
+}
+@section Styles{
+    @Html.RenderStyles()
+}

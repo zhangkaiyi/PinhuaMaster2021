@@ -1,0 +1,238 @@
+﻿@page "{Id?}"
+@model PinhuaMaster.Pages.ProductionManagement.ProductionOrder.DetailsModel
+@{
+    ViewData["Title"] = "Details";
+    ViewBag.NoContentHeader = true;
+}
+
+<div class="row">
+    <div class="col-xs-12">
+        <div class="box box-solid">
+            <div class="box-header">
+                <i class="fa fa-globe"></i>
+                <h3 class="box-title"> 查看 - 生产订单</h3>
+                <div class="pull-right box-tools">
+                    <!-- button with a dropdown -->
+                    @if (User.Identity.IsAuthenticated)
+                    {
+                            <a href="@(Url.Page("Edit", new {Id = Model.Order.M?.单号}))" class="btn btn-default">
+                                <i class="fa fa-edit fa-fw"></i> 修改
+                            </a>
+                            <a href="@(Url.Page("Delete", new { Id = Model?.Order?.M?.单号 }))" class="btn btn-default">
+                                <i class="fa fa-times fa-fw"></i> 删除
+                            </a>
+                        @*<div class="btn-group">
+                            <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                                <i class="fa fa-bars"></i>
+                            </button>
+                            <ul class="dropdown-menu pull-right" role="menu">
+                                <li>
+                                    <a href="@(Url.Page("Edit", new {Id = Model.Order.M?.单号}))">
+                                        <i class="fa fa-edit fa-fw"></i> 修改
+                                    </a>
+                                </li>
+                                <li class="divider"></li>
+                                <li>
+                                    <a href="@(Url.Page("Delete", new { Id = Model?.Order?.M?.单号 }))">
+                                        <i class="fa fa-times fa-fw"></i> 删除
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>*@
+                    }
+                </div>
+                @*<div class="box-tools pull-right"><a href="@(Url.Page("Edit", new {Id = Model.Order.M?.单号}))" class="btn btn-primary"><i class="fa fa-edit"></i> 修改</a></div>*@
+            </div>
+            <div class="box-body">
+                <div class="row">
+                    <div class="col-sm-6">
+                        <table class="table">
+                            <tbody>
+                                <tr>
+                                    <th>单号</th>
+                                    <td> @(Model.Order.M?.单号) （@(Model.Order?.M?.状态)）</td>
+                                </tr>
+                                <tr>
+                                    <th style="        width: 50%">客户</th>
+                                    <td>@(Model.Order.M.客户名)</td>
+                                </tr>
+                                <tr>
+                                    <th>概要</th>
+                                    <td>@(Model.Order.M.概要)</td>
+                                </tr>
+                                <tr>
+                                    <th>日期</th>
+                                    <td class="text-primary">@(Model.Order.M?.日期?.ToString("yyyy-MM-dd"))</td>
+                                </tr>
+                                <tr>
+                                    <th>交期</th>
+                                    <td class="text-success">@(Model.Order.M?.交期?.ToString("yyyy-MM-dd"))</td>
+                                </tr>
+                                <tr>
+                                    <th>备注</th>
+                                    <th class="text-danger">@(Model.Order.M.备注)</th>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <!-- /.col -->
+                </div>
+                <!-- /.row -->
+                <!-- Table row -->
+                <div class="row">
+                    <div class="col-xs-12">
+                        <div class="table-responsive">
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th>Idx</th>
+                                        <th>图片</th>
+                                        <th>描述</th>
+                                        <th>规格</th>
+                                        <th>片数</th>
+                                        @*<th>平方</th>*@
+                                        <th>刻线</th>
+                                        <th>拉丝</th>
+                                        <th>开槽</th>
+                                        <th>油漆</th>
+                                        <th>其他要求</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var tr in Model.Order.D)
+                                    {
+                                    <tr>
+                                        <td style="vertical-align: middle;">@(Model.Order.D.IndexOf(tr) + 1)</td>
+                                        <td>
+                                            @if (!string.IsNullOrEmpty(tr.图片))
+                                                {<a href="@Url.Action("Image","PinhuaImage",new {contentType=string.IsNullOrEmpty(tr.图片type)?"image/jpeg":tr.图片type , picNo=tr.图片})">
+                                                <img src="@Url.Action("Image","PinhuaImage",new {contentType=string.IsNullOrEmpty(tr.图片type)?"image/jpeg":tr.图片type , picNo=tr.图片})" style="min-width: 80px;max-width: 80px;height: auto;" />
+                                            </a>
+                                                }
+                                        </td>
+                                        <td style="vertical-align: middle;">@(tr.描述)</td>
+                                        <td style="vertical-align: middle;">@(tr.长?.ToString("0.#"))×@(tr.宽?.ToString("0.#"))×@(tr.高?.ToString("0.#"))</td>
+                                        <td style="vertical-align: middle;">@(tr.片数?.ToString("0.#"))</td>
+                                        @*<td>@(tr.平方数)</td>*@
+                                        <td style="vertical-align: middle;"><zky-tag-yesno description="@(tr.刻线要求)">@(tr.是否刻线)</zky-tag-yesno></td>
+                                        <td style="vertical-align: middle;"><zky-tag-yesno description="@(tr.拉丝要求)">@(tr.是否拉丝)</zky-tag-yesno></td>
+                                        <td style="vertical-align: middle;"><zky-tag-yesno description="@(tr.开槽要求)">@(tr.是否开槽)</zky-tag-yesno></td>
+                                        <td style="vertical-align: middle;"><zky-tag-yesno description="@(tr.油漆要求)">@(tr.是否油漆)</zky-tag-yesno></td>
+                                        <td style="vertical-align: middle;">@(tr.其他要求)</td>
+                                    </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <!-- /.col -->
+                </div>
+                <!-- /.row -->
+                <!-- this row will not appear when printing -->
+                <div class="row no-print">
+                    <div class="col-xs-12">
+                        @*<a href="invoice-print.html" target="_blank" class="btn btn-default"><i class="fa fa-print"></i> Print</a>*@
+                        <a href="javascript:history.back(-1);" class="btn btn-default btn-flat"><i class="fa fa-long-arrow-left"></i> 返回</a>
+                        <div class="pull-right">
+                            @if (User.Identity.IsAuthenticated)
+                            {
+                            @*<a class="btn btn-danger btn-flat" href="@(Url.Page("Delete", new { Id = Model?.Order?.M?.单号 }))">
+                                    <i class="fa fa-times"></i> 删除订单
+                                </a>*@
+                            }
+                            @if (Model?.Order?.M?.状态 == "进行中")
+                            {
+                            <a href="javascript:toFinishOrder('@Model.Order.M.单号');" class="btn btn-success btn-flat">
+                                <i class="fa fa-credit-card"></i> 订单完成
+                            </a>
+                            }
+                            else if (Model?.Order?.M?.状态 == "完成" && User.Identity.IsAuthenticated)
+                            {
+                            <a href="javascript:toFinishCancel('@Model.Order.M.单号');" class="btn btn-info btn-flat">
+                                <i class="fa fa-credit-card"></i> 取消完成
+                            </a>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+    <script>
+        function detailFormatter(index, row) {
+            var html = []
+            $.each(row, function (key, value) {
+                html.push('<p><b>' + key + ':</b> ' + value + '</p>')
+            })
+            return html.join('')
+        }
+
+        function toFinishOrder(id) {
+            if (confirm("确认当前生产订单 " + id + " 已经完成了吗？")) {
+                $.ajax({
+                    url: '@Url.Page("Edit", "FinishOrder")',
+                    method: 'post',
+                    data: {
+                        id: id
+                    },
+                    success: function (data) {
+                        console.log(data)
+                        location.reload()
+                    }
+                })
+            }
+        }
+
+        function toFinishCancel(id) {
+            if (confirm("确认取消生产订单 " + id + " 的完成状态到进行中吗？")) {
+                $.ajax({
+                    url: '@Url.Page("Edit", "FinishCancel")',
+                    method: 'post',
+                    data: {
+                        id: id
+                    },
+                    success: function (data) {
+                        console.log(data)
+                        location.reload()
+                    }
+                })
+            }
+        }
+    </script>
+}
+@section Styles{
+    <style>
+        [v-cloak] {
+            display: none;
+        }
+
+        .form-horizontal .control-label {
+            text-align: right;
+            margin-bottom: 0;
+            padding-top: 7px;
+        }
+
+        body.modal-open {
+            position: fixed;
+            overflow: hidden;
+            left: 0;
+            right: 0;
+        }
+
+        .modal {
+            -webkit-overflow-scrolling: auto;
+        }
+
+        .zky {
+            min-width: 100px;
+            max-width: 100px;
+        }
+
+        body {
+            font-size: 14px;
+        }
+    </style>
+}

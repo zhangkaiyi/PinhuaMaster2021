@@ -1,0 +1,17 @@
+﻿@page "{Id?}"
+@using PinhuaMaster.Pages.StockManagement.StockSubconctracting.ViewModel
+@model PinhuaMaster.Pages.StockManagement.StockSubconctracting.EditModel
+@{
+    ViewData["Title"] = "编辑";
+    ViewBag.NoContentHeader = true;
+}
+
+@Html.Partial("_StockSubconctractingPartial", Model.Order)
+
+
+@section Scripts{
+    @Html.RenderScripts()
+}
+@section Styles{
+    @Html.RenderStyles()
+}

@@ -1,0 +1,74 @@
+﻿@page "{year}/{month}"
+@model PinhuaMaster.Pages.Attendance.DetailsModel
+@{
+    ViewData["Title"] = "Details";
+    Layout = "~/Pages/_Layout.cshtml";
+}
+
+<div class="box box-solid">
+    <div class="box-header" style="font-size:22px">
+        @{
+            var result = Model.AttendanceData.Details.FirstOrDefault();
+            if (result != null)
+            {
+                @:@(new DateTime(result.Y, result.M, 1).ToString("yyyy年M月")) - <small>@Model.AttendanceData.Details.Sum(d => d.总工时)?.ToString("0.0") 小时</small>
+            }
+        }
+        <div class="pull-right">
+            <div class="btn-group"><a asp-page="Edit" asp-route-Y="@result.Y" asp-route-M="@result.M" class="btn btn-default"><i class="fa fa-edit"></i> 重算</a></div>
+            <div class="btn-group"><button class="btn btn-default" onclick="toDelete('@result.ExcelServerRcid')"><i class="fa fa-remove"></i> 删除</button></div>
+        </div>
+    </div>
+    <div class="box-body">
+        <div>
+            <table class="table table-striped text-nowrap" data-toggle="table">
+                <thead>
+                    <tr>
+                        <th>姓名</th>
+                        <th>全勤</th>
+                        <th>正班</th>
+                        <th>加班</th>
+                        <th>总工时</th>
+                        <th>用餐</th>
+                        <th>迟到</th>
+                        <th>早退</th>
+                        <th>缺勤</th>
+                        <th>请假</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var detail in Model.AttendanceData.Details)
+                    {
+                        <tr>
+                            <td>@detail.姓名</td>
+                            <td>@detail.是否全勤</td>
+                            <td>@detail.正班.Value.ToString("0.0")</td>
+                            <td>@detail.加班.Value.ToString("0.0")</td>
+                            <td>@detail.总工时.Value.ToString("0.0")</td>
+                            <td>@detail.用餐</td>
+                            <td>@detail.迟到</td>
+                            <td>@detail.早退</td>
+                            <td>@detail.缺勤</td>
+                            <td>@detail.请假</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<form method="post" asp-page="Delete" id="toDeleteForm">
+    <input type="hidden" id="toDeleteRcid" name="rcId" />
+</form>
+
+@section Scripts{
+    <script>
+        function toDelete(rcid) {
+            if (confirm('确定删除这条记录吗？')) {
+                $('#toDeleteRcid').val(rcid);
+                $('#toDeleteForm').submit();
+            }
+        }
+    </script>
+}

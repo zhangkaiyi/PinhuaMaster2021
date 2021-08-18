@@ -1,0 +1,77 @@
+﻿@page
+@model PinhuaMaster.Pages.Attendance.OvertimeForm.EditModel
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h2>Edit</h2>
+
+<h4>OvertimeFormMain</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="OvertimeFormMain.Y" />
+            <input type="hidden" asp-for="OvertimeFormMain.M" />
+            <input type="hidden" asp-for="OvertimeFormMain.D" />
+            <div class="form-group">
+                <label asp-for="OvertimeFormMain.ExcelServerRcid" class="control-label"></label>
+                <input asp-for="OvertimeFormMain.ExcelServerRcid" class="form-control" />
+                <span asp-validation-for="OvertimeFormMain.ExcelServerRcid" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="OvertimeFormMain.ExcelServerRn" class="control-label"></label>
+                <input asp-for="OvertimeFormMain.ExcelServerRn" class="form-control" />
+                <span asp-validation-for="OvertimeFormMain.ExcelServerRn" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="OvertimeFormMain.ExcelServerCn" class="control-label"></label>
+                <input asp-for="OvertimeFormMain.ExcelServerCn" class="form-control" />
+                <span asp-validation-for="OvertimeFormMain.ExcelServerCn" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="OvertimeFormMain.ExcelServerRc1" class="control-label"></label>
+                <input asp-for="OvertimeFormMain.ExcelServerRc1" class="form-control" />
+                <span asp-validation-for="OvertimeFormMain.ExcelServerRc1" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="OvertimeFormMain.ExcelServerWiid" class="control-label"></label>
+                <input asp-for="OvertimeFormMain.ExcelServerWiid" class="form-control" />
+                <span asp-validation-for="OvertimeFormMain.ExcelServerWiid" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="OvertimeFormMain.ExcelServerRtid" class="control-label"></label>
+                <input asp-for="OvertimeFormMain.ExcelServerRtid" class="form-control" />
+                <span asp-validation-for="OvertimeFormMain.ExcelServerRtid" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="OvertimeFormMain.ExcelServerChg" class="control-label"></label>
+                <input asp-for="OvertimeFormMain.ExcelServerChg" class="form-control" />
+                <span asp-validation-for="OvertimeFormMain.ExcelServerChg" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="OvertimeFormMain.CreatedDate" class="control-label"></label>
+                <input asp-for="OvertimeFormMain.CreatedDate" class="form-control" />
+                <span asp-validation-for="OvertimeFormMain.CreatedDate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="OvertimeFormMain.CreatedBy" class="control-label"></label>
+                <input asp-for="OvertimeFormMain.CreatedBy" class="form-control" />
+                <span asp-validation-for="OvertimeFormMain.CreatedBy" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-default" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-page="./Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

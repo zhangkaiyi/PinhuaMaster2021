@@ -1,0 +1,123 @@
+﻿@page "{Id?}"
+@model PinhuaMaster.Pages.OrderManagement.EasyDelivery.OrderPrintModel
+@{
+    ViewData["Title"] = "打印";
+    Layout = null;
+    var delivery = pinhuaContext.Gi2Main.Where(d => d.DeliveryId == Model.Id).SingleOrDefault();
+    var details = pinhuaContext.Gi2Details.Where(d => d.ExcelServerRcid == delivery.ExcelServerRcid).ToList();
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="stylesheet" href="~/css/zky-lodop-bootstrap-print.css" type="text/css" asp-append-version="true" />
+    <partial name="_Partial_lodop_css" />
+</head>
+<body>
+    <!-- Main content -->
+    <section class="container-fluid">
+        <div id="forPrint">
+            <!-- title row -->
+            <div class="row">
+                <div style="text-align:center">
+                    <div style="font-size:26px;margin-top:10px;">
+                        嘉善县胜美木业厂
+                        <span style="font-size:20px;">（送货单）</span>
+                    </div>
+                </div>
+                <!-- /.col -->
+            </div>
+            <!-- info row -->
+            <div class="row">
+                <div class="col-xs-12 col-md-6">
+                    <div style="padding:5px;">
+                        <p>收货单位： @delivery.CustomerName</p>
+                        <p>收货地址： @delivery.DeliveryAddress</p>
+                        <p>备　　注： @delivery.Remarks</p>
+                    </div>
+                </div>
+                <!-- /.col -->
+                <div class="col-xs-12 col-md-3">
+                    <div style="padding:5px;">
+                        <p>单　　号： @delivery.DeliveryId</p>
+                        <p>日　　期： @delivery.DeliveryDate?.ToString("yyyy-MM-dd")</p>
+                        <p>类　　型： @(pinhuaContext.业务类型.FirstOrDefault(p => p.业务类型1 == delivery.DeliveryType).类型描述)</p>
+                    </div>
+                </div>
+                <!-- /.col -->
+                <div class="col-xs-12 col-md-3">
+                    <div style="padding:5px;">
+                        <p>联系人　： @(delivery.Contact ?? "无")</p>
+                        <p>联系电话： @(delivery.ContactNumber ?? "无")</p>
+                    </div>
+                </div>
+                <!-- /.col -->
+            </div>
+            <!-- /.row -->
+            <!-- Table row -->
+            <div class="row">
+                <div class="col-md-12">
+                    <table class="table my-table-condensed text-nowrap" style="width:100%">
+                        <thead>
+                            <tr>
+                                <th style="width:30%" class="text-left">描述</th>
+                                <th style="width:25%" class="text-left">规格</th>
+                                <th style="width:10%" class="text-right">片数</th>
+                                <th style="width:15%" class="text-right">单位数量</th>
+                                <th style="width:10%" class="text-right no-price">单价</th>
+                                <th style="width:10%" class="text-right no-price">金额</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var detail in details)
+                            {
+                            <tr>
+                                <td>@detail.Description</td>
+                                <td>@detail.Specification</td>
+                                <td class="text-right">@detail.Qty?.ToString("0")</td>
+                                <td class="text-right">@detail.UnitQty?.ToString("0.0000") @detail.Unit</td>
+                                <td class="text-right no-price">@detail.Price?.ToString("0.00")</td>
+                                <td class="text-right no-price">@detail.Amount?.ToString("0.00")</td>
+                            </tr>
+                            }
+                            @for (var i = 0; i != (details.Count < 8 ? 8 - details.Count() : 0); i++)
+                            {
+                            <tr style="height:29px;">
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td class="text-right"></td>
+                                <td class="text-right no-price"></td>
+                                <td class="text-right no-price"></td>
+                            </tr>
+
+                            }
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <td colspan="5" class="text-right no-price">合计：</td>
+                                <td class="text-right no-price">@details.Sum(a => a.Amount)?.ToString("0.00")</td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+                <!-- /.col -->
+            </div>
+            <!-- /.row -->
+            <div class="row">
+                <div style="margin-left:23px;margin-right:23px">
+                    <div class="col-md-4"><p>承运人： <u>　　　　　　　　　　</u></p></div>
+                    <div class="col-md-4"><p>收货单位： <u>　　　　　　　　　　</u></p></div>
+                    <div class="col-md-4"><p>送货单位： <u>　　　　　　　　　　</u></p></div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- /.content -->
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+
+</body>
+</html>

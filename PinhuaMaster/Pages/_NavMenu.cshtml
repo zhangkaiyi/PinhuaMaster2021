@@ -1,0 +1,21 @@
+﻿@using PinhuaMaster.Services
+@model IList<NavbarMenu>
+
+@foreach (var navMenu in Model)
+{
+    if (navMenu.children == null || !navMenu.children.Any())
+    {
+        <li><a asp-page="@navMenu.url"><i class="@navMenu.icon"></i> @navMenu.name</a></li>
+    }
+    else
+    {
+        <li class="dropdown">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                <i class="@navMenu.icon"></i> @navMenu.name <span class="caret"></span>
+            </a>
+            <ul class="dropdown-menu">
+                @await Html.PartialAsync("_NavMenu", navMenu.children)
+            </ul>
+        </li>
+    }
+}

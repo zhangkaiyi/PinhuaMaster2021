@@ -1,0 +1,173 @@
+﻿@page "{Y}/{M}"
+@model PinhuaMaster.Pages.Payroll.DetailsModel
+@{
+    ViewData["Title"] = "查看工资单";
+    var Y = PageContext.RouteData.Values["Y"];
+    var M = PageContext.RouteData.Values["M"];
+}
+
+<div class="row">
+    <div class="col-md-3">
+        <div class="box box-solid">
+            <div class="box-body">
+                <div class="form-horizontal" id="test">
+                    <div class="form-group">
+                        <div class="col-xs-12">
+                            <div class="input-group">
+                                <input class="form-control" id="refreshY" value="@Y" readonly />
+                                <span class="input-group-addon">
+                                    年
+                                </span>
+                                <input class="form-control" id="refreshM" value="@M" readonly />
+                                <span class="input-group-addon">
+                                    月
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-xs-12">
+                            <div class="input-group">
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-xs-12">
+                            <button class="form-control btn btn-default btn-flat" onclick="computePayroll()">刷新</button>
+                            <input type="hidden" id="hiddenYMList" value="" />
+                            <input type="hidden" value="@Url.Page("Create", "AjaxComputePayroll", new { year=Y, month=M})" id="refreshUrl" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-xs-12">
+                            <form method="post" asp-page-handler="Update" asp-route-y="@Y" asp-route-m="@M">
+                                <button class="form-control btn btn-default btn-flat" type="submit">保存</button>
+                                <input type="hidden" id="refreshJSON" name="jsonStr" />
+                            </form>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-xs-12">
+                            <button class="form-control btn btn-default" onclick="toDelete('@(pinhuaContext.PayrollMain.AsNoTracking().FirstOrDefault(r=>r.Y==(int)Y&&r.M==(int)M)?.ExcelServerRcid)')">删除</button>
+                            <input type="hidden" id="hiddenYMList" value="" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-xs-12">
+                            <a asp-page="Index" class="form-control btn btn-default">返 回</a>
+                            <input type="hidden" id="hiddenYMList" value="" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <div class="col-md-9">
+        <div class="box box-solid">
+            <div class="box-body">
+                <table id="table"
+                       data-toggle="table"
+                       data-url="@Url.Page("Details","AjaxGetDetails",new { Model.Y, Model.M})"
+                       data-classes="table table-striped"
+                       data-row-style="rowStyle"
+                       data-show-footer="true"
+                       data-response-handler="responseHandler"
+                       style="white-space:nowrap;">
+                    <thead>
+                        <tr>
+                            <th data-field="@(nameof(ViewModel.PayrollDetailsDTO.Id))" data-visible="false">编号</th>
+                            <th data-field="@(nameof(ViewModel.PayrollDetailsDTO.Name))">姓名</th>
+                            <th data-field="@(nameof(ViewModel.PayrollDetailsDTO.Post))">岗位</th>
+                            <th data-field="@(nameof(ViewModel.PayrollDetailsDTO.IsFullAttendance))" data-visible="false">是否全勤</th>
+                            <th data-field="@(nameof(ViewModel.PayrollDetailsDTO.PriceOverview))">工价</th>
+                            <th data-field="@(nameof(ViewModel.PayrollDetailsDTO.AllHours))" data-formatter="fmtDetailHours">工时</th>
+                            <th data-field="@(nameof(ViewModel.PayrollDetailsDTO.AllHoursAmountWithFullAttendance))" data-formatter="fmtAmount" class="hidden-xs">工资</th>
+                            <th data-field="@(nameof(ViewModel.PayrollDetailsDTO.TimesOfDinner))">用餐</th>
+                            <th data-field="@(nameof(ViewModel.PayrollDetailsDTO.DinnerAmount))">餐费</th>
+                            <th data-field="@(nameof(ViewModel.PayrollDetailsDTO.FinalAmount))" data-formatter="fmtAmount" data-footer-formatter="fmtFooter">实发</th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<form method="post" asp-page="Delete" id="toDeleteForm">
+    <input type="hidden" id="toDeleteRcid" name="rcId" />
+</form>
+
+<form method="post" id="toSaveForm">
+    <input type="hidden" name="yyyy" value="@Y" />
+    <input type="hidden" name="mm" value="@M" />
+    <input type="hidden" id="jsonStr" name="jsonStr" />
+</form>
+
+@section Scripts{
+    <script>
+        function computePayroll() {
+            var refreshUrl = $('#refreshUrl').val()
+            var $table = $('#table')
+            $table.bootstrapTable('refresh', { url: refreshUrl });
+        }
+
+        function updatePayroll() {
+
+
+        }
+
+        function toDelete(rcid) {
+            if (confirm('确定删除这条记录吗？')) {
+                $('#toDeleteRcid').val(rcid);
+                $('#toDeleteForm').submit();
+            }
+        }
+    </script>
+
+    <script>
+        function rowStyle(row, index) {
+            var classes = ['active', 'success', 'info', 'warning', 'danger'];
+            if (row.IsFullAttendance) {
+                return {
+                    classes: 'text-danger'
+                    //classes: 'text-bold'
+                };
+            }
+            else
+                return {
+                    //classes: 'text-success'
+                    classes: ''
+                };
+        }
+
+        function fmtHours(value, row) {
+            if (!value)
+                return ""
+            return value.toFixed(1)
+        }
+
+        function fmtDetailHours(value, row) {
+            return row.AllHours.toFixed(1) + ' ( ' + row.DaytimeHours.toFixed(1) + ' / ' + row.OvertimeHours.toFixed(1) + ' )'
+        }
+
+        function fmtAmount(value, row) {
+            return value.toFixed(2)
+        }
+
+        function fmtFooter(data) {
+            var sum = 0
+            for (var i in data) {
+                sum += parseFloat(data[i].FinalAmount)
+            }
+            return sum.toFixed(2)
+        }
+
+        function responseHandler(res) {
+            $('#refreshJSON').val(JSON.stringify(res))
+            return res
+        }
+    </script>
+}

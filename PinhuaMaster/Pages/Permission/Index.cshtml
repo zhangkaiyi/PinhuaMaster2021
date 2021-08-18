@@ -1,0 +1,56 @@
+﻿@page
+@model PinhuaMaster.Pages.Permission.IndexModel
+@using PinhuaMaster.Services
+@inject IActionPermissionService permissionService
+@inject UserManager<ApplicationUser> _userManager
+@inject RoleManager<IdentityRole> _roleManager
+@{
+    ViewData["Title"] = "Index";
+}
+
+<div class="row">
+    <div class="col-md-3">
+        <div class="box box-solid">
+            <ul class="nav nav-pills nav-stacked">
+                @foreach (var role in _roleManager.Roles)
+                {
+                    var is_active = Model.SelectRole.Id == role.Id ? "active" : "";
+                    var count = Model.RolePages.Where(p => p.RoleId == role.Id).Count();
+                    var color = count > 0 ? "bg-blue" : "bg-red";
+                    <li class="@is_active"><a asp-page="Index" asp-route-roleid="@role.Id">@role.Name<span class="pull-right badge @color">@count</span></a></li>
+                }
+            </ul>
+        </div>
+    </div>
+    <div class="col-md-9">
+        <div class="box box-solid">
+            <div class="box-header with-border">
+                <div class="box-title"> Permissions - @Model.SelectRole.Name</div>
+                <div class="box-tools pull-right">
+                    <a asp-page="Create" asp-route-roleId="@Model.SelectRole.Id" class="btn btn-primary btn-flat btn-sm">添加权限</a>
+                </div>
+            </div>
+            <table class="table table-striped table-bordered no-margin">
+                @if (Model.RolePages.Where(p => p.RoleId == Model.SelectRole.Id).Count() == 0)
+                {
+                    <tr><td class="">该角色下没有允许访问的页面</td></tr>
+                }
+                else
+                {
+                    foreach (var rolepage in Model.RolePages.Where(p => p.RoleId == Model.SelectRole.Id))
+                    {
+                        <tr>
+                            <td>
+                                <form method="post" asp-page-handler="delete" asp-route-roleId="@rolepage.RoleId" asp-route-path="@rolepage.Page">
+                                    <a asp-page="@rolepage.Page">@rolepage.Page</a>
+                                    <button type="submit" class="pull-right btn btn-xs btn-flat btn-danger" onclick="return confirm('确定删除此权限？');">删除</button>
+                                </form>
+                            </td>
+                        </tr>
+                    }
+                }
+            </table>
+        </div>
+    </div>
+
+</div>

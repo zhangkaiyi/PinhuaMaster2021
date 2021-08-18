@@ -1,0 +1,202 @@
+﻿@page "{Id?}/{printMode?}"
+@model PinhuaMaster.Pages.OrderManagement.EasyDelivery.PrintModel
+@{
+    ViewData["Title"] = "打印";
+    ViewBag.NoContentHeader = true;
+}
+
+<!-- Main content -->
+<div class="box box-solid">
+    <div class="box-header">
+        <i class="fa fa-globe"></i>
+        <h3 class="box-title"> 打印</h3>
+        <div class="pull-right box-tools">
+            <!-- button with a dropdown -->
+            <div @*class="btn-group"*@>
+                <a asp-page="Print" asp-route-id="@Model.Id" asp-route-printMode="frp" class="btn btn-default"><i class="fa fa-cloud"></i> FRP</a>
+                <button class="btn btn-default" onclick="previewOrder('iframe1')"><i class="fa fa-search"></i> 预览</button>
+                <button class="btn btn-default" onclick="printOrder('iframe1')"><i class="fa fa-print"></i> 打印</button>
+                <div class="btn-group">
+                    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                        <i class="fa fa-bars"></i>
+                    </button>
+                    <ul class="dropdown-menu pull-right" role="menu">
+                        <li>
+                            <a href="javascript:;" onclick="previewOrderWithNoPrice('iframe1')"><i class="fa fa-search"></i> 无价格预览</a>
+                        </li>
+                        <li class="divider"></li>
+                        <li>
+                            <a href="javascript:;" onclick="printOrderWithNoPrice('iframe1')"><i class="fa fa-print"></i> 无价格打印</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="box-body"><iframe id="iframe1" src="@Url.Page("OrderPrint", new {Id=Model.Id })" style="width:100%;height:600px;border:1px solid"></iframe></div>
+    <div class="box-footer">
+        @{
+            var mode = ViewContext.RouteData.Values["printMode"]?.ToString();
+            if (mode == "dev")
+            {
+                @("<script src='http://192.168.1.20:8000/CLodopfuncs.js'></script>")
+            }
+            else if (mode == "frp")
+            {
+                @("<script src='http://clodop.frp.chang.pinhuadashi.com:7999/CLodopfuncs.js'></script>")
+            }
+            else
+            {
+                @("<script src='http://qy.pinhuadashi.com:6800/CLodopfuncs.js'></script>")
+            }
+        }
+    </div>
+</div>
+<!-- /.content -->
+<div class="pull-">
+    <button class="btn btn-default" onclick="previewOrder('iframe1')"><i class="fa fa-search"></i> 预览</button>
+    <button class="btn btn-default" onclick="printOrder('iframe1')"><i class="fa fa-print"></i> 打印</button>
+</div>
+
+@section Scripts{
+    <partial name="_Partial_lodop_js" />
+    <script language="javascript" type="text/javascript">
+        function previewOrder(tagId) {
+
+            LODOP.PRINT_INIT("分页打印 @(Model.Id)");
+            LODOP.SET_PRINT_PAGESIZE(1, '241mm', '143mm');
+            var pageSize = 8;
+            strHtml = document.getElementById(tagId).contentWindow.document.documentElement.innerHTML;
+            var $dom = $(document.getElementById(tagId).contentWindow.document.documentElement);
+
+            var count = Math.ceil($dom.find('tbody>tr').length / pageSize);
+            for (var i = 0; i != count; i++) {
+                if (i != 0) {
+                    LODOP.NewPageA();
+                }
+                var $x = $dom.clone();
+                // method 1
+                //$x.find('tbody>tr:gt(' + ((i + 1) * pageSize - 1).toString() + ')').hide();
+                //$x.find('tbody>tr:lt(' + (i * pageSize).toString() + ')').hide();;
+                // method 2
+                //$x.find('tbody>tr').not($x.find('tbody>tr').slice(i * pageSize, (i + 1) * pageSize)).hide();
+                // method 3
+                $x.find('tbody>tr').hide();
+                $x.find('tbody>tr').slice(i * pageSize, (i + 1) * pageSize).show();
+
+                LODOP.ADD_PRINT_HTM(0, 0, "100%", "100%", $x.html());
+                if (count > 1) {
+                    LODOP.ADD_PRINT_HTM(1, 600, 300, 100, "总页号：<font color='#0000ff' size='3'><span tdata='pageNO'>第##页</span>/<span tdata='pageCount'>共##页</span></font>");
+                }
+            }
+
+            var printerName = 'EPSON LQ-635K ESC/P2'
+            LODOP.SET_PRINTER_INDEX(printerName)
+            LODOP.SET_PRINTER_INDEXA(printerName)
+            LODOP.PREVIEW();
+    }
+    function printOrder(tagId) {
+
+            LODOP.PRINT_INIT("分页打印 @(Model.Id)");
+            LODOP.SET_PRINT_PAGESIZE(1, '241mm', '150mm');
+            var pageSize = 8;
+            //strHtml = document.getElementById(tagId).contentWindow.document.documentElement.innerHTML;
+            var $dom = $(document.getElementById(tagId).contentWindow.document.documentElement);
+            var count = Math.ceil($dom.find('tbody>tr').length / pageSize);
+            for (var i = 0; i != count; i++) {
+                if (i != 0) {
+                    LODOP.NewPageA();
+                }
+                var $x = $dom.clone();
+                // method 1
+                //$x.find('tbody>tr:gt(' + ((i + 1) * pageSize - 1).toString() + ')').hide();
+                //$x.find('tbody>tr:lt(' + (i * pageSize).toString() + ')').hide();;
+                // method 2
+                //$x.find('tbody>tr').not($x.find('tbody>tr').slice(i * pageSize, (i + 1) * pageSize)).hide();
+                // method 3
+                $x.find('tbody>tr').hide();
+                $x.find('tbody>tr').slice(i * pageSize, (i + 1) * pageSize).show();
+                LODOP.ADD_PRINT_HTM(0, 0, "100%", "100%", $x.html());
+                if (count > 1) {
+                    LODOP.ADD_PRINT_HTM(1, 600, 300, 100, "总页号：<font color='#0000ff' size='3'><span tdata='pageNO'>第##页</span>/<span tdata='pageCount'>共##页</span></font>");
+                }
+            }
+
+            var printerName = 'EPSON LQ-635K ESC/P2'
+            LODOP.SET_PRINTER_INDEX(printerName)
+            LODOP.SET_PRINTER_INDEXA(printerName)
+            if (confirm("确认通过 " + printerName + " 打印吗?")) {
+                LODOP.PRINT();
+            }
+            }
+
+    function previewOrderWithNoPrice(tagId) {
+
+            LODOP.PRINT_INIT("无价格分页打印 @(Model.Id)");
+            LODOP.SET_PRINT_PAGESIZE(1, '241mm', '150mm');
+            var pageSize = 8;
+            //strHtml = document.getElementById(tagId).contentWindow.document.documentElement.innerHTML;
+            var $dom = $(document.getElementById(tagId).contentWindow.document.documentElement);
+            var count = Math.ceil($dom.find('tbody>tr').length / pageSize);
+            for (var i = 0; i != count; i++) {
+                if (i != 0) {
+                    LODOP.NewPageA();
+                }
+                var $x = $dom.clone();
+                // method 1
+                //$x.find('tbody>tr:gt(' + ((i + 1) * pageSize - 1).toString() + ')').hide();
+                //$x.find('tbody>tr:lt(' + (i * pageSize).toString() + ')').hide();;
+                // method 2
+                //$x.find('tbody>tr').not($x.find('tbody>tr').slice(i * pageSize, (i + 1) * pageSize)).hide();
+                // method 3
+                $x.find('tbody>tr').hide();
+                $x.find('tbody>tr').slice(i * pageSize, (i + 1) * pageSize).show();
+                $x.find('.no-price').hide()
+                LODOP.ADD_PRINT_HTM(0, 0, "100%", "100%", $x.html());
+                if (count > 1) {
+                    LODOP.ADD_PRINT_HTM(1, 600, 300, 100, "总页号：<font color='#0000ff' size='3'><span tdata='pageNO'>第##页</span>/<span tdata='pageCount'>共##页</span></font>");
+                }
+            }
+
+            var printerName = 'EPSON LQ-635K ESC/P2'
+            LODOP.SET_PRINTER_INDEX(printerName)
+            LODOP.SET_PRINTER_INDEXA(printerName)
+            LODOP.PREVIEW();
+    }
+        function printOrderWithNoPrice(tagId) {
+
+            LODOP.PRINT_INIT("无价格分页打印 @(Model.Id)");
+            LODOP.SET_PRINT_PAGESIZE(1, '241mm', '150mm');
+            var pageSize = 8;
+            //strHtml = document.getElementById(tagId).contentWindow.document.documentElement.innerHTML;
+            var $dom = $(document.getElementById(tagId).contentWindow.document.documentElement);
+            var count = Math.ceil($dom.find('tbody>tr').length / pageSize);
+            for (var i = 0; i != count; i++) {
+                if (i != 0) {
+                    LODOP.NewPageA();
+                }
+                var $x = $dom.clone();
+                // method 1
+                //$x.find('tbody>tr:gt(' + ((i + 1) * pageSize - 1).toString() + ')').hide();
+                //$x.find('tbody>tr:lt(' + (i * pageSize).toString() + ')').hide();;
+                // method 2
+                //$x.find('tbody>tr').not($x.find('tbody>tr').slice(i * pageSize, (i + 1) * pageSize)).hide();
+                // method 3
+                $x.find('tbody>tr').hide();
+                $x.find('tbody>tr').slice(i * pageSize, (i + 1) * pageSize).show();
+                $x.find('.no-price').hide()
+                LODOP.ADD_PRINT_HTM(0, 0, "100%", "100%", $x.html());
+                if (count > 1) {
+                    LODOP.ADD_PRINT_HTM(1, 600, 300, 100, "总页号：<font color='#0000ff' size='3'><span tdata='pageNO'>第##页</span>/<span tdata='pageCount'>共##页</span></font>");
+                }
+            }
+
+            var printerName = 'EPSON LQ-635K ESC/P2'
+            LODOP.SET_PRINTER_INDEX(printerName)
+            LODOP.SET_PRINTER_INDEXA(printerName)
+            if (confirm("确认通过 " + printerName + " 打印吗?")) {
+                LODOP.PRINT();
+            }
+    }
+    </script>
+}

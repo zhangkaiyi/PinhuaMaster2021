@@ -1,0 +1,445 @@
+﻿@page
+@model PinhuaMaster.Pages.ProductionManagement.ProductionOrder.CreateModel
+@using PinhuaMaster.Pages.ProductionManagement.ProductionOrder.ViewModel
+@using Newtonsoft.Json
+@using System.Data.SqlClient
+@using System.Data
+
+@{
+    ViewData["Title"] = "Create";
+ViewBag.NoContentHeader = true;
+}
+@if (ModelState.Count > 0)
+{
+<div class="alert alert-danger">
+    <h4><i class="icon fa fa-warning"></i> 提示</h4>
+    <div asp-validation-summary="All"></div>
+</div>
+}
+<form method="post" enctype="multipart/form-data" id="vueScope">
+    <div class="box box-solid">
+        <div class="box-header">
+            <i class="fa fa-globe"></i>
+            <h3 class="box-title"> 新增 - 生产订单</h3>
+        </div>
+        <div class="box-body">
+            <div class="row">
+                <input type="hidden" asp-for="Order.M.状态" value="进行中" />
+                <div class="col-sm-4">
+                    <div class="form-group has-error">
+                        <label class="control-label" asp-for="Order.M.客户号"><i class="fa fa-angle-double-right"></i> @Html.DisplayNameFor(x => x.Order.M.客户号)</label>
+                        <div class="input-group">
+                            <select class="form-control" asp-for="Order.M.客户号" asp-items="Model.PartnerSelectList"></select>
+                            <span class="input-group-addon no-padding">
+                                <i class="fa fa-address-card-o" style="width:38px;"></i>
+                            </span>
+                        </div>
+                        <span class="help-block" asp-validation-for="Order.M.客户号"></span>
+                    </div>
+                    <div class="form-group has-error">
+                        <label class="control-label" asp-for="Order.M.概要"><i class="fa fa-angle-double-right"></i> @Html.DisplayNameFor(x => x.Order.M.概要)</label>
+                        <div class="input-group">
+                            <input type="text" asp-for="Order.M.概要" class="form-control" />
+                            <span class="input-group-addon no-padding">
+                                <i class="fa fa-sticky-note-o" style="width:38px;"></i>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="form-group has-error">
+                        <label class="control-label" asp-for="Order.M.日期"><i class="fa fa-angle-double-right"></i> @Html.DisplayNameFor(x => x.Order.M.日期)</label>
+                        <div class="input-group">
+                            <input type="text" asp-for="Order.M.日期" data-provide="datepicker" data-date-format="yyyy-mm-dd" readonly class="form-control" />
+                            <span class="input-group-addon no-padding">
+                                <i class="fa fa-calendar-o" style="width:38px;"></i>
+                            </span>
+                        </div>
+                        <span class="help-block" asp-validation-for="Order.M.日期"></span>
+                    </div>
+                    <div class="form-group has-error">
+                        <label class="control-label" asp-for="Order.M.交期"><i class="fa fa-angle-double-right"></i> @Html.DisplayNameFor(x => x.Order.M.交期)</label>
+                        <div class="input-group">
+                            <input type="text" asp-for="Order.M.交期" data-provide="datepicker" data-date-format="yyyy-mm-dd" readonly class="form-control" />
+                            <span class="input-group-addon no-padding">
+                                <i class="fa fa-calendar-o" style="width:38px;"></i>
+                            </span>
+                        </div>
+                        <span class="help-block" asp-validation-for="Order.M.交期"></span>
+                    </div>
+                </div>
+                <!-- /.col -->
+                <div class="col-sm-4">
+                    <div class="form-group has-warning">
+                        <label class="control-label" asp-for="Order.M.备注">
+                            <i class="fa fa-bell-o"></i> @Html.DisplayNameFor(x => x.Order.M.备注)
+                        </label>
+                        <div class="input-group">
+                            <textarea asp-for="Order.M.备注" class="form-control" rows="3"></textarea>
+                            <span class="input-group-addon no-padding">
+                                <i class="fa fa-ellipsis-h" style="width:38px;"></i>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <!-- /.col -->
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="box box-solid">
+                <div class="box-header with-border">
+                    <div class="box-title">产品列表</div>
+                    <div class="box-tools pull-right">
+                        <a class="btn btn-default btn-sm" v-on:click="newRecord">
+                            <i class="fa fa-plus"></i>　添加产品
+                        </a>
+                    </div>
+                </div>
+                <div class="box-body no-padding" v-if="">
+                    <div class="table-responsive">
+                        <table class="table table-striped table-bordered" id="formTable" style="">
+                            <thead>
+                                <tr>
+                                    <th style="width:80px;max-width:80px"></th>
+                                    <th style="min-width:80px;">描述</th>
+                                    <th style="min-width:80px;">规格</th>
+                                    <th class="hidden" style="min-width:80px;">长</th>
+                                    <th class="hidden" style="min-width:80px;">宽</th>
+                                    <th class="hidden" style="min-width:80px;">高</th>
+                                    <th style="min-width:80px;">片数</th>
+                                    <th class="" style="min-width:80px;">刻线</th>
+                                    <th class="" style="min-width:80px;">拉丝</th>
+                                    <th class="" style="min-width:80px;">开槽</th>
+                                    <th class="" style="min-width:80px;">油漆</th>
+                                    <th class="" style="min-width:80px;">其他</th>
+                                    <th class="" style="min-width:80px;">图片</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr v-if="items.length == 0"><td colspan="20" class="text-center">空</td></tr>
+                                <tr v-for="(item,index) in items">
+                                    <td class="text-center">
+                                        <a href="javascript:;" v-on:click="removeRecord(index)">移除</a> <a href="javascript:;" v-on:click="editRecord(index)">修改</a>
+                                    </td>
+                                    <td>{{ item.描述 }}<input :name="buildName(index,'描述')" type="hidden" v-model="item.描述" /></td>
+                                    <td>{{ buildSpecification(item) }}</td>
+                                    <td class="hidden">{{ item.长 }}<input :name="buildName(index,'长')" type="hidden" v-bind:value="item.长" /></td>
+                                    <td class="hidden">{{ item.宽 }}<input :name="buildName(index,'宽')" type="hidden" v-bind:value="item.宽" /></td>
+                                    <td class="hidden">{{ item.高 }}<input :name="buildName(index,'高')" type="hidden" v-bind:value="item.高" /></td>
+                                    <td>{{ item.片数 }}<input :name="buildName(index,'片数')" type="hidden" v-bind:value="item.片数" /></td>
+                                    <td>{{ item.刻线要求 }}<input :name="buildName(index,'刻线要求')" type="hidden" v-bind:value="item.刻线要求" /></td>
+                                    <td>{{ item.拉丝要求 }}<input :name="buildName(index,'拉丝要求')" type="hidden" v-bind:value="item.拉丝要求" /></td>
+                                    <td>{{ item.开槽要求 }}<input :name="buildName(index,'开槽要求')" type="hidden" v-bind:value="item.开槽要求" /></td>
+                                    <td>{{ item.油漆要求 }}<input :name="buildName(index,'油漆要求')" type="hidden" v-bind:value="item.油漆要求" /></td>
+                                    <td>{{ item.其他要求 }}<input :name="buildName(index,'其他要求')" type="hidden" v-bind:value="item.其他要求" /></td>
+                                    <td>
+                                        <input type="hidden" :name="buildName(index,'图片base64')" v-bind:value="item.图片base64" />
+                                        <input type="hidden" :name="buildName(index,'图片name')" v-bind:value="item.图片name" />
+                                        <input type="hidden" :name="buildName(index,'图片type')" v-bind:value="item.图片type" />
+                                        <img :src="item.图片base64" style="min-width: 80px;max-width: 80px;height: auto;" />
+                                    </td>
+
+                                </tr>
+                            </tbody>
+                        </table>
+                        @*<input type="submit" value="upload" class="btn btn-default" />*@
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- /.col -->
+        <div id="ItemDetail" style="display:none;">
+            <div class="modal-body" style="overflow-y:scroll;">
+                <div class="form-horizontal margin-r-5">
+                    <div class="form-group has-error">
+                        <label class="control-label col-xs-4 col-md-3"><i class="fa fa-angle-double-right"></i> 描述</label>
+                        <div class="col-xs-8 col-md-9">
+                            <div class="input-group">
+                                <input class="form-control" v-model="itemCurrent.描述" />
+                                <div class="input-group-addon no-padding">
+                                    <i class="fa fa-info" style="width:38px;"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group has-error">
+                        <label class="control-label col-xs-4 col-md-3"><i class="fa fa-angle-double-right"></i> 长</label>
+                        <div class="col-xs-8 col-md-9">
+                            <div class="input-group">
+                                <input type="number" class="form-control" v-model="itemCurrent.长" />
+                                <div class="input-group-btn">
+                                    <button type="button" class="btn btn-danger btn-flat dropdown-toggle" style="width:40px" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="caret"></span></button>
+                                    <ul class="dropdown-menu dropdown-menu-right">
+                                        <li><a v-on:click="itemCurrent.长=450">450</a></li>
+                                        <li><a v-on:click="itemCurrent.长=500">500</a></li>
+                                        <li><a v-on:click="itemCurrent.长=600">600</a></li>
+                                        <li><a v-on:click="itemCurrent.长=300">300</a></li>
+                                    </ul>
+                                    @*<button type="button" class="btn btn-danger btn-flat" style="width:40px"><i class="fa fa-sort-numeric-asc"></i></button>*@
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group has-error">
+                        <label class="control-label col-xs-4 col-md-3"><i class="fa fa-angle-double-right"></i> 宽</label>
+                        <div class="col-xs-8 col-md-9">
+                            <div class="input-group">
+                                <input type="number" class="form-control" v-model="itemCurrent.宽" />
+                                <div class="input-group-btn">
+                                    <button type="button" class="btn btn-danger btn-flat dropdown-toggle" style="width:40px" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="caret"></span></button>
+                                    <ul class="dropdown-menu dropdown-menu-right">
+                                        <li><a v-on:click="itemCurrent.宽=450">450</a></li>
+                                        <li><a v-on:click="itemCurrent.宽=500">500</a></li>
+                                        <li><a v-on:click="itemCurrent.宽=600">600</a></li>
+                                        <li><a v-on:click="itemCurrent.宽=300">300</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group has-error">
+                        <label class="control-label col-xs-4 col-md-3"><i class="fa fa-angle-double-right"></i> 高</label>
+                        <div class="col-xs-8 col-md-9">
+                            <div class="input-group">
+                                <input type="number" class="form-control" v-model="itemCurrent.高" />
+                                <div class="input-group-btn">
+                                    <button type="button" class="btn btn-danger btn-flat dropdown-toggle" style="width:40px" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="caret"></span></button>
+                                    <ul class="dropdown-menu dropdown-menu-right">
+                                        <li><a v-on:click="itemCurrent.高=15">15</a></li>
+                                        <li><a v-on:click="itemCurrent.高=18">18</a></li>
+                                        <li><a v-on:click="itemCurrent.高=12">12</a></li>
+                                        <li><a v-on:click="itemCurrent.高=2">2</a></li>
+                                        <li><a v-on:click="itemCurrent.高=1.2">1.2</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group has-error">
+                        <label class="control-label col-xs-4 col-md-3"><i class="fa fa-angle-double-right"></i> 片数</label>
+                        <div class="col-xs-8 col-md-9">
+                            <div class="input-group">
+                                <input type="number" class="form-control" v-model="itemCurrent.片数" />
+                                <div class="input-group-addon no-padding">
+                                    <i class="fa fa-calculator" style="width:38px"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group has-error">
+                        <label class="control-label col-xs-4 col-md-3"><i class="fa fa-angle-double-right"></i> 刻线</label>
+                        <div class="col-xs-8 col-md-9">
+                            <div class="input-group">
+                                <input class="form-control" v-model="itemCurrent.刻线要求" />
+                                <div class="input-group-btn">
+                                    <button type="button" class="btn btn-danger btn-flat dropdown-toggle" style="width:40px" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="caret"></span></button>
+                                    <ul class="dropdown-menu dropdown-menu-right">
+                                        <li><a v-on:click="itemCurrent.刻线要求='常规'">常规</a></li>
+                                        <li><a v-on:click="itemCurrent.刻线要求='深'">深</a></li>
+                                        <li><a v-on:click="itemCurrent.刻线要求='浅'">浅</a></li>
+                                        <li><a v-on:click="itemCurrent.刻线要求='不能刻穿'">不能刻穿</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group has-error">
+                        <label class="control-label col-xs-4 col-md-3"><i class="fa fa-angle-double-right"></i> 拉丝</label>
+                        <div class="col-xs-8 col-md-9">
+                            <div class="input-group">
+                                <input class="form-control" v-model="itemCurrent.拉丝要求" />
+                                <div class="input-group-btn">
+                                    <button type="button" class="btn btn-danger btn-flat dropdown-toggle" style="width:40px" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="caret"></span></button>
+                                    <ul class="dropdown-menu dropdown-menu-right">
+                                        <li><a v-on:click="itemCurrent.拉丝要求='常规'">常规</a></li>
+                                        <li><a v-on:click="itemCurrent.拉丝要求='深拉丝'">深拉丝</a></li>
+                                        <li><a v-on:click="itemCurrent.拉丝要求='浅拉丝'">浅拉丝</a></li>
+                                        <li><a v-on:click="itemCurrent.拉丝要求='浮雕'">浮雕</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group has-error">
+                        <label class="control-label col-xs-4 col-md-3"><i class="fa fa-angle-double-right"></i> 开槽</label>
+                        <div class="col-xs-8 col-md-9">
+                            <div class="input-group">
+                                <input class="form-control" v-model="itemCurrent.开槽要求" />
+                                <div class="input-group-btn">
+                                    <button type="button" class="btn btn-danger btn-flat dropdown-toggle" style="width:40px" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="caret"></span></button>
+                                    <ul class="dropdown-menu dropdown-menu-right">
+                                        <li><a v-on:click="itemCurrent.开槽要求='常规'">常规</a></li>
+                                        <li><a v-on:click="itemCurrent.开槽要求='百木5/5/5'">百木5/5/5</a></li>
+                                        <li><a v-on:click="itemCurrent.开槽要求='4/5/6'">4/5/6</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group has-error">
+                        <label class="control-label col-xs-4 col-md-3"><i class="fa fa-angle-double-right"></i> 油漆</label>
+                        <div class="col-xs-8 col-md-9">
+                            <div class="input-group">
+                                <input class="form-control" v-model="itemCurrent.油漆要求" />
+                                <div class="input-group-btn">
+                                    <button type="button" class="btn btn-danger btn-flat dropdown-toggle" style="width:40px" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="caret"></span></button>
+                                    <ul class="dropdown-menu dropdown-menu-right">
+                                        <li><a v-on:click="itemCurrent.油漆要求='UV'">UV</a></li>
+                                        <li><a v-on:click="itemCurrent.油漆要求='PU'">PU</a></li>
+                                        <li><a v-on:click="itemCurrent.油漆要求='木蜡油'">木蜡油</a></li>
+                                        <li><a v-on:click="itemCurrent.油漆要求='UV油'">UV油</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group has-error">
+                        <label class="control-label col-xs-4 col-md-3"><i class="fa fa-angle-double-right"></i> 其他</label>
+                        <div class="col-xs-8 col-md-9">
+                            <div class="input-group">
+                                <input class="form-control" v-model="itemCurrent.其他要求" />
+                                <div class="input-group-addon no-padding">
+                                    <i class="fa fa-ellipsis-h" style="width:38px"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group has-error">
+                        <label class="control-label col-xs-4 col-md-3"><i class="fa fa-angle-double-right"></i> 图片</label>
+                        <div class="col-xs-8 col-md-9">
+                            <div class="input-group">
+                                <div class="form-control no-padding" style="height:120px">
+                                    <img :src="itemCurrent.图片base64" style="width:auto;height:100%" />
+                                </div>
+                                <div class="input-group-btn">
+                                    <div class="btn btn-danger btn-file btn-flat no-padding" style="width:40px;height:120px;line-height:120px;">
+                                        <i class="fa fa-paperclip" style=""></i>
+                                        <input type="file" class="form-control" v-on:change="previewPic" accept="image/*" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default btn-flat" onclick="layer.closeAll('page')">取消</button>
+                <button type="button" class="btn btn-default btn-flat" v-if="isNew" v-on:click="saveNew">新增</button>
+                <button type="button" class="btn btn-default btn-flat" v-if="!isNew" v-on:click="saveEdit">修改</button>
+            </div>
+        </div>
+
+    </div>
+</form>
+
+<a href="javascript:$('#vueScope').submit();" class="btn btn-default btn-flat"><i class="fa fa-check"></i>&nbsp;提交</a>
+
+@section Styles{
+    <style>
+        body {
+            font-size: 14px;
+        }
+    </style>
+}
+
+@section Scripts{
+    <script>
+        console.log($(window).width()*0.8)
+        function layerItemDetail() {
+            layer.open({
+                type: 1,
+                area: $(window).width() < 992 ? ['95%', ($(window).height()*0.9).toString()+'px'] : ['800px', 'auto'],
+                content: $('#ItemDetail'),
+                shadeClose: true,
+                isOutAnim: false,
+                fixed: false,
+                //closeBtn: false,
+                scrollbar: false,
+                //title: false,
+            });
+        }
+
+        //$(function () {
+        //    $(document).on(
+        //        'change',
+        //        'input[type=file]',
+        //        function () {
+        //            var reader = new FileReader();
+        //            var that = this;
+        //            reader.onload = function (e) {
+        //                //console.log(reader.result);  //或者 e.target.result都是一样的，都是base64码
+        //                //console.log($(that).siblings('input[type=text]').prop('id'))
+        //                $(that).siblings('input[type=hidden]').val(reader.result)
+        //                $(that).siblings('img')[0].src = reader.result
+        //            }
+        //            reader.readAsDataURL(this.files[0])
+
+        //            //filses就是input[type=file]文件列表，files[0]就是第一个文件，这里就是将选择的第一个图片文件转化为base64的码
+        //        })
+        //})
+    </script>
+
+    <script>
+        var emptyRecord = @Html.Raw(JsonConvert.SerializeObject(new dto生产单D()));
+        var emptyRecordList = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model?.Order?.D ?? new List<dto生产单D>()));
+        var vm = new Vue({
+            el: '#vueScope',
+            data: {
+                items: emptyRecordList,
+                itemCurrent: {},
+                itemIndex: {},
+                isNew: false,
+            },
+            methods: {
+                buildName: function (index, name) {
+                    return "Order.D[" + index + "]." + name
+                },
+                newRecord: function () {
+                    this.isNew = true;
+                    this.itemCurrent = JSON.parse(JSON.stringify(emptyRecord))
+                    layerItemDetail()
+                },
+                saveNew: function () {
+                    this.items.push(this.itemCurrent);
+                    layer.closeAll('page')
+                },
+                editRecord: function (index) {
+                    this.isNew = false;
+                    this.itemIndex = index;
+                    this.itemCurrent = JSON.parse(JSON.stringify(this.items[index]))
+                    layerItemDetail()
+                },
+                saveEdit: function () {
+                    this.$set(this.items, this.itemIndex, this.itemCurrent)
+                    layer.closeAll('page')
+
+                },
+                removeRecord: function (index) {
+                    this.items.splice(index, 1)
+                },
+                buildSpecification: function (item) {
+                    if (!item.长 || !item.宽 || !item.高)
+                        return ""
+                    return [item.长, item.宽, item.高].join("*")
+                },
+                previewPic: function ($event) {
+                    var reader = new FileReader();
+                    var that = this;
+                    reader.onload = function (e) {
+                        //console.log(reader.result);  //或者 e.target.result都是一样的，都是base64码
+                        //console.log($(that).siblings('input[type=text]').prop('id'))
+                        //$(that).siblings('input[type=hidden]').val(reader.result)
+                        //$(that).siblings('img')[0].src = reader.result
+                        that.itemCurrent.图片base64 = reader.result
+                    }
+                    if ($event.target.files.length > 0) {
+                        reader.readAsDataURL($event.target.files[0])
+                        this.itemCurrent.图片name = $event.target.files[0].name
+                        this.itemCurrent.图片type = $event.target.files[0].type
+                    }
+                }
+            }
+        })
+    </script>
+}

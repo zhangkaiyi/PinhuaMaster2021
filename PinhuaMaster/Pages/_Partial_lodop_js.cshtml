@@ -1,0 +1,29 @@
+﻿<!-- _Partial_lodop_js -->
+
+@{
+    var mode = ViewContext.RouteData.Values["printMode"]?.ToString();
+    if (mode == "dev")
+    {
+        <!-- Dev -->
+        <!-- @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(ViewContext.RouteData)) -->
+        <script src='http://192.168.1.20:8000/CLodopfuncs.js'></script>
+    }
+    else if (mode == "frp")
+    {
+        <!-- Frp -->
+        <!-- @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(ViewContext.RouteData)) -->
+        <script src='http://clodop.frp.chang.pinhuadashi.com:7999/CLodopfuncs.js'></script>
+    }
+    else
+    {
+        <!-- Production -->
+        <!-- @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(ViewContext.RouteData)) -->
+        <script src='http://qy.pinhuadashi.com:6800/CLodopfuncs.js'></script>
+    }
+<script>
+    LODOP.SET_LICENSES("","5A7B86A1115E612CDF0F9507DC18589D","C94CEE276DB2187AE6B65D56B3FC2848","");
+</script>
+}
+
+
+<!-- /_Partial_lodop_js -->

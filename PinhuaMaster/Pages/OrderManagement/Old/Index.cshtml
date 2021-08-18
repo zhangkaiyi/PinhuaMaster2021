@@ -1,0 +1,33 @@
+﻿@page
+@model PinhuaMaster.Pages.OrderManagement.Old.IndexModel
+@{
+    ViewData["Title"] = "旧版单据";
+}
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="box box-solid">
+            <div class="box-body">
+                <table data-toggle="table"
+                       data-url="@Url.Page("Index","AjaxOrders")"
+                       data-show-columns="true"
+                       data-search="true"
+                       data-striped="true"
+                       data-pagination="true"
+                       data-page-size="15"
+                       data-page-list="[15, 50, 100, 200]">
+                    <thead>
+                        <tr>
+                            <th data-field="@nameof(PinhuaMaster.Data.Entities.Pinhua.发货.送货日期)">@nameof(PinhuaMaster.Data.Entities.Pinhua.发货.送货日期)</th>
+                            <th data-field="@nameof(PinhuaMaster.Data.Entities.Pinhua.发货.送货单号)">@nameof(PinhuaMaster.Data.Entities.Pinhua.发货.送货单号)</th>
+                            <th data-field="@nameof(PinhuaMaster.Data.Entities.Pinhua.发货.客户)">@nameof(PinhuaMaster.Data.Entities.Pinhua.发货.客户)</th>
+                            <th data-field="@nameof(PinhuaMaster.Data.Entities.Pinhua.发货.业务描述)">@nameof(PinhuaMaster.Data.Entities.Pinhua.发货.业务描述)</th>
+                            <th data-field="@nameof(PinhuaMaster.Data.Entities.Pinhua.发货.地址)">@nameof(PinhuaMaster.Data.Entities.Pinhua.发货.地址)</th>
+                            <th data-field="@nameof(PinhuaMaster.Data.Entities.Pinhua.发货.备注)">@nameof(PinhuaMaster.Data.Entities.Pinhua.发货.备注)</th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

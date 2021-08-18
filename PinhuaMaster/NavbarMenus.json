@@ -1,0 +1,294 @@
+{
+  "NavbarMenus": [
+    {
+      "name": "主页",
+      "icon": "fa fa-home",
+      "url": "/Index"
+    },
+    {
+      "name": "销售管理",
+      "icon": "fa fa-table",
+      "url": "",
+      "children": [
+        {
+          "name": "简易销售（无库存）",
+          "icon": "fa fa-sticky-note-o",
+          "url": "/OrderManagement/EasyDelivery/Index"
+        },
+        {
+          "name": "销售出库单",
+          "icon": "fa fa-circle-o",
+          "url": "/StockManagement/StockOut/Index"
+        }
+      ]
+    },
+    {
+      "name": "采购管理",
+      "icon": "fa fa-circle-o",
+      "url": "",
+      "children": [
+        {
+          "name": "简易采购（无库存）",
+          "icon": "fa fa-circle-o",
+          "url": "/OrderManagement/EasyPurchasing/Index"
+        },
+        {
+          "name": "采购入库单",
+          "icon": "fa fa-circle-o",
+          "url": "/StockManagement/StockIn/Index"
+        }
+      ]
+    },
+    {
+      "name": "仓库管理",
+      "icon": "fa fa-circle-o",
+      "url": "",
+      "children": [
+        {
+          "name": "仓库登记",
+          "icon": "fa fa-circle-o",
+          "url": "/StockManagement/Warehouse/Index"
+        },
+        {
+          "name": "库存清单",
+          "icon": "fa fa-circle-o",
+          "url": "/StockManagement/Inventory"
+        },
+        {
+          "name": "库存转移",
+          "icon": "fa fa-circle-o",
+          "url": "/StockManagement/StockTransfer/Index"
+        }
+      ]
+    },
+    {
+      "name": "生产管理",
+      "icon": "fa fa-circle-o",
+      "url": "",
+      "children": [
+        {
+          "name": "生产订单",
+          "icon": "fa fa-circle-o",
+          "url": "/ProductionManagement/ProductionOrder/Index"
+        },
+        {
+          "name": "生产入库单",
+          "icon": "fa fa-circle-o",
+          "url": "/StockManagement/ProductionStockIn/Index"
+        },
+        {
+          "name": "外协加工单",
+          "icon": "fa fa-circle-o",
+          "url": "/StockManagement/StockSubconctracting/Index"
+        }
+      ]
+    },
+    {
+      "name": "零售管理",
+      "icon": "fa fa-circle-o",
+      "url": "",
+      "children": [
+        {
+          "name": "出库单",
+          "icon": "fa fa-circle-o",
+          "url": "/Retail/Delivery/Index"
+        }
+      ]
+    },
+    {
+      "name": "财务管理",
+      "icon": "fa fa-exchange",
+      "url": "",
+      "children": [
+        {
+          "name": "对帐单",
+          "icon": "fa fa-random",
+          "url": "/Statement/Index"
+        },
+        {
+          "name": "收款",
+          "icon": "fa fa-arrow-circle-o-right",
+          "url": "/Finance/Collection/Index"
+        },
+        {
+          "name": "付款",
+          "icon": "fa fa-arrow-circle-o-left",
+          "url": "/Finance/Payment/Index"
+        }
+      ]
+    },
+    {
+      "name": "人力资源管理",
+      "icon": "fa fa-circle-o",
+      "url": "",
+      "children": [
+        {
+          "name": "人事管理",
+          "icon": "fa fa-address-book-o",
+          "url": "",
+          "children": [
+            {
+              "name": "人员档案",
+              "icon": "fa fa-list",
+              "url": "/Personnel/Files/Index"
+            },
+            {
+              "name": "新建档案",
+              "icon": "fa fa-user-plus",
+              "url": "/Personnel/Files/Create"
+            }
+          ]
+        },
+        {
+          "name": "考勤管理",
+          "icon": "fa fa-calendar",
+          "url": "",
+          "children": [
+            {
+              "name": "考勤报表",
+              "icon": "fa fa-wpforms",
+              "url": "/Attendance/Index"
+            },
+            {
+              "name": "加班单",
+              "icon": "fa fa-circle-o",
+              "url": "/Attendance/OvertimeForm/Index"
+            },
+            {
+              "name": "数据库",
+              "icon": "fa fa-database",
+              "url": "",
+              "children": [
+                {
+                  "name": "EastRiver",
+                  "icon": "fa fa-circle-o",
+                  "url": "/Attendance/EastRiver/Index"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "工资管理",
+          "icon": "fa fa-money",
+          "url": "/Payroll/Index"
+        }
+      ]
+    },
+    {
+      "name": "基础信息",
+      "icon": "fa fa-circle-o",
+      "url": "",
+      "children": [
+        {
+          "name": "产品型号",
+          "icon": "fa fa-circle-o",
+          "url": "/BasicInformation/ModelNumber/Index"
+        },
+        {
+          "name": "产品登记",
+          "icon": "fa fa-circle-o",
+          "url": "/BasicInformation/ProductRegistration/Index"
+        },
+        {
+          "name": "合作单位",
+          "icon": "fa fa-circle-o",
+          "url": "/BasicInformation/Partner/Index"
+        }
+      ]
+    },
+    {
+      "name": "后台管理",
+      "icon": "fa fa-cog",
+      "url": "",
+      "children": [
+        {
+          "name": "菜单",
+          "icon": "fa fa-circle-o",
+          "url": "/MenuManagement/Index"
+        },
+        {
+          "name": "用户",
+          "icon": "fa fa-circle-o",
+          "url": "/User/Index"
+        },
+        {
+          "name": "角色",
+          "icon": "fa fa-circle-o",
+          "url": "/Role/Index"
+        },
+        {
+          "name": "权限",
+          "icon": "fa fa-circle-o",
+          "url": "/Permission/Index"
+        }
+      ]
+    },
+    {
+      "name": "测试版",
+      "icon": "fa fa-circle-o",
+      "url": "",
+      "children": [
+        {
+          "name": "旧版销售与采购",
+          "icon": "fa fa-sticky-note-o",
+          "url": "/OrderManagement/Old/Index"
+        },
+        {
+          "name": "库存管理",
+          "icon": "fa fa-hand-lizard-o",
+          "url": "/StockManagement/Inventory2"
+        },
+        {
+          "name": "运输单",
+          "icon": "fa fa-truck",
+          "url": ""
+        },
+        {
+          "name": "订单系统",
+          "icon": "fa fa-pencil-square-o",
+          "url": "",
+          "children": [
+            {
+              "name": "概览",
+              "icon": "fa fa-list",
+              "url": "/OrderManagement/Index"
+            },
+            {
+              "name": "订单",
+              "icon": "fa fa-circle-o",
+              "url": "/OrderManagement/Sales/Index"
+            },
+            {
+              "name": "交货",
+              "icon": "fa fa-circle-o",
+              "url": "/OrderManagement/Delivery/Index"
+            },
+            {
+              "name": "收款",
+              "icon": "fa fa-circle-o",
+              "url": "/OrderManagement/Collection/Index"
+            },
+            {
+              "name": "旧订单管理",
+              "icon": "fa fa-exchange",
+              "url": "",
+              "children": [
+                {
+                  "name": "送货单",
+                  "icon": "fa fa-circle-o",
+                  "url": "/OrderManagement/Old/DeliveryOrder/Index"
+                },
+                {
+                  "name": "新建送货单",
+                  "icon": "fa fa-circle-o",
+                  "url": "/OrderManagement/Old/DeliveryOrder/Create"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

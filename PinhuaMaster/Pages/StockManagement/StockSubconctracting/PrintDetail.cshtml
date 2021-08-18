@@ -1,0 +1,141 @@
+﻿@page "{Id?}"
+@model PinhuaMaster.Pages.StockManagement.StockSubconctracting.PrintDetailModel
+@{
+    ViewData["Title"] = "打印";
+    Layout = null;
+    var delivery = pinhuaContext.StockSubconctractingMain.Where(d => d.OrderId == Model.Id).SingleOrDefault();
+    var details = pinhuaContext.StockSubconctractingDetails.Where(d => d.ExcelServerRcid == delivery.ExcelServerRcid).ToList();
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <style>
+        body, button, input, select, textarea, h1, h2, h3, h4, h5, h6, table {
+            font-family: "Microsoft YaHei", "微软雅黑", "黑体", SimSun, "宋体", sans-serif;
+            font-size: 12px;
+        }
+
+        table {
+            border-collapse: collapse;
+        }
+
+        .table > tbody > tr > td, .table > tfoot > tr > td, .table > tfoot > tr > th, .table > thead > tr > td, .table > thead > tr > th {
+            border-top: 1px dashed #000;
+        }
+
+        .table > caption + thead > tr:first-child > td, .table > caption + thead > tr:first-child > th, .table > colgroup + thead > tr:first-child > td, .table > colgroup + thead > tr:first-child > th, .table > thead:first-child > tr:first-child > td, .table > thead:first-child > tr:first-child > th {
+            border-top: 1px solid #000 !important;
+        }
+
+        .table > tbody > tr:last-child > td {
+            border-bottom: 1px solid #000 !important
+        }
+
+        th, td {
+            text-align: left;
+            height: 30px;
+        }
+
+        .text-right {
+            text-align: right;
+        }
+    </style>
+</head>
+<body>
+    <!-- Main content -->
+    <section class="container-fluid">
+        <div id="forPrint">
+            <!-- title row -->
+            <div style="display:block">
+                <div style="text-align:center">
+                    <div style="font-size:26px;margin-top:5px;">
+                        嘉善县胜美木业厂
+                        <span style="font-size:20px;">（送货单）</span>
+                    </div>
+                </div>
+                <!-- /.col -->
+            </div>
+            <!-- info row -->
+            <div style="display:block; font-size:12px;">
+                <div style="width:75%;float:left;">
+                    <div style="padding-left:23px">
+                        <p>收货单位： @delivery.CustomerName</p>
+                        <p>收货地址： @delivery.CustomerAddress</p>
+                        <p>备　　注： @delivery.Remarks</p>
+                    </div>
+                </div>
+                <!-- /.col -->
+                <div style="width:25%;float:left">
+                    <p>单　　号： @delivery.OrderId</p>
+                    <p>日　　期： @delivery.OrderDate?.ToString("yyyy-MM-dd")</p>
+                    <p>类　　型： @(pinhuaContext.业务类型.FirstOrDefault(p => p.业务类型1 == delivery.MovementType).类型描述)</p>
+
+                </div>
+                <!-- /.col -->
+            </div>
+            <!-- /.row -->
+            <!-- Table row -->
+            <div style="display:block;margin-left:23px;margin-right:23px">
+                <div class="col-xs-12">
+                    <table class="table" style="width:100%">
+                        <thead>
+                            <tr>
+                                <th>描述</th>
+                                <th>规格</th>
+                                <th class="text-right">片数</th>
+                                <th class="text-right">单位数量</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var detail in details)
+                            {
+                                <tr>
+                                    <td>@detail.ModelName（@detail.Description）</td>
+                                    <td>@detail.Specification</td>
+                                    <td class="text-right">@detail.Qty?.ToString("0")</td>
+                                    <td class="text-right">@detail.UnitQty?.ToString("0.00") @detail.Unit</td>
+                                </tr>
+                            }
+                            @for (var i = 0; i != (details.Count < 7 ? 7 - details.Count() : 0); i++)
+                            {
+                                <tr>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td class="text-right"></td>
+                                    <td class="text-right"></td>
+                                    <td class="text-right"></td>
+                                </tr>
+                            }
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <td>合计：</td>
+                                <td></td>
+                                <td class="text-right">@details.Sum(a => a.Qty)?.ToString("0")</td>
+                                <td class="text-right"></td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+                <!-- /.col -->
+            </div>
+            <!-- /.row -->
+            <div class="row">
+                <div style="margin-left:23px;margin-right:23px">
+                    <div style="width:33.333333%;float:left;"><p>承运人： <u>　　　　　　　　　　</u></p></div>
+                    <div style="width:33.333333%;float:left;"><p>收货单位： <u>　　　　　　　　　　</u></p></div>
+                    <div style="width:33.333333%;float:left;"><p>送货单位： <u>　　　　　　　　　　</u></p></div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- /.content -->
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+</body>
+</html>

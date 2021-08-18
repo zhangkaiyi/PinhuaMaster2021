@@ -1,0 +1,192 @@
+﻿@page
+@model PinhuaMaster.Pages.StockManagement.StockTransfer.SearchModel
+@{
+    ViewData["Title"] = "Search";
+}
+<form method="post">
+    <div class="box box-solid">
+        <div class="box-body">
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label class="control-label" asp-for="SearchViewModel.OrderId"><i class="fa fa-angle-double-right"></i> @Html.DisplayNameFor(m => m.SearchViewModel.OrderId)</label>
+                        <div class="input-group">
+                            <input asp-for="SearchViewModel.OrderId" class="form-control" />
+                            <span class="input-group-addon no-padding">
+                                <i class="fa fa-info" style="width:38px;"></i>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label" asp-for="SearchViewModel.CustomerName"><i class="fa fa-angle-double-right"></i> @Html.DisplayNameFor(m => m.SearchViewModel.CustomerName)</label>
+                        <div class="input-group">
+                            <input asp-for="SearchViewModel.CustomerName" class="form-control" />
+                            <span class="input-group-addon no-padding">
+                                <i class="fa fa-info" style="width:38px;"></i>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label" asp-for="SearchViewModel.MovementTypeDescription"><i class="fa fa-angle-double-right"></i> @Html.DisplayNameFor(m => m.SearchViewModel.MovementTypeDescription)</label>
+                        <div class="input-group">
+                            <input asp-for="SearchViewModel.MovementTypeDescription" class="form-control" />
+                            <span class="input-group-addon no-padding">
+                                <i class="fa fa-info" style="width:38px;"></i>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label" asp-for="SearchViewModel.OrderDate"><i class="fa fa-angle-double-right"></i> @Html.DisplayNameFor(m => m.SearchViewModel.OrderDate)</label>
+                        <div class="input-group">
+                            <input asp-for="SearchViewModel.OrderDate" class="form-control" />
+                            <span class="input-group-addon no-padding">
+                                <i class="fa fa-info" style="width:38px;"></i>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label class="control-label" asp-for="SearchViewModel.Contact"><i class="fa fa-angle-double-right"></i> @Html.DisplayNameFor(m => m.SearchViewModel.Contact)</label>
+                        <div class="input-group">
+                            <input asp-for="SearchViewModel.Contact" class="form-control" />
+                            <span class="input-group-addon no-padding">
+                                <i class="fa fa-info" style="width:38px;"></i>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label" asp-for="SearchViewModel.ContactNumber"><i class="fa fa-angle-double-right"></i> @Html.DisplayNameFor(m => m.SearchViewModel.ContactNumber)</label>
+                        <div class="input-group">
+                            <input asp-for="SearchViewModel.ContactNumber" class="form-control" />
+                            <span class="input-group-addon no-padding">
+                                <i class="fa fa-info" style="width:38px;"></i>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label" asp-for="SearchViewModel.CustomerAddress"><i class="fa fa-angle-double-right"></i> @Html.DisplayNameFor(m => m.SearchViewModel.CustomerAddress)</label>
+                        <div class="input-group">
+                            <input asp-for="SearchViewModel.CustomerAddress" class="form-control" />
+                            <span class="input-group-addon no-padding">
+                                <i class="fa fa-info" style="width:38px;"></i>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label" asp-for="SearchViewModel.Remarks"><i class="fa fa-angle-double-right"></i> @Html.DisplayNameFor(m => m.SearchViewModel.Remarks)</label>
+                        <div class="input-group">
+                            <input asp-for="SearchViewModel.Remarks" class="form-control" />
+                            <span class="input-group-addon no-padding">
+                                <i class="fa fa-info" style="width:38px;"></i>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label class="control-label" asp-for="SearchViewModel.CreatedBy"><i class="fa fa-angle-double-right"></i> @Html.DisplayNameFor(m => m.SearchViewModel.CreatedBy)</label>
+                        <div class="input-group">
+                            <input asp-for="SearchViewModel.CreatedBy" class="form-control" />
+                            <span class="input-group-addon no-padding">
+                                <i class="fa fa-info" style="width:38px;"></i>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label" asp-for="SearchViewModel.CreatedDate"><i class="fa fa-angle-double-right"></i> @Html.DisplayNameFor(m => m.SearchViewModel.CreatedDate)</label>
+                        <div class="input-group">
+                            <input asp-for="SearchViewModel.CreatedDate" class="form-control" />
+                            <span class="input-group-addon no-padding">
+                                <i class="fa fa-info" style="width:38px;"></i>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="box box-solid">
+        <div class="box-body">
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label class="control-label" asp-for="SearchViewModel.ItemId"><i class="fa fa-angle-double-right"></i> @Html.DisplayNameFor(m => m.SearchViewModel.ItemId)</label>
+                        <div class="input-group">
+                            <input asp-for="SearchViewModel.ItemId" class="form-control" />
+                            <span class="input-group-addon no-padding">
+                                <i class="fa fa-info" style="width:38px;"></i>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label" asp-for="SearchViewModel.ItemDescription"><i class="fa fa-angle-double-right"></i> @Html.DisplayNameFor(m => m.SearchViewModel.ItemDescription)</label>
+                        <div class="input-group">
+                            <input asp-for="SearchViewModel.ItemDescription" class="form-control" />
+                            <span class="input-group-addon no-padding">
+                                <i class="fa fa-info" style="width:38px;"></i>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label" asp-for="SearchViewModel.ItemSpecification"><i class="fa fa-angle-double-right"></i> @Html.DisplayNameFor(m => m.SearchViewModel.ItemSpecification)</label>
+                        <div class="input-group">
+                            <input asp-for="SearchViewModel.ItemSpecification" class="form-control" />
+                            <span class="input-group-addon no-padding">
+                                <i class="fa fa-info" style="width:38px;"></i>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label" asp-for="SearchViewModel.ItemRemarks"><i class="fa fa-angle-double-right"></i> @Html.DisplayNameFor(m => m.SearchViewModel.ItemRemarks)</label>
+                        <div class="input-group">
+                            <input asp-for="SearchViewModel.ItemRemarks" class="form-control" />
+                            <span class="input-group-addon no-padding">
+                                <i class="fa fa-info" style="width:38px;"></i>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label class="control-label" asp-for="SearchViewModel.ItemQty"><i class="fa fa-angle-double-right"></i> @Html.DisplayNameFor(m => m.SearchViewModel.ItemQty)</label>
+                        <div class="input-group">
+                            <input asp-for="SearchViewModel.ItemQty" class="form-control" />
+                            <span class="input-group-addon no-padding">
+                                <i class="fa fa-info" style="width:38px;"></i>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label" asp-for="SearchViewModel.ItemUnitQty"><i class="fa fa-angle-double-right"></i> @Html.DisplayNameFor(m => m.SearchViewModel.ItemUnitQty)</label>
+                        <div class="input-group">
+                            <input asp-for="SearchViewModel.ItemUnitQty" class="form-control" />
+                            <span class="input-group-addon no-padding">
+                                <i class="fa fa-info" style="width:38px;"></i>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label" asp-for="SearchViewModel.ItemPrice"><i class="fa fa-angle-double-right"></i> @Html.DisplayNameFor(m => m.SearchViewModel.ItemPrice)</label>
+                        <div class="input-group">
+                            <input asp-for="SearchViewModel.ItemPrice" class="form-control" />
+                            <span class="input-group-addon no-padding">
+                                <i class="fa fa-info" style="width:38px;"></i>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label" asp-for="SearchViewModel.ItemAmount"><i class="fa fa-angle-double-right"></i> @Html.DisplayNameFor(m => m.SearchViewModel.ItemAmount)</label>
+                        <div class="input-group">
+                            <input asp-for="SearchViewModel.ItemAmount" class="form-control" />
+                            <span class="input-group-addon no-padding">
+                                <i class="fa fa-info" style="width:38px;"></i>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <button type="submit" class="btn btn-primary"><i class="fa fa-search"></i> Search</button>
+</form>

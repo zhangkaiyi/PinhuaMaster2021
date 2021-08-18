@@ -1,0 +1,17 @@
+﻿@page "{ModelNumber?}/{SubModelNumber?}"
+@using PinhuaMaster.Pages.BasicInformation.ProductRegistration.ViewModel
+@model PinhuaMaster.Pages.BasicInformation.ProductRegistration.EditModel
+@{
+    ViewData["Title"] = "编辑";
+    ViewBag.NoContentHeader = true;
+}
+
+@Html.Partial("_ProductRegistrationPartial", Model.ProductRegistrationInfo)
+
+
+@section Scripts{
+    @Html.RenderScripts()
+}
+@section Styles{
+    @Html.RenderStyles()
+}

@@ -1,0 +1,17 @@
+﻿@page "{Id?}"
+@using PinhuaMaster.Pages.BasicInformation.ModelNumber.ViewModel
+@model PinhuaMaster.Pages.BasicInformation.ModelNumber.EditModel
+@{
+    ViewData["Title"] = "编辑";
+    ViewBag.NoContentHeader = true;
+}
+
+@Html.Partial("_ModelNumberPartial", Model.ModelNumberInfo)
+
+
+@section Scripts{
+    @Html.RenderScripts()
+}
+@section Styles{
+    @Html.RenderStyles()
+}

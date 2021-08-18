@@ -1,0 +1,56 @@
+﻿@page "{year}/{month}/{id?}"
+@using Microsoft.EntityFrameworkCore;
+@model PinhuaMaster.Pages.Attendance.EastRiver.DetailsModel
+@{
+    var id = @PageContext.RouteData.Values["id"] as string;
+    var year = @PageContext.RouteData.Values["year"] as string;
+    var month = @PageContext.RouteData.Values["month"] as string;
+    ViewData["Title"] = $"依时利{new DateTime(int.Parse(year),int.Parse(month),1).ToString( " yyyy-MM ")}打卡数据";
+}
+
+<div class="row">
+    <div class="col-md-8">
+        <div class="box box-solid">
+            <div class="box-body">
+                <table data-toggle="table">
+                    <thead>
+                        <tr>
+                            <th>编号</th>
+                            <th>姓名</th>
+                            <th class="hidden-xs">卡号</th>
+                            <th>打卡时间</th>
+                            <th data-width="20"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var timeRecord in Model.timeRecords.OrderBy(r => r.SignTime).ThenBy(r => r.Id))
+                        {
+                            <tr>
+                                <td>@timeRecord.Id</td>
+                                <td>@timeRecord.Name</td>
+                                <td>@timeRecord.CardNo</td>
+                                <td>@timeRecord.SignTime.ToString("yyyy-MM-dd HH:mm:ss")</td>
+                                <td><a href="javascript:toDelete(@timeRecord.RecordId)"><i class="fa fa-times"></i></a></td>
+                            </tr>
+
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<form method="post" asp-page="Delete" id="toDeleteForm">
+    <input type="hidden" id="toDeleteRcid" name="id" />
+</form>
+
+@section Scripts{
+    <script>
+        function toDelete(id) {
+            if (confirm('确定删除这条记录吗？')) {
+                $('#toDeleteRcid').val(id);
+                $('#toDeleteForm').submit();
+            }
+        }
+    </script>
+}

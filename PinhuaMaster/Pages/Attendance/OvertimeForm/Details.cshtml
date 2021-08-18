@@ -1,0 +1,73 @@
+﻿@page
+@model PinhuaMaster.Pages.Attendance.OvertimeForm.DetailsModel
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>OvertimeFormMain</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.OvertimeFormMain.ExcelServerRcid)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.OvertimeFormMain.ExcelServerRcid)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.OvertimeFormMain.ExcelServerRn)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.OvertimeFormMain.ExcelServerRn)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.OvertimeFormMain.ExcelServerCn)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.OvertimeFormMain.ExcelServerCn)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.OvertimeFormMain.ExcelServerRc1)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.OvertimeFormMain.ExcelServerRc1)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.OvertimeFormMain.ExcelServerWiid)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.OvertimeFormMain.ExcelServerWiid)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.OvertimeFormMain.ExcelServerRtid)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.OvertimeFormMain.ExcelServerRtid)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.OvertimeFormMain.ExcelServerChg)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.OvertimeFormMain.ExcelServerChg)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.OvertimeFormMain.CreatedDate)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.OvertimeFormMain.CreatedDate)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.OvertimeFormMain.CreatedBy)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.OvertimeFormMain.CreatedBy)
+        </dd>
+    </dl>
+</div>
+<div>
+    @Html.ActionLink("Edit", "Edit", new { /* id = Model.PrimaryKey */ }) |
+    <a asp-page="./Index">Back to List</a>
+</div>

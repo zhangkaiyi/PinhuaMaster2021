@@ -1,0 +1,171 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.2</TargetFramework>
+    <UserSecretsId>aspnet-PinhuaMaster-2EC1126D-F76B-4005-9F56-56DA2E3EB455</UserSecretsId>
+    <MvcRazorCompileOnPublish>false</MvcRazorCompileOnPublish>
+    <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Remove="Pages\Attendance\aaa\**" />
+    <Compile Remove="wwwroot\lib\AdminLTE-2.4.3\build\**" />
+    <Compile Remove="wwwroot\lib\AdminLTE-2.4.3\documentation\**" />
+    <Compile Remove="wwwroot\lib\AdminLTE-2.4.3\pages\**" />
+    <Compile Remove="wwwroot\lib\AdminLTE-2.4.3\plugins\**" />
+    <Compile Remove="wwwroot\lib\bootstrap-datepicker\build\**" />
+    <Compile Remove="wwwroot\lib\bootstrap-datepicker\docs\**" />
+    <Compile Remove="wwwroot\lib\bootstrap-datepicker\grunt\**" />
+    <Compile Remove="wwwroot\lib\bootstrap-datepicker\js\**" />
+    <Compile Remove="wwwroot\lib\bootstrap-datepicker\less\**" />
+    <Compile Remove="wwwroot\lib\bootstrap-datepicker\tests\**" />
+    <Compile Remove="wwwroot\lib\bootstrap-table\src\**" />
+    <Compile Remove="wwwroot\lib\bootstrap\fonts\**" />
+    <Compile Remove="wwwroot\lib\bootstrap\grunt\**" />
+    <Compile Remove="wwwroot\lib\bootstrap\js\**" />
+    <Compile Remove="wwwroot\lib\bootstrap\less\**" />
+    <Compile Remove="wwwroot\lib\bootstrap\nuget\**" />
+    <Compile Remove="wwwroot\lib\jquery\external\**" />
+    <Compile Remove="wwwroot\lib\jquery\src\**" />
+    <Compile Remove="wwwroot\lib\layer\src\**" />
+    <Compile Remove="wwwroot\lib\layer\test\**" />
+    <Compile Remove="wwwroot\lib\vue\packages\**" />
+    <Compile Remove="wwwroot\lib\vue\types\**" />
+    <Content Remove="Pages\Attendance\aaa\**" />
+    <Content Remove="wwwroot\lib\AdminLTE-2.4.3\build\**" />
+    <Content Remove="wwwroot\lib\AdminLTE-2.4.3\documentation\**" />
+    <Content Remove="wwwroot\lib\AdminLTE-2.4.3\pages\**" />
+    <Content Remove="wwwroot\lib\AdminLTE-2.4.3\plugins\**" />
+    <Content Remove="wwwroot\lib\bootstrap-datepicker\build\**" />
+    <Content Remove="wwwroot\lib\bootstrap-datepicker\docs\**" />
+    <Content Remove="wwwroot\lib\bootstrap-datepicker\grunt\**" />
+    <Content Remove="wwwroot\lib\bootstrap-datepicker\js\**" />
+    <Content Remove="wwwroot\lib\bootstrap-datepicker\less\**" />
+    <Content Remove="wwwroot\lib\bootstrap-datepicker\tests\**" />
+    <Content Remove="wwwroot\lib\bootstrap-table\src\**" />
+    <Content Remove="wwwroot\lib\bootstrap\fonts\**" />
+    <Content Remove="wwwroot\lib\bootstrap\grunt\**" />
+    <Content Remove="wwwroot\lib\bootstrap\js\**" />
+    <Content Remove="wwwroot\lib\bootstrap\less\**" />
+    <Content Remove="wwwroot\lib\bootstrap\nuget\**" />
+    <Content Remove="wwwroot\lib\jquery\external\**" />
+    <Content Remove="wwwroot\lib\jquery\src\**" />
+    <Content Remove="wwwroot\lib\layer\src\**" />
+    <Content Remove="wwwroot\lib\layer\test\**" />
+    <Content Remove="wwwroot\lib\vue\packages\**" />
+    <Content Remove="wwwroot\lib\vue\types\**" />
+    <EmbeddedResource Remove="Pages\Attendance\aaa\**" />
+    <EmbeddedResource Remove="wwwroot\lib\AdminLTE-2.4.3\build\**" />
+    <EmbeddedResource Remove="wwwroot\lib\AdminLTE-2.4.3\documentation\**" />
+    <EmbeddedResource Remove="wwwroot\lib\AdminLTE-2.4.3\pages\**" />
+    <EmbeddedResource Remove="wwwroot\lib\AdminLTE-2.4.3\plugins\**" />
+    <EmbeddedResource Remove="wwwroot\lib\bootstrap-datepicker\build\**" />
+    <EmbeddedResource Remove="wwwroot\lib\bootstrap-datepicker\docs\**" />
+    <EmbeddedResource Remove="wwwroot\lib\bootstrap-datepicker\grunt\**" />
+    <EmbeddedResource Remove="wwwroot\lib\bootstrap-datepicker\js\**" />
+    <EmbeddedResource Remove="wwwroot\lib\bootstrap-datepicker\less\**" />
+    <EmbeddedResource Remove="wwwroot\lib\bootstrap-datepicker\tests\**" />
+    <EmbeddedResource Remove="wwwroot\lib\bootstrap-table\src\**" />
+    <EmbeddedResource Remove="wwwroot\lib\bootstrap\fonts\**" />
+    <EmbeddedResource Remove="wwwroot\lib\bootstrap\grunt\**" />
+    <EmbeddedResource Remove="wwwroot\lib\bootstrap\js\**" />
+    <EmbeddedResource Remove="wwwroot\lib\bootstrap\less\**" />
+    <EmbeddedResource Remove="wwwroot\lib\bootstrap\nuget\**" />
+    <EmbeddedResource Remove="wwwroot\lib\jquery\external\**" />
+    <EmbeddedResource Remove="wwwroot\lib\jquery\src\**" />
+    <EmbeddedResource Remove="wwwroot\lib\layer\src\**" />
+    <EmbeddedResource Remove="wwwroot\lib\layer\test\**" />
+    <EmbeddedResource Remove="wwwroot\lib\vue\packages\**" />
+    <EmbeddedResource Remove="wwwroot\lib\vue\types\**" />
+    <None Remove="wwwroot\lib\AdminLTE-2.4.3\build\**" />
+    <None Remove="wwwroot\lib\AdminLTE-2.4.3\documentation\**" />
+    <None Remove="wwwroot\lib\AdminLTE-2.4.3\pages\**" />
+    <None Remove="wwwroot\lib\AdminLTE-2.4.3\plugins\**" />
+    <None Remove="wwwroot\lib\bootstrap-datepicker\build\**" />
+    <None Remove="wwwroot\lib\bootstrap-datepicker\docs\**" />
+    <None Remove="wwwroot\lib\bootstrap-datepicker\grunt\**" />
+    <None Remove="wwwroot\lib\bootstrap-datepicker\js\**" />
+    <None Remove="wwwroot\lib\bootstrap-datepicker\less\**" />
+    <None Remove="wwwroot\lib\bootstrap-datepicker\tests\**" />
+    <None Remove="wwwroot\lib\bootstrap-table\src\**" />
+    <None Remove="wwwroot\lib\bootstrap\fonts\**" />
+    <None Remove="wwwroot\lib\bootstrap\grunt\**" />
+    <None Remove="wwwroot\lib\bootstrap\js\**" />
+    <None Remove="wwwroot\lib\bootstrap\less\**" />
+    <None Remove="wwwroot\lib\bootstrap\nuget\**" />
+    <None Remove="wwwroot\lib\jquery\external\**" />
+    <None Remove="wwwroot\lib\jquery\src\**" />
+    <None Remove="wwwroot\lib\layer\src\**" />
+    <None Remove="wwwroot\lib\layer\test\**" />
+    <None Remove="wwwroot\lib\vue\packages\**" />
+    <None Remove="wwwroot\lib\vue\types\**" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Remove="wwwroot\lib\bootstrap-datepicker\.bower.json" />
+    <Content Remove="wwwroot\lib\bootstrap-datepicker\.editorconfig" />
+    <Content Remove="wwwroot\lib\bootstrap-datepicker\.gitignore" />
+    <Content Remove="wwwroot\lib\bootstrap-datepicker\.travis.yml" />
+    <Content Remove="wwwroot\lib\bootstrap-datepicker\bower.json" />
+    <Content Remove="wwwroot\lib\bootstrap-datepicker\CHANGELOG.md" />
+    <Content Remove="wwwroot\lib\bootstrap-datepicker\CODE_OF_CONDUCT.md" />
+    <Content Remove="wwwroot\lib\bootstrap-datepicker\composer.json" />
+    <Content Remove="wwwroot\lib\bootstrap-datepicker\CONTRIBUTING.md" />
+    <Content Remove="wwwroot\lib\bootstrap-datepicker\Gruntfile.js" />
+    <Content Remove="wwwroot\lib\bootstrap-datepicker\LICENSE" />
+    <Content Remove="wwwroot\lib\bootstrap-datepicker\package.json" />
+    <Content Remove="wwwroot\lib\bootstrap-datepicker\README.md" />
+    <Content Remove="wwwroot\lib\bootstrap-datepicker\yarn.lock" />
+    <Content Remove="wwwroot\lib\bootstrap-table\.bower.json" />
+    <Content Remove="wwwroot\lib\bootstrap-table\bootstrap-table.jquery.json" />
+    <Content Remove="wwwroot\lib\bootstrap-table\bower.json" />
+    <Content Remove="wwwroot\lib\bootstrap-table\CHANGELOG.md" />
+    <Content Remove="wwwroot\lib\bootstrap-table\composer.json" />
+    <Content Remove="wwwroot\lib\bootstrap-table\CONTRIBUTING.md" />
+    <Content Remove="wwwroot\lib\bootstrap-table\DONATORS.md" />
+    <Content Remove="wwwroot\lib\bootstrap-table\Gruntfile.js" />
+    <Content Remove="wwwroot\lib\bootstrap-table\index.d.ts" />
+    <Content Remove="wwwroot\lib\bootstrap-table\LICENSE" />
+    <Content Remove="wwwroot\lib\bootstrap-table\package.json" />
+    <Content Remove="wwwroot\lib\bootstrap-table\README.md" />
+    <Content Remove="wwwroot\lib\bootstrap-table\_config.yml" />
+    <Content Remove="wwwroot\lib\bootstrap\.bower.json" />
+    <Content Remove="wwwroot\lib\bootstrap\bower.json" />
+    <Content Remove="wwwroot\lib\bootstrap\CHANGELOG.md" />
+    <Content Remove="wwwroot\lib\bootstrap\Gemfile" />
+    <Content Remove="wwwroot\lib\bootstrap\Gemfile.lock" />
+    <Content Remove="wwwroot\lib\bootstrap\Gruntfile.js" />
+    <Content Remove="wwwroot\lib\bootstrap\ISSUE_TEMPLATE.md" />
+    <Content Remove="wwwroot\lib\bootstrap\LICENSE" />
+    <Content Remove="wwwroot\lib\bootstrap\package.js" />
+    <Content Remove="wwwroot\lib\bootstrap\package.json" />
+    <Content Remove="wwwroot\lib\bootstrap\README.md" />
+    <Content Remove="wwwroot\lib\jquery\.bower.json" />
+    <Content Remove="wwwroot\lib\jquery\AUTHORS.txt" />
+    <Content Remove="wwwroot\lib\jquery\bower.json" />
+    <Content Remove="wwwroot\lib\jquery\LICENSE.txt" />
+    <Content Remove="wwwroot\lib\jquery\README.md" />
+    <Content Remove="wwwroot\lib\layer\.bower.json" />
+    <Content Remove="wwwroot\lib\layer\.gitignore" />
+    <Content Remove="wwwroot\lib\layer\bower.json" />
+    <Content Remove="wwwroot\lib\layer\CHANGELOG.md" />
+    <Content Remove="wwwroot\lib\layer\gulpfile.js" />
+    <Content Remove="wwwroot\lib\layer\LICENSE" />
+    <Content Remove="wwwroot\lib\layer\package.json" />
+    <Content Remove="wwwroot\lib\layer\README.md" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="8.1.1" />
+    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="6.1.1" />
+    <PackageReference Include="EPPlus" Version="4.5.3.2" />
+    <PackageReference Include="log4net" Version="2.0.8" />
+    <PackageReference Include="Microsoft.AspNetCore.App" />
+    <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.7.8" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.2.3" PrivateAssets="All" />
+    <PackageReference Include="NLog" Version="4.6.8" />
+    <PackageReference Include="NLog.Web.AspNetCore" Version="4.8.6" />
+    <PackageReference Include="NPOI" Version="2.4.1" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Update="NavbarMenus.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+</Project>

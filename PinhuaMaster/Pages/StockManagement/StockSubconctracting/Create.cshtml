@@ -1,0 +1,19 @@
+﻿@page
+@using PinhuaMaster.Pages.StockManagement.StockSubconctracting.ViewModel
+@using PinhuaMaster.Pages.StockManagement.StockSubconctracting
+@using Microsoft.EntityFrameworkCore
+@model CreateModel
+@{
+    ViewData["Title"] = "录入";
+    ViewBag.NoContentHeader = true;
+}
+
+@Html.Partial("_StockSubconctractingPartial", Model.Order)
+
+
+@section Scripts{
+    @Html.RenderScripts()
+}
+@section Styles{
+    @Html.RenderStyles()
+}

@@ -1,0 +1,248 @@
+﻿@page
+@model PinhuaMaster.Pages.Attendance.CreateModel
+@using PinhuaMaster.Services
+@inject IAttendanceService attendanceService
+@{
+    ViewData["Title"] = "生成考勤报表";
+}
+
+<div class="row">
+    <div class="col-md-3">
+        <div class="box box-solid">
+            <div class="box-body">
+                <div class="form-horizontal" id="test">
+                    <div class="form-group">
+                        <label class="control-label col-xs-3">年</label>
+                        <div class="col-xs-9">
+                            <div class="input-group">
+                                <select class="form-control" v-model="Y" v-on:change="getMList" id="refreshY">
+                                    <option v-for="(item,index) in YMList">{{item.Year}}</option>
+                                </select>
+                                <span class="input-group-addon">
+                                    年
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-xs-3">月</label>
+                        <div class="col-xs-9">
+                            <div class="input-group">
+                                <select class="form-control" v-model="M" id="refreshM">
+                                    <option v-for="(item,index) in MList" :value="item.Month" v-bind:disabled="isDisabled(item)">{{display(item)}}</option>
+                                </select>
+                                <span class="input-group-addon">
+                                    月
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-xs-9 col-xs-offset-3">
+                            <button class="form-control btn btn-default btn-flat" v-on:click="toLoad">计算考勤数据</button>
+                            <input type="hidden" id="hiddenYMList" value="@(Newtonsoft.Json.JsonConvert.SerializeObject(Model.ymList))" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-xs-9 col-xs-offset-3">
+                            <form method="post" asp-page="Create">
+                                <button class="form-control btn btn-default btn-flat" type="submit">保存</button>
+                                <input type="hidden" id="refreshJSON" name="jsonStr" />
+                            </form>
+                        </div>
+                    </div>
+                    <input type="hidden" value="@Url.Page("Create", "Ajax")" id="refreshUrl" />
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-9">
+        <div class="box box-solid">
+            <div class="box-body">
+                <table data-toggle="table" class="table table-bordered table-striped table-hover" data-response-handler="responseHandler" id="computedTable">
+                    <thead>
+                        <tr>
+                            <th data-width="1" data-formatter="fmtEastriver"></th>
+                            <th data-sortable="true" class="hidden-xs" data-field="@(nameof(AttendanceServicePerson.Id))" data-visible="false">编号</th>
+                            <th data-sortable="true" data-field="@(nameof(AttendanceServicePerson.Name))">姓名</th>
+                            <th data-sortable="true" data-formatter="fmtIsFullAttendance" data-field="@(nameof(AttendanceServicePerson.IsFullAttendance))">全勤</th>
+                            <th data-field="@(nameof(AttendanceServicePerson.DaytimeHours))">正班</th>
+                            <th data-field="@(nameof(AttendanceServicePerson.OvertimeHours))">加班</th>
+                            <th data-field="@(nameof(AttendanceServicePerson.TotalHours))">总工时</th>
+                            <th class="hidden-xs" data-field="@(nameof(AttendanceServicePerson.TimesOfDinner))">用餐</th>
+                        </tr>
+                    </thead>
+
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal" id="detailsModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="detailsTitle">Modal title</h4>
+            </div>
+            <div class="modal-body">
+                <table data-classes="table table-hover text-nowrap"
+                       data-toggle="table"
+                       data-striped="true"
+                       id="detailsTable">
+                    <thead>
+                        <tr>
+                            <th data-field="Date">日期</th>
+                            <th data-field="Range0" data-visible="false">班段</th>
+                            <th data-field="State0">状态</th>
+                            <th data-field="From0">上班</th>
+                            <th data-field="End0">下班</th>
+                            <th data-field="Hours0">工时</th>
+                            <th data-field="Range1" data-visible="false">班段</th>
+                            <th data-field="State1">状态</th>
+                            <th data-field="From1">上班</th>
+                            <th data-field="End1">下班</th>
+                            <th data-field="Hours1">工时</th>
+                            <th data-field="DayHours">合计</th>
+                        </tr>
+                    </thead>
+
+                </table>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+    <script>
+        function fmtEastriver(value, row) {
+            return '<a href="/Attendance/EastRiver/Details/' + Y + '/' + M + '/' + row.Id + '"><i class="fa fa-search"></i></a>'
+        }
+
+        function fmtIsFullAttendance(value, row) {
+            if (value)
+                return '<span class="text-danger">是</span>'
+            else
+                return '<span class="text-success">否</span>'
+        }
+
+        attendance = null;
+
+        function responseHandler(res) {
+            Y = res.Y
+            M = res.M
+            $('#refreshJSON').val(JSON.stringify(res))
+            attendance = res
+            return res.PersonList
+        }
+
+        var $computedTable = $('#computedTable')
+        var $detailsModal = $('#detailsModal')
+        var $detailsTable = $('#detailsTable')
+        var $detailsTitle = $('#detailsTitle')
+        $computedTable.on('click-cell.bs.table', function (event, field, value, row, $element) {
+            if (field == 0)
+                return
+
+            var personList = attendance.PersonList
+            for (var i in personList) {
+                if (personList[i].Id == row.Id && personList[i].Results != null) {
+                    var newResultList = []
+                    for (var result of personList[i].Results) {
+                        var newResult = {}
+                        newResult["Date"] = result.Date
+                        newResult["DayHours"] = result.DayHours
+                        for (var z in result.Details) {
+                            newResult["Range" + z] = result.Details[z].Range
+                            newResult["State" + z] = result.Details[z].State
+                            newResult["From" + z] = result.Details[z].Time1Fix
+                            newResult["End" + z] = result.Details[z].Time2Fix
+                            newResult["Hours" + z] = result.Details[z].Hours
+                        }
+                        newResultList.push(newResult)
+                    }
+
+                    $detailsTable.bootstrapTable('load', { data: newResultList })
+                    $detailsTitle.text(personList[i].Name + ' - ' + attendance.Y + '年' + attendance.M + '月')
+                    $detailsModal.modal()
+                }
+
+            }
+        })
+    </script>
+
+    <script>
+        var data = JSON.parse($('#hiddenYMList').val())
+        vm = new Vue({
+            el: '#test',
+            data: {
+                YMList: data,
+                MList: [],
+                Y: {},
+                M: {},
+
+            },
+            methods: {
+                getMList: function () {
+                    var tempMList = []
+                    this.MList = []
+                    for (var item of this.YMList) {
+                        if (item.Year == this.Y) {
+                            for (var month of item.MonthList) {
+                                tempMList.push(month)
+                            }
+                        }
+                    }
+                    this.MList = tempMList
+
+                    var bContains = false;
+                    for (var item of this.MList) {
+                        if (item.Month == this.M) {
+                            this.M = item.Month
+                            bContains = true;
+                            break;
+                        }
+                    }
+                    if (!bContains) {
+                        for (var i in this.MList) {
+                            if (this.MList[i].State != "已存在") {
+                                this.M = this.MList[i].Month
+                                break;
+                            }
+                        }
+
+                    }
+                },
+                isDisabled: function (item) {
+                    if (item.State == "已存在")
+                        return true
+                    else
+                        return false
+                },
+                display: function (item) {
+                    if (item.State == "已存在")
+                        return item.Month + ' Exsited'
+                    else
+                        return item.Month
+
+                },
+                toLoad: function () {
+                    var refreshUrl = [$('#refreshUrl').val(), '&Y=', this.Y, '&M=', this.M].join('')
+                    var $table = $('#computedTable')
+                    $table.bootstrapTable('refresh', { url: refreshUrl });
+                }
+            },
+            mounted: function () {
+                this.Y = this.YMList[0].Year
+                this.getMList()
+            }
+        })
+    </script>
+}
