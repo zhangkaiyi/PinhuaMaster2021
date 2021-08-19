@@ -69,16 +69,11 @@ namespace PinhuaMaster.Services
 
     public class 模型_月考勤表:模型_年考勤表
     {
-        public int 年 { get; set; }
         public int 月 { get; set; }
-        public IList<模型_考勤人> 考勤人列表 { get; set; }
     }
 
     public class 模型_日考勤表 : 模型_月考勤表
     {
-        public int 年 { get; set; }
-        public int 月 { get; set; }
         public int 日 { get; set; }
-        public IList<模型_考勤人> 考勤人列表 { get; set; }
     }
 }

@@ -10,9 +10,10 @@
     var rcid = pinhuaContext.AttendanceReport.AsNoTracking().FirstOrDefault(r => r.Y == int.Parse(PageContext.RouteData.Values["Y"].ToString()) && r.M == int.Parse(PageContext.RouteData.Values["M"].ToString())).ExcelServerRcid;
     var refreshUrl = Url.Page("Create", "Ajax", new { Y = Y, M = M });
     var getUrl = Url.Page("Edit", "AjaxExsitedAttendanceData", new { Y = PageContext.RouteData.Values["Y"], M = PageContext.RouteData.Values["M"] });
-    //var aaa = Newtonsoft.Json.JsonConvert.SerializeObject(attendanceService2021.考勤表(2021,7), Newtonsoft.Json.Formatting.Indented);
+    var report = attendanceService2021.月考勤表(int.Parse(Y.ToString()), int.Parse(M.ToString()));
+    var ccc = report.考勤人列表.Max(a => a.打卡数据.GroupBy(b => b.时间.Day).Max(c => c.Count()));
+    var aaa = Newtonsoft.Json.JsonConvert.SerializeObject(report, Newtonsoft.Json.Formatting.Indented);
 }
-@*<pre>@aaa</pre>*@
 <div class="row">
     <div class="col-md-3">
         <div class="box box-solid">
@@ -90,6 +91,50 @@
                     </thead>
 
                 </table>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-xs-12">
+        <div class="box box-solid">
+            <div class="box-body">
+                <div class="table-responsive">
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr><th>姓名</th><th>日期</th><th colspan="@ccc">时间</th></tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var tr in report.考勤人列表)
+                            {
+                                @for (var i = 1; i != DateTime.DaysInMonth(int.Parse(Y.ToString()), int.Parse(M.ToString())); i++)
+                                {
+                                    <tr>
+                                        <td>@(tr.姓名)</td>
+                                        <td>@(new DateTime(int.Parse(Y.ToString()), int.Parse(M.ToString()), i).ToString("yyyy-MM-dd"))</td>
+                                        @*@foreach (var td in tr.打卡数据.Where(a => a.时间.Day == i))
+                                            {
+                                                <td>@(td.时间.ToString("HH:mm:ss"))</td>
+                                            }*@
+                                        @for (var n = 0; n != ccc; n++)
+                                        {
+                                            <td>
+                                                @{
+                                                    var item = tr.打卡数据.Where(a => a.时间.Day == i).ElementAtOrDefault(n);
+                                                    if (item != null)
+                                                    {
+                                                        @item.时间.ToString("HH:mm:ss")
+                                                    }
+                                            }
+                                        </td>
+                                    }
+                                    </tr>
+                                }
+
+                            }
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </div>
