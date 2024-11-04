@@ -1,5 +1,11 @@
 {
   "version": "1.0",
   "defaultProvider": "cdnjs",
-  "libraries": []
+  "libraries": [
+    {
+      "provider": "cdnjs",
+      "destination": "wwwroot/lib/fastclick/",
+      "library": "fastclick@1.0.6"
+    }
+  ]
 }

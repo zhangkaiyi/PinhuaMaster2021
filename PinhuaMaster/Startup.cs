@@ -101,6 +101,8 @@ namespace PinhuaMaster
                     });
             });
 
+            services.AddCors();
+
             // Register no-op EmailSender used by account confirmation and password reset during development
             // For more information on how to enable account confirmation and password reset please visit https://go.microsoft.com/fwlink/?LinkID=532713
             services.AddSingleton<IEmailSender, EmailSender>();
@@ -160,6 +162,8 @@ namespace PinhuaMaster
             });
 
             app.UseStaticHttpContext();
+
+            app.UseCors(x => x.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod().AllowCredentials().WithExposedHeaders("X-Pagination"));
 
             app.UseUtility();
 

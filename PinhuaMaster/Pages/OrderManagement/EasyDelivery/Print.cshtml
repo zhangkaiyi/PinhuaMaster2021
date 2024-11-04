@@ -13,7 +13,9 @@
         <div class="pull-right box-tools">
             <!-- button with a dropdown -->
             <div @*class="btn-group"*@>
-                <a asp-page="Print" asp-route-id="@Model.Id" asp-route-printMode="frp" class="btn btn-default"><i class="fa fa-cloud"></i> FRP</a>
+                <a asp-page="Print" asp-route-id="@Model.Id" asp-route-printMode="" class="btn btn-default"><i class="fa fa-cloud"></i> Standard</a>
+                <a asp-page="Print" asp-route-id="@Model.Id" asp-route-printMode="v6" class="btn btn-default"><i class="fa fa-cloud"></i> IPV6</a>
+                <a asp-page="Print" asp-route-id="@Model.Id" asp-route-printMode="dev" class="btn btn-default"><i class="fa fa-cloud"></i> DEV</a>
                 <button class="btn btn-default" onclick="previewOrder('iframe1')"><i class="fa fa-search"></i> 预览</button>
                 <button class="btn btn-default" onclick="printOrder('iframe1')"><i class="fa fa-print"></i> 打印</button>
                 <div class="btn-group">
@@ -39,11 +41,15 @@
             var mode = ViewContext.RouteData.Values["printMode"]?.ToString();
             if (mode == "dev")
             {
-                @("<script src='http://192.168.1.20:8000/CLodopfuncs.js'></script>")
+                @("<script src='http://192.168.10.51:8000/CLodopfuncs.js'></script>")
             }
             else if (mode == "frp")
             {
                 @("<script src='http://clodop.frp.chang.pinhuadashi.com:7999/CLodopfuncs.js'></script>")
+            }
+            else if (mode == "v6")
+            {
+                @("<script src='http://12051v6.pinhuadashi.com:8000/CLodopfuncs.js'></script>")
             }
             else
             {

@@ -284,7 +284,7 @@
 @section Scripts{
     <script>
         function browseRecord (value, row) {
-            return '<a href="@(Url.Page("Print"))/' + row.DeliveryId + '/frp">打印</a> <a href="@(Url.Page("Edit"))/' + row.DeliveryId + '">修改</a>'
+            return '<a href="@(Url.Page("Print"))/' + row.DeliveryId + '/">打印</a> <a href="@(Url.Page("Edit"))/' + row.DeliveryId + '">修改</a>'
             //return '<a href="@(Url.Page("Details"))/' + row.DeliveryId + '"><i class="fa fa-search"></i> </a>'
         }
         function deleteRecord (value, row) {

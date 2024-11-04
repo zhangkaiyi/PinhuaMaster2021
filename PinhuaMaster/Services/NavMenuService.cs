@@ -64,7 +64,7 @@ namespace PinhuaMaster.Services
 
         public IList<NavbarMenu> GetNavbarMenus()
         {
-            using (var fs = new FileStream($"{_env.ContentRootPath}/{_filename}", FileMode.Open))
+            using (var fs = new FileStream($"{_env.ContentRootPath}/{_filename}", FileMode.Open, FileAccess.Read))
             using (var sr = new StreamReader(fs, System.Text.Encoding.Default))
             {
                 var jsonString = sr.ReadToEnd();
