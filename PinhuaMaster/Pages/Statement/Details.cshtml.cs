@@ -283,6 +283,118 @@ namespace PinhuaMaster.Pages.Statement
                 return File(pck.GetAsByteArray(), provider.Mappings[fileExt], saveAsFileName);
             }
         }
+
+        public IActionResult OnGetExportExcelEPPlusNew(string Id)
+        {
+            this.Id = Id;
+            var customer = _pinhuaContext.往来单位.FirstOrDefault(p => p.单位编号 == Id);
+            StatementData = _pinhuaContext.myView_对账_汇总.Where(p => p.CustomerId == Id).OrderBy(p => p.OrderDate).ThenBy(p => p.OrderId).ThenBy(p => p.ItemId).ToList();
+            using (ExcelPackage pck = new ExcelPackage())
+            {
+                var colNumEnd = 12;
+                var rowNumStart = 3;
+                var rowNumCurrent = rowNumStart;
+
+                //Create the worksheet
+                string sheetName = "Sheet1";
+                ExcelWorksheet ws = pck.Workbook.Worksheets.Add(sheetName);
+                ws.Cells.Style.Font.Name = "Microsoft YaHei";
+                ws.Cells.Style.Font.Size = 11;
+                //Load the datatable into the sheet, starting from cell A1. Print the column names on row 1
+                ws.Cells[1, 1].Value = $"对帐单，{customer.单位名称} - {DateTime.Now.ToString("yyyyMMddHHmmss")}";
+                ws.Row(1).Height = 40;
+                ws.Row(1).Style.Font.Size = 12;
+                ws.Cells[1, 1, 1, colNumEnd].Merge = true;
+                ws.Cells[1, 1, 1, colNumEnd].Style.VerticalAlignment = OfficeOpenXml.Style.ExcelVerticalAlignment.Center;
+                ws.Cells[2, 1].Value = "日期";
+                ws.Cells[2, 2].Value = "业务";
+                ws.Cells[2, 3].Value = "备注";
+                ws.Cells[2, 4].Value = "产品编号";
+                ws.Cells[2, 5].Value = "产品描述";
+                ws.Cells[2, 6].Value = "规格";
+                ws.Cells[2, 7].Value = "片数";
+                ws.Cells[2, 8].Value = "数量";
+                ws.Cells[2, 9].Value = "单位";
+                ws.Cells[2, 10].Value = "单价";
+                ws.Cells[2, 11].Value = "金额";
+                ws.Cells[2, 12].Value = "结余";
+                ws.Row(2).Height = 30;
+                ws.Row(2).Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Center;
+                ws.Row(2).Style.VerticalAlignment = OfficeOpenXml.Style.ExcelVerticalAlignment.Center;
+                ws.Cells[2, 1, 2, colNumEnd].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
+                ws.Cells[2, 1, 2, colNumEnd].Style.Fill.BackgroundColor.SetColor(Color.FromArgb(248, 246, 235));
+                ws.Cells[2, 1, 2, colNumEnd].AutoFilter = true;
+
+                //var rowNum = 3;
+                foreach (var data in StatementData)
+                {
+                    ws.Row(rowNumCurrent).Height = 20;
+                    ws.Row(rowNumCurrent).Style.VerticalAlignment = OfficeOpenXml.Style.ExcelVerticalAlignment.Center;
+                    ws.Cells[rowNumCurrent, 1].Value = data.OrderDate.Value.ToString("yyyy-MM-dd");
+                    ws.Cells[rowNumCurrent, 2].Value = data.MovementTypeDescription;
+                    ws.Cells[rowNumCurrent, 3].Value = data.Remarks;
+                    ws.Cells[rowNumCurrent, 4].Value = data.ItemId;
+                    ws.Cells[rowNumCurrent, 5].Value = data.Description;
+                    ws.Cells[rowNumCurrent, 6].Value = data.Specification;
+                    ws.Cells[rowNumCurrent, 6].Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Right;
+                    ws.Cells[rowNumCurrent, 7].Value = data.Qty;
+                    ws.Cells[rowNumCurrent, 7].Style.Numberformat.Format = "0.00";
+                    ws.Cells[rowNumCurrent, 8].Value = data.UnitQty;
+                    ws.Cells[rowNumCurrent, 8].Style.Numberformat.Format = "0.00";
+                    ws.Cells[rowNumCurrent, 9].Value = data.Unit;
+                    ws.Cells[rowNumCurrent, 10].Value = data.Price;
+                    ws.Cells[rowNumCurrent, 10].Style.Numberformat.Format = "0.00";
+                    ws.Cells[rowNumCurrent, 11].Value = data.Amount;
+                    ws.Cells[rowNumCurrent, 11].Style.Numberformat.Format = "0.00";
+                    if (rowNumCurrent > rowNumStart)
+                    {
+                        ws.Cells[rowNumCurrent, 12].Value = (decimal)(ws.Cells[rowNumCurrent - 1, 12].Value ?? 0m) + data.Amount;
+                        ws.Cells[rowNumCurrent, 12].Style.Numberformat.Format = "0.00";
+                    }
+                    if (data.Amount < 0)
+                    {
+                        //ws.Row(rowNum).Style.Font.Color.SetColor(ColorTranslator.FromHtml("#A94442"));
+                    }
+                    rowNumCurrent++;
+                }
+                if (StatementData.Count() > 0)
+                {
+                    ws.Cells[rowNumCurrent, 11].Formula = $"SUM(K3:K{StatementData.Count() + 2})";
+                    ws.Cells[rowNumCurrent, 11].Style.Numberformat.Format = "0.00";
+                    ws.Row(rowNumCurrent).Height = 25;
+                    ws.Row(rowNumCurrent).Style.VerticalAlignment = OfficeOpenXml.Style.ExcelVerticalAlignment.Center;
+                    ws.Cells[rowNumCurrent, 1, rowNumCurrent, colNumEnd].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
+                    ws.Cells[rowNumCurrent, 1, rowNumCurrent, colNumEnd].Style.Fill.BackgroundColor.SetColor(Color.FromArgb(248, 246, 235));
+                }
+                //var allCells = ws.Cells[$"A1:L{rowNum}"];
+                var allCells = ws.Cells[1, 1, rowNumCurrent, colNumEnd];
+                allCells.Style.Border.Left.Style = OfficeOpenXml.Style.ExcelBorderStyle.Thin;
+                allCells.Style.Border.Left.Color.SetColor(Color.FromArgb(166, 166, 166));
+                allCells.Style.Border.Right.Style = OfficeOpenXml.Style.ExcelBorderStyle.Thin;
+                allCells.Style.Border.Right.Color.SetColor(Color.FromArgb(166, 166, 166));
+                allCells.Style.Border.Top.Style = OfficeOpenXml.Style.ExcelBorderStyle.Thin;
+                allCells.Style.Border.Top.Color.SetColor(Color.FromArgb(166, 166, 166));
+                allCells.Style.Border.Bottom.Style = OfficeOpenXml.Style.ExcelBorderStyle.Thin;
+                allCells.Style.Border.Bottom.Color.SetColor(Color.FromArgb(166, 166, 166));
+                ws.Calculate();
+                ws.Cells.AutoFitColumns();
+                ws.View.FreezePanes(3, 1);
+
+                var cfAddress = new ExcelAddress(3, 1, StatementData.Count() + 2, colNumEnd);
+                var cfRule1 = ws.ConditionalFormatting.AddExpression(cfAddress);
+                cfRule1.Formula = "$K3<0";
+                cfRule1.Style.Font.Color.Color = ColorTranslator.FromHtml("#A94442"); // text-danger
+                //var cfRule2 = ws.ConditionalFormatting.AddExpression(cfAddress);
+                //cfRule2.Formula = "$J3>=0";
+                //cfRule2.Style.Font.Color.Color = Color.FromArgb(0x337AB7); // text-primary
+
+                var saveAsFileName = $"对帐单，{customer.单位名称}-{DateTime.Now.ToString("yyyyMMddHHmmss")}.xlsx";
+                var fileExt = Path.GetExtension(saveAsFileName);
+                var provider = new FileExtensionContentTypeProvider();
+                return File(pck.GetAsByteArray(), provider.Mappings[fileExt], saveAsFileName);
+            }
+        }
+
         public IActionResult OnGetExportExcelEPPlus2(string Id)
         {
             this.Id = Id;

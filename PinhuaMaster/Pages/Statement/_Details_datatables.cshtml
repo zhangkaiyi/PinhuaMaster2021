@@ -163,7 +163,7 @@
             },
             })
 
-            $("div#myTools").prepend('<div class="pull-left"><a class="btn btn-default" href="@Url.Page("Details", "ExportExcelEPPlus", new { Id = Model.Id })"><i class="fa fa-table"></i> 导出 Excel</a> <a class="btn btn-default" href="@Url.Page("Details", "ExportExcelEPPlus2", new { Id = Model.Id })"><i class="fa fa-table"></i> 模板导出 Excel</a></div>');
+            $("div#myTools").prepend('<div class="pull-left"><a class="btn btn-default" href="@Url.Page("Details", "ExportExcelEPPlus", new { Id = Model.Id })"><i class="fa fa-table"></i> 导出 Excel</a> <a class="btn btn-default" href="@Url.Page("Details", "ExportExcelEPPlusNew", new { Id = Model.Id })"><i class="fa fa-table"></i> 导出 Excel 新版</a> <a class="btn btn-default" href="@Url.Page("Details", "ExportExcelEPPlus2", new { Id = Model.Id })"><i class="fa fa-table"></i> 模板导出 Excel</a></div>');
 
             $(window).resize(function () {
                 detailTable.columns.adjust();

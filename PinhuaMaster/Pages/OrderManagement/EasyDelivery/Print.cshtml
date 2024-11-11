@@ -13,11 +13,26 @@
         <div class="pull-right box-tools">
             <!-- button with a dropdown -->
             <div @*class="btn-group"*@>
-                <a asp-page="Print" asp-route-id="@Model.Id" asp-route-printMode="" class="btn btn-default"><i class="fa fa-cloud"></i> Standard</a>
-                <a asp-page="Print" asp-route-id="@Model.Id" asp-route-printMode="v6" class="btn btn-default"><i class="fa fa-cloud"></i> IPV6</a>
-                <a asp-page="Print" asp-route-id="@Model.Id" asp-route-printMode="dev" class="btn btn-default"><i class="fa fa-cloud"></i> DEV</a>
                 <button class="btn btn-default" onclick="previewOrder('iframe1')"><i class="fa fa-search"></i> 预览</button>
                 <button class="btn btn-default" onclick="printOrder('iframe1')"><i class="fa fa-print"></i> 打印</button>
+                <div class="btn-group">
+                    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                        <i class="fa fa-gear fa-fw"></i>模式
+                    </button>
+                    <ul class="dropdown-menu pull-right" role="menu">
+                        <li>
+                            <a asp-page="Print" asp-route-id="@Model.Id" asp-route-printMode="" class="btn btn-default"><i class="fa fa-cloud"></i> 标准</a>
+                        </li>
+                        <li class="divider"></li>
+                        <li>
+                            <a asp-page="Print" asp-route-id="@Model.Id" asp-route-printMode="v6" class="btn btn-default"><i class="fa fa-cloud"></i> IPV6</a>
+                        </li>
+                        <li class="divider"></li>
+                        <li>
+                            <a asp-page="Print" asp-route-id="@Model.Id" asp-route-printMode="dev" class="btn btn-default"><i class="fa fa-cloud"></i> 本地</a>
+                        </li>
+                    </ul>
+                </div>
                 <div class="btn-group">
                     <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
                         <i class="fa fa-bars"></i>
