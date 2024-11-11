@@ -303,7 +303,7 @@ namespace PinhuaMaster.Pages.Statement
                 //Load the datatable into the sheet, starting from cell A1. Print the column names on row 1
                 ws.Cells[1, 1].Value = $"对帐单，{customer.单位名称} - {DateTime.Now.ToString("yyyyMMddHHmmss")}";
                 ws.Row(1).Height = 40;
-                ws.Row(1).Style.Font.Size = 12;
+                ws.Row(1).Style.Font.Size = 16;
                 ws.Cells[1, 1, 1, colNumEnd].Merge = true;
                 ws.Cells[1, 1, 1, colNumEnd].Style.VerticalAlignment = OfficeOpenXml.Style.ExcelVerticalAlignment.Center;
                 ws.Cells[2, 1].Value = "日期";
@@ -318,7 +318,8 @@ namespace PinhuaMaster.Pages.Statement
                 ws.Cells[2, 10].Value = "单价";
                 ws.Cells[2, 11].Value = "金额";
                 ws.Cells[2, 12].Value = "结余";
-                ws.Row(2).Height = 30;
+                ws.Row(2).Height = 50;
+                ws.Row(2).Style.Font.Size = 12;
                 ws.Row(2).Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Center;
                 ws.Row(2).Style.VerticalAlignment = OfficeOpenXml.Style.ExcelVerticalAlignment.Center;
                 ws.Cells[2, 1, 2, colNumEnd].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
@@ -346,7 +347,13 @@ namespace PinhuaMaster.Pages.Statement
                     ws.Cells[rowNumCurrent, 10].Style.Numberformat.Format = "0.00";
                     ws.Cells[rowNumCurrent, 11].Value = data.Amount;
                     ws.Cells[rowNumCurrent, 11].Style.Numberformat.Format = "0.00";
-                    if (rowNumCurrent > rowNumStart)
+                    if (rowNumCurrent == rowNumStart)
+                    {
+                        ws.Cells[rowNumCurrent, 11].Value = "";
+                        ws.Cells[rowNumCurrent, 12].Value = data.Amount;
+                        ws.Cells[rowNumCurrent, 12].Style.Numberformat.Format = "0.00";
+                    }
+                    else if (rowNumCurrent > rowNumStart)
                     {
                         ws.Cells[rowNumCurrent, 12].Value = (decimal)(ws.Cells[rowNumCurrent - 1, 12].Value ?? 0m) + data.Amount;
                         ws.Cells[rowNumCurrent, 12].Style.Numberformat.Format = "0.00";
@@ -359,8 +366,8 @@ namespace PinhuaMaster.Pages.Statement
                 }
                 if (StatementData.Count() > 0)
                 {
-                    ws.Cells[rowNumCurrent, 11].Formula = $"SUM(K3:K{StatementData.Count() + 2})";
-                    ws.Cells[rowNumCurrent, 11].Style.Numberformat.Format = "0.00";
+                    //ws.Cells[rowNumCurrent, 11].Formula = $"SUM(K3:K{StatementData.Count() + 2})";
+                    //ws.Cells[rowNumCurrent, 11].Style.Numberformat.Format = "0.00";
                     ws.Row(rowNumCurrent).Height = 25;
                     ws.Row(rowNumCurrent).Style.VerticalAlignment = OfficeOpenXml.Style.ExcelVerticalAlignment.Center;
                     ws.Cells[rowNumCurrent, 1, rowNumCurrent, colNumEnd].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
@@ -377,7 +384,7 @@ namespace PinhuaMaster.Pages.Statement
                 allCells.Style.Border.Bottom.Style = OfficeOpenXml.Style.ExcelBorderStyle.Thin;
                 allCells.Style.Border.Bottom.Color.SetColor(Color.FromArgb(166, 166, 166));
                 ws.Calculate();
-                ws.Cells.AutoFitColumns();
+                ws.Cells.AutoFitColumns(15);
                 ws.View.FreezePanes(3, 1);
 
                 var cfAddress = new ExcelAddress(3, 1, StatementData.Count() + 2, colNumEnd);
