@@ -309,12 +309,12 @@ namespace PinhuaMaster.Pages.Statement
                 ws.Cells[2, 1].Value = "日期";
                 ws.Cells[2, 2].Value = "业务";
                 ws.Cells[2, 3].Value = "备注";
-                ws.Cells[2, 4].Value = "产品编号";
-                ws.Cells[2, 5].Value = "产品描述";
+                ws.Cells[2, 4].Value = "单号";
+                ws.Cells[2, 5].Value = "产品";
                 ws.Cells[2, 6].Value = "规格";
-                ws.Cells[2, 7].Value = "片数";
-                ws.Cells[2, 8].Value = "数量";
-                ws.Cells[2, 9].Value = "单位";
+                ws.Cells[2, 7].Value = "个数";
+                ws.Cells[2, 8].Value = "结算数量";
+                ws.Cells[2, 9].Value = "结算单位";
                 ws.Cells[2, 10].Value = "单价";
                 ws.Cells[2, 11].Value = "金额";
                 ws.Cells[2, 12].Value = "结余";
@@ -334,7 +334,10 @@ namespace PinhuaMaster.Pages.Statement
                     ws.Cells[rowNumCurrent, 1].Value = data.OrderDate.Value.ToString("yyyy-MM-dd");
                     ws.Cells[rowNumCurrent, 2].Value = data.MovementTypeDescription;
                     ws.Cells[rowNumCurrent, 3].Value = data.Remarks;
-                    ws.Cells[rowNumCurrent, 4].Value = data.ItemId;
+                    var a = data.OrderId;
+                    var b = data.ItemId;
+                    b = string.IsNullOrWhiteSpace(b) ? b : $" - {b}";
+                    ws.Cells[rowNumCurrent, 4].Value = a + b;
                     ws.Cells[rowNumCurrent, 5].Value = data.Description;
                     ws.Cells[rowNumCurrent, 6].Value = data.Specification;
                     ws.Cells[rowNumCurrent, 6].Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Right;
@@ -384,7 +387,7 @@ namespace PinhuaMaster.Pages.Statement
                 allCells.Style.Border.Bottom.Style = OfficeOpenXml.Style.ExcelBorderStyle.Thin;
                 allCells.Style.Border.Bottom.Color.SetColor(Color.FromArgb(166, 166, 166));
                 ws.Calculate();
-                ws.Cells.AutoFitColumns(15);
+                ws.Cells.AutoFitColumns(14);
                 ws.View.FreezePanes(3, 1);
 
                 var cfAddress = new ExcelAddress(3, 1, StatementData.Count() + 2, colNumEnd);
